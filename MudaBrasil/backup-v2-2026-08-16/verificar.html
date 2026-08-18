@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>MudaBrasil · Verificação de Político</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{--accent:#00E5C9;--gold:#D4AF37;--coral:#FF6B6B;--azul:#012169;--blue:#3aa5ff;--r:18px;--tap:48px}
+body{--bg:#0B132B;--card:rgba(18,26,51,.78);--solid:#121A33;--sunken:#0E1626;--line:#243052;--ink:#EAF0F7;--muted:#93A4B8}
+body[data-theme=light]{--bg:#F4F6FB;--card:rgba(255,255,255,.82);--solid:#fff;--sunken:#E4E9F2;--line:#D6DEE9;--ink:#0E1726;--muted:#5A6B7E}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:Manrope,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+h1,h2,h3{font-family:Montserrat,sans-serif}
+.wrap{max-width:640px;margin:0 auto;padding:24px 16px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:Montserrat;font-weight:700;border:none;cursor:pointer;border-radius:999px;min-height:var(--tap);padding:0 22px;font-size:15px}
+.btn-accent{background:linear-gradient(135deg,var(--accent),#00b39c);color:#04271f}
+.btn-ghost{background:var(--solid);color:var(--ink);border:2px solid var(--line)}
+.btn-block{width:100%}.btn-lg{min-height:54px}
+.card{background:var(--card);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:var(--r);padding:20px;margin-bottom:14px}
+.small{font-size:13px;color:var(--muted)}
+select,input{width:100%;min-height:var(--tap);padding:0 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--sunken);color:var(--ink);font-size:15px;margin:6px 0}
+.selo-ok{display:inline-flex;align-items:center;gap:7px;font-family:Montserrat;font-weight:800;font-size:12px;color:#fff;background:linear-gradient(135deg,#1d8fe0,#3aa5ff);border-radius:999px;padding:6px 14px}
+.selo-wait{display:inline-flex;align-items:center;gap:7px;font-family:Montserrat;font-weight:800;font-size:12px;color:#6b7684;background:rgba(138,151,168,.14);border:1px solid rgba(138,151,168,.4);border-radius:999px;padding:6px 14px}
+#toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#0c1726;color:#fff;padding:12px 18px;border-radius:12px;z-index:600;display:none;max-width:90%}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<div class="wrap">
+ <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><a href="index.html" class="btn btn-ghost" style="min-height:40px" aria-label="Voltar"><i class="fa-solid fa-arrow-left"></i></a>
+ <h1 style="font-size:22px">Verificação de Político</h1></div>
+ <p class="small" style="margin-bottom:16px">Página oficial pra quem exerce (ou exerceu) mandato público entrar no MudaBrasil com perfil autêntico.</p>
+
+ <div class="card"><h3 style="font-size:16px"><i class="fa-solid fa-certificate" style="color:var(--blue)"></i> O que é a verificação?</h3>
+ <p class="small" style="margin-top:8px">É o processo em que <b>você entra no site, comprova identidade e mandato</b> e passa a fazer parte da plataforma por dentro. Quem verifica ganha o selo azul <span class="selo-ok"><i class="fa-solid fa-certificate"></i> Verificado</span>; quem não se manifesta fica com o selo cinza <span class="selo-wait"><i class="fa-solid fa-certificate"></i> Não verificado</span> — e a fiscalização pública continua do mesmo jeito.</p>
+ <p class="small" style="margin-top:10px"><b>O que você ganha:</b> selo azul de autenticidade · <b>direito de resposta</b> direto na sua ficha · notificações de cobranças e provas enviadas · acesso ao painel do político (Fase 6).</p>
+ <p class="small" style="margin-top:10px"><b>Como funciona (3 passos, ~48h):</b> 1) preencha o formulário abaixo · 2) envie documento com foto + comprovante de mandato (diploma/posse) · 3) nossa equipe confere e libera o selo.</p></div>
+
+ <div class="card"><h3 style="font-size:16px"><i class="fa-solid fa-pen-to-square"></i> Pedido de verificação</h3>
+ <label class="small">Nome completo</label><input id="fNome" placeholder="Ex.: Maria Santos"/>
+ <label class="small">Cargo</label><select id="fCargo"><option>Presidente</option><option>Governador</option><option>Senador</option><option>Deputado Federal</option><option>Deputado Estadual</option><option>Prefeito</option><option>Vereador</option></select>
+ <label class="small">Partido</label><input id="fPartido" placeholder="Sigla"/>
+ <label class="small">E-mail institucional</label><input id="fEmail" type="email" placeholder="nome@camara.leg.br / gabinete@..."/>
+ <label class="small">Link pra prova de mandato (Diário Oficial, página da Casa, etc.)</label><input id="fLink" placeholder="https://"/>
+ <button class="btn btn-accent btn-block btn-lg" style="margin-top:10px" onclick="enviar()"><i class="fa-solid fa-paper-plane"></i> Enviar pedido de verificação</button>
+ <p class="small" style="margin-top:10px">Nesta fase de teste, o pedido é simulado. Na fase oficial, ele vai pro e-mail <b>verificacao@mudabrasil.com.br</b> e os documentos são conferidos por humano em até 48h.</p></div>
+
+ <div class="card"><h3 style="font-size:16px"><i class="fa-solid fa-circle-question"></i> Perguntas frequentes</h3>
+ <p class="small" style="margin-top:8px"><b>Preciso pagar?</b> Não. A verificação é gratuita — o MudaBrasil se sustenta por doações e publicidade genérica.</p>
+ <p class="small" style="margin-top:8px"><b>E se eu não verificar?</b> Sua ficha pública continua existindo (com dados e lastro), com o selo cinza "Não verificado" e sem direito de resposta.</p>
+ <p class="small" style="margin-top:8px"><b>Posso remover minha ficha?</b> O direito de resposta e a retificação são garantidos; a ficha em si é interesse público (dados de mandato são públicos).</p></div>
+ <p class="small" style="text-align:center">"Seu voto coloca, seu voto tira." · <a href="index.html" style="color:var(--accent)">voltar ao site</a></p>
+</div>
+<script>
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',3000);}
+function enviar(){const n=document.getElementById('fNome').value.trim(),e=document.getElementById('fEmail').value.trim();
+ if(!n||!e){toast('Preencha ao menos nome e e-mail.');return;}
+ toast('Pedido registrado! Em breve entraremos em contato ✅ (demo)');}
+</script>
+</body>
+</html>

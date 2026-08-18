@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>MudaBrasil · App</title>
+<meta name="description" content="Voto contínuo e revogável. Seu voto coloca, seu voto tira."/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="../config.js"></script>
+<style>
+:root{--accent:#00E5C9;--accent-ink:#067A6C;--gold:#D4AF37;--coral:#FF6B6B;--azul:#012169;--verde:#009739;--amarelo:#FEDB00;--blue:#3aa5ff;--roxo:#7b3ff2;--r:16px;--tap:48px}
+body{--bg:#0B132B;--card:rgba(18,26,51,.78);--solid:#121A33;--surface2:#182242;--sunken:#0E1626;--line:#243052;--ink:#EAF0F7;--muted:#93A4B8;--topbar:rgba(11,19,43,.85)}
+body[data-theme=light]{--bg:#F4F6FB;--card:rgba(255,255,255,.82);--solid:#fff;--surface2:#EDF1F7;--sunken:#E4E9F2;--line:#D6DEE9;--ink:#0E1726;--muted:#5A6B7E;--topbar:rgba(244,246,251,.85)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;min-width:0}
+html,body{overflow-x:hidden;max-width:100%}
+body{font-family:Manrope,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(620px 300px at 85% -60px,rgba(0,229,201,.09),transparent),radial-gradient(520px 280px at -80px 40%,rgba(1,33,105,.28),transparent)}
+h1,h2,h3{font-family:Montserrat,sans-serif;letter-spacing:-.02em}
+.wrap{max-width:520px;margin:0 auto;padding:0 16px;width:100%;position:relative;z-index:1}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:Montserrat;font-weight:700;border:none;cursor:pointer;border-radius:999px;min-height:var(--tap);padding:0 22px;font-size:15px;transition:transform .15s,filter .15s}
+.btn:active{transform:scale(.97)}
+.btn.off{opacity:.5;cursor:not-allowed}
+.btn-accent{background:linear-gradient(135deg,var(--accent),#00b39c);color:#04271f}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#b8941f);color:#241a00}
+.btn-blue{background:linear-gradient(135deg,var(--azul),#011845);color:#fff}
+.btn-ghost{background:var(--solid);color:var(--ink);border:2px solid var(--line)}
+.btn-danger{background:rgba(255,107,107,.14);color:var(--coral)}
+.btn-block{width:100%}.btn-lg{min-height:56px}.btn-sm{min-height:40px;font-size:13px;padding:0 15px}
+.card{background:var(--card);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.badge{font-family:Montserrat;font-weight:700;font-size:11px;padding:4px 10px;border-radius:999px;background:rgba(0,229,201,.14);color:var(--accent)}
+body[data-theme=light] .badge{color:var(--accent-ink)}
+.badge.num{background:var(--amarelo);color:#3a2f00}
+.badge.peso{background:rgba(212,175,55,.16);color:var(--gold)}
+.screen{display:none;padding:16px 0 190px}.screen.on{display:block}
+.top{position:sticky;top:0;z-index:50;background:var(--topbar);backdrop-filter:blur(12px);padding:12px 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap;user-select:none}
+.logo{font-family:Montserrat;font-weight:900;font-size:20px}.logo b{color:var(--ink)}.logo span{color:var(--accent)}
+body[data-theme=light] .logo span{color:var(--accent-ink)}
+.filete{height:3px;border-radius:2px;background:linear-gradient(90deg,var(--verde) 0 33%,var(--amarelo) 33% 66%,var(--azul) 66%);opacity:.85}
+.nav{position:fixed;bottom:0;left:0;right:0;background:var(--solid);border-top:1px solid var(--line);display:flex;z-index:60}
+.nav button{flex:1;border:none;background:none;padding:11px 0 13px;display:flex;flex-direction:column;align-items:center;gap:4px;font-family:Montserrat;font-weight:700;font-size:10px;color:var(--muted);cursor:pointer}
+.nav button i{font-size:20px}
+.nav button:nth-child(1) i{color:var(--accent)}
+.nav button:nth-child(2) i{color:var(--gold)}
+.nav button:nth-child(3) i{color:var(--blue)}
+.nav button:nth-child(4) i{color:var(--roxo)}
+.nav button:nth-child(5) i{color:var(--coral)}
+.nav button.on{background:var(--surface2);color:var(--ink)}
+body[data-theme=light] .nav button.on{background:var(--sunken)}
+.sticky{position:fixed;bottom:72px;left:0;right:0;z-index:55;display:none;align-items:center;justify-content:center;gap:10px;padding:8px 14px;background:var(--topbar);backdrop-filter:blur(12px);border-top:1px solid var(--line)}
+.overlay{position:fixed;inset:0;background:rgba(4,10,26,.66);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
+.overlay.on{display:flex}
+.modal{background:var(--solid);border:1px solid var(--line);border-radius:20px;padding:26px;max-width:420px;width:100%;max-height:86vh;overflow:auto}
+.opt{display:flex;align-items:center;gap:12px;padding:14px;border:1.5px solid var(--line);border-radius:14px;margin-bottom:10px;cursor:pointer;background:var(--card);backdrop-filter:blur(12px);flex-wrap:wrap}
+.opt .av{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;color:#fff;font-family:Montserrat;font-weight:800}
+.mask{letter-spacing:2px;color:var(--muted)}
+.step{display:flex;gap:6px;margin:8px 0 6px}.step i{flex:1;height:5px;border-radius:3px;background:var(--sunken)}.step i.on{background:var(--accent)}
+.codebox{background:linear-gradient(135deg,var(--azul),#011845);color:#fff;border-radius:14px;padding:14px;font-family:Montserrat;font-weight:800;letter-spacing:1px;text-align:center;font-size:14px;word-break:break-all}
+.small{font-size:12.5px;color:var(--muted)}
+.etq{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-family:Montserrat;font-weight:700;color:var(--muted);background:var(--sunken);border:1px solid var(--line);border-radius:999px;padding:5px 10px}
+.warn{background:rgba(212,175,55,.16);color:var(--gold);border-radius:12px;padding:12px;font-size:13px;margin:12px 0}
+body[data-theme=light] .warn{color:#9a7a16}
+select,input{width:100%;min-height:var(--tap);padding:0 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--sunken);color:var(--ink);font-size:15px}
+.row{display:flex;gap:10px;flex-wrap:wrap}.row .btn{flex:1 1 auto}
+#toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#0c1726;color:#fff;padding:12px 18px;border-radius:12px;z-index:200;display:none;max-width:90%}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media(max-width:380px){.logo{font-size:17px}.btn{font-size:13.5px;padding:0 16px}.btn-lg{min-height:52px}h1{font-size:22px!important}.codebox{font-size:12.5px}.nav button{font-size:8.5px}}
+</style>
+</head>
+<body>
+<div id="toast" role="status"></div>
+
+<div class="overlay on" id="popSim"><div class="modal" role="dialog" aria-modal="true">
+  <h2 style="font-size:20px">🧪 O que é simulação e o que é real aqui?</h2>
+  <p class="small" style="margin:12px 0;color:var(--ink)">
+    · <b>Simulação (sem valor jurídico):</b> a votação, o termômetro e a revogação — uma pesquisa viva da opinião do povo. Ninguém é eleito nem destituído de verdade.<br><br>
+    · <b>Real:</b> as notícias da Central no site — jornalismo de fontes verificadas, com link pra matéria original.<br><br>
+    · <b>Seus dados:</b> ficam somente no seu navegador; não rastreamos o eleitor.<br><br>
+    · <b>O futuro:</b> a tecnologia mostrada (comprovante com código + conferência separada) é a mesma que permitiria o voto real integrado ao TSE (Gov.br + biometria + blockchain).
+  </p>
+  <button class="btn btn-accent btn-block" onclick="fechar('popSim');ir('scrInstr')">Entendi, quero testar</button>
+</div></div>
+
+<div class="overlay" id="popNao"><div class="modal" role="dialog" aria-modal="true">
+  <h2 style="font-size:20px"><i class="fa-solid fa-lock"></i> Ainda não pode revogar</h2>
+  <p class="small" style="margin:12px 0;color:var(--ink)">A revogação só abre <b>a partir da posse</b> dos eleitos do mandato 2026 (jan/fev de 2027) e fica aberta <b>até o fim do mandato</b>. Antes disso, seu voto permanece <b>ativo</b> — e você continua acompanhando tudo por aqui.</p>
+  <button class="btn btn-accent btn-block" onclick="fechar('popNao')">Entendi</button>
+</div></div>
+
+<div class="screen" id="scrInstr"><div class="wrap">
+  <div class="logo"><b>Muda</b><span>Brasil</span></div>
+  <div class="filete" style="margin:6px 0 14px" aria-hidden="true"></div>
+  <h1 style="font-size:26px;margin:0 0 8px">Como funciona o seu voto</h1>
+  <div class="card" style="padding:16px;margin-bottom:12px"><b>1 · Vote</b><p class="small">Escolha seus candidatos por cargo (ou branco/nulo). No fim, você recebe <b>1 código</b> pra cédula inteira.</p></div>
+  <div class="card" style="padding:16px;margin-bottom:12px"><b>2 · Guarde o código</b><p class="small">Ele é o seu comprovante — e <b>fica salvo no app também</b>: veja a qualquer momento em <b>Meu voto</b>. No site, com ele + login, você confere e revoga.</p></div>
+  <div class="card" style="padding:16px;margin-bottom:12px"><b>3 · Revogue após a posse</b><p class="small">Se o eleito não corresponder (descumprir promessa, corrupção, condenação), você poderá <b>revogar</b> o voto a partir da <b>posse</b>, durante o mandato.</p></div>
+  <div class="card" style="padding:16px;margin-bottom:16px"><b>4 · Privacidade anti-coerção</b><p class="small">💡 <b>Balance o celular rapidinho</b> pra ocultar tudo, se alguém estiver vendo em quem você está votando. No app, seus votos ficam sempre mascarados por padrão.</p></div>
+  <button class="btn btn-accent btn-block btn-lg" onclick="ir('scrLocal')">Continuar</button>
+</div></div>
+
+<div class="screen" id="scrLocal"><div class="wrap">
+  <h1 style="font-size:24px;margin:8px 0 12px">Onde você vota?</h1>
+  <p class="small" style="margin-bottom:12px">Os cargos disponíveis dependem da sua localidade. (DF não tem prefeito/vereador.)</p>
+  <div class="card" style="padding:16px">
+    <label class="small">Estado (UF)</label><select id="uf" aria-label="Estado"></select>
+    <label class="small" style="margin-top:10px">Cidade</label><input id="cidade" placeholder="Ex.: São Paulo" aria-label="Cidade"/>
+    <label class="small" style="margin-top:10px">Simular 2º turno?</label><select id="st" aria-label="Segundo turno"><option value="0">Não (1º turno)</option><option value="1">Sim (2º turno)</option></select>
+    <button class="btn btn-accent btn-block btn-lg" style="margin-top:14px" onclick="salvarLocal()">Continuar</button>
+  </div>
+</div></div>
+
+<div class="screen" id="scrHome"><div class="wrap">
+  <div class="top"><div class="logo"><b>Muda</b><span>Brasil</span></div><span class="badge" id="locBadge"></span>
+    <button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="toggleTheme()" aria-label="Alternar tema"><i class="fa-solid fa-circle-half-stroke"></i></button></div>
+  <div class="filete" aria-hidden="true"></div>
+  <div class="card" style="padding:16px;margin:14px 0 12px"><b>Seu voto coloca, seu voto tira.</b>
+  <p class="small" style="margin-top:6px">Vote agora e siga acompanhando. Se o político mentir, se envolver com corrupção ou não corresponder às suas expectativas, <b>revogue o voto a qualquer momento a partir da posse</b> — até o fim do mandato.</p></div>
+  <button class="btn btn-gold btn-block btn-lg" onclick="comecarVoto()"><i class="fa-solid fa-check-to-slot"></i> Votar</button>
+  <div id="btnVerHome" style="height:10px"></div>
+</div></div>
+
+<div class="screen" id="scrLogin"><div class="wrap">
+  <div class="logo" style="display:flex;justify-content:center"><b>Muda</b><span>Brasil</span></div>
+  <h1 style="font-size:24px;text-align:center;margin:16px 0 6px">Quase lá!</h1>
+  <p class="small" style="text-align:center;margin-bottom:16px">Sua cédula está revisada. Entre pra gerar o <b>código único</b> (R4).</p>
+  <button class="btn btn-ghost btn-block" style="margin-bottom:10px" onclick="login()"><i class="fab fa-google"></i> Entrar com Google</button>
+  <input id="fone" placeholder="(11) 9 0000-0000" style="margin-bottom:10px" aria-label="Telefone"/>
+  <button class="btn btn-accent btn-block" onclick="login()">Enviar código SMS</button>
+</div></div>
+
+<div class="screen" id="scrVotar"><div class="wrap">
+  <div class="step" id="stepbar"></div>
+  <p class="small" id="stepTxt" style="margin-bottom:12px"></p>
+  <div id="votoArea"></div>
+</div></div>
+
+<div class="screen" id="scrVer"><div class="wrap">
+  <h2 style="font-size:18px;margin-bottom:10px">Meu voto</h2>
+  <div class="warn"><i class="fa-solid fa-user-secret"></i> Seus votos ficam <b>mascarados</b> por padrão (anti-print). Toque em "mostrar" pra revelar.</div>
+  <div id="verArea"></div>
+</div></div>
+
+<div class="screen" id="scrRev"><div class="wrap">
+  <h2 style="font-size:18px;margin-bottom:10px">Revogar voto</h2>
+  <div id="revArea"></div>
+</div></div>
+
+<!-- PLs: participação popular em leis reais, em bom português -->
+<div class="screen" id="scrPLs"><div class="wrap">
+  <h2 style="font-size:22px;margin-bottom:8px"><i class="fa-solid fa-file-pen" style="color:var(--blue)"></i> Projetos de Lei da semana</h2>
+  <p class="small" style="margin-bottom:12px">Aqui você opina sobre <b>leis reais</b> em discussão na Câmara dos Deputados — explicadas <b>em bom português</b>. Seu "aprovo / não aprovo" vira o termômetro do povo sobre cada projeto. É a sua participação direta na elaboração das leis, 365 dias por ano.</p>
+  <div id="plArea"></div>
+</div></div>
+
+<div class="screen" id="scrAdmin"><div class="wrap">
+  <h2 style="font-size:18px;margin-bottom:10px">Painel (demo)</h2>
+  <div class="card" style="padding:16px"><b>Janela de revogação</b><p class="small">Simula se já passou da <b>posse</b> (R5).</p>
+  <button class="btn btn-blue btn-block" style="margin-top:10px" id="btnJanela" onclick="toggleJanela()">Abrir janela de revogação</button></div>
+</div></div>
+
+<div class="sticky" id="sticky"></div>
+<nav class="nav" aria-label="Navegação principal">
+  <button onclick="ir('scrHome')"><i class="fa-solid fa-house"></i>Início</button>
+  <button onclick="comecarVoto()"><i class="fa-solid fa-check-to-slot"></i>Votar</button>
+  <button onclick="ir('scrPLs')"><i class="fa-solid fa-file-pen"></i>PLs</button>
+  <button onclick="verMeuVoto()"><i class="fa-solid fa-eye"></i>Meu voto</button>
+  <button onclick="ir('scrAdmin')"><i class="fa-solid fa-gauge-high"></i>Painel</button>
+</nav>
+
+<script>
+const $=s=>document.querySelector(s);
+const CFG=window.MB_CONFIG||{decadencia:{cheioDias:90,pisoDias:180,piso:.5}};
+const AV=['#009739','#012169','#D4AF37','#e3000f','#7b3ff2','#0a8f8f'];
+const cor=n=>AV[[...n].reduce((a,c)=>a+c.charCodeAt(0),0)%AV.length];
+const ini=n=>n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+function toast(m){const t=$('#toast');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',3000);}
+function fechar(id){$('#'+id).classList.remove('on');}
+function abrir(id){$('#'+id).classList.add('on');}
+function ir(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));$('#'+id).classList.add('on');window.scrollTo(0,0);atualizaSticky();}
+const LS={get:(k,d)=>{try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))};
+document.body.dataset.theme=(()=>{const t=LS.get('mb_theme',null);if(t)return t;return matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';})();
+function toggleTheme(){const d=document.body.dataset.theme==='dark'?'light':'dark';document.body.dataset.theme=d;LS.set('mb_theme',d);}
+function pesoVoto(ts){const a=(Date.now()-ts)/864e5,c=CFG.decadencia;
+  if(a<=c.cheioDias)return 1;if(a>=c.pisoDias)return c.piso;
+  return Math.round((1-(a-c.cheioDias)/(c.pisoDias-c.cheioDias)*(1-c.piso))*100)/100;}
+const CAND=[
+ {n:'Ana Silva',p:'PV',num:'43',c:'Presidente'},{n:'Carlos Mendes',p:'PSDB',num:'45',c:'Presidente'},
+ {n:'Maria Santos',p:'PT',num:'13',c:'Presidente'},{n:'João Oliveira',p:'PL',num:'22',c:'Presidente'},
+ {n:'Roberto Lima',p:'MDB',num:'15',c:'Governador'},{n:'Fernanda Costa',p:'PSOL',num:'50',c:'Governador'},
+ {n:'Paulo Rocha',p:'PP',num:'11',c:'Governador'},
+ {n:'Lucia Ferreira',p:'REDE',num:'18',c:'Senador'},{n:'Marcos Souza',p:'UNIÃO',num:'44',c:'Senador'},
+ {n:'Camila Alves',p:'PV',num:'4321',c:'Deputado Federal'},{n:'Rafael Nunes',p:'PT',num:'1313',c:'Deputado Federal'},
+ {n:'Beatriz Ramos',p:'PSB',num:'40',c:'Prefeito'},{n:'André Martins',p:'NOVO',num:'30',c:'Prefeito'},
+ {n:'Juliana Prado',p:'PDT',num:'1234',c:'Vereador'},{n:'Thiago Barros',p:'PL',num:'2222',c:'Vereador'}];
+const UFS=['SP','RJ','MG','RS','BA','PR','PE','CE','DF','GO','AM','PA'];
+let local=LS.get('mb_local',null),sess=LS.get('mb_sess',null),ballot=LS.get('mb_ballot',null),codigo=LS.get('mb_codigo',null),janela=LS.get('mb_janela',false),pendente=false;
+$('#uf').innerHTML=UFS.map(u=>`<option>${u}</option>`).join('');
+function cargosDisponiveis(){let b=['Presidente','Governador','Senador','Deputado Federal'];if(local&&local.uf!=='DF'){b.push('Prefeito','Vereador');}if(local&&$('#st').value==='1'){b=b.filter(c=>['Presidente','Governador','Prefeito'].includes(c));}return b;}
+function salvarLocal(){local={uf:$('#uf').value,cidade:$('#cidade').value||'—',st:$('#st').value};LS.set('mb_local',local);setupHome();ir('scrHome');toast('Localidade salva: '+local.uf+' 📍');}
+function login(){sess={nome:'Cidadão BR'};LS.set('mb_sess',sess);toast('Bem-vindo! 🎉');if(pendente){pendente=false;emit();}else{setupHome();ir('scrHome');}}
+function setupHome(){
+ $('#locBadge').textContent=(local?local.uf+' · '+local.cidade:'—');
+ $('#btnVerHome').innerHTML=codigo?`<div style="height:10px"></div><button class="btn btn-blue btn-block" onclick="verMeuVoto()"><i class="fa-solid fa-eye"></i> Ver meu voto</button>`:'<div style="height:4px"></div>';}
+let cargos=[],idx=0,temp=null,_timer10=null;
+function comecarVoto(){if(!local){ir('scrLocal');return;}ballot={};cargos=cargosDisponiveis();idx=0;ir('scrVotar');renderCargo();}
+function refazer(){idx=0;ir('scrVotar');renderCargo();}
+function lbl(b){return b.tipo==='candidato'?CAND[b.cand].n+' ('+CAND[b.cand].p+')':(b.tipo==='branco'?'BRANCO':'NULO');}
+function renderStep(){$('#stepbar').innerHTML=cargos.map((c,i)=>`<i class="${i<=idx?'on':''}"></i>`).join('');}
+function renderCargo(){renderStep();const c=cargos[idx];$('#stepTxt').innerHTML=`Passo <b>${idx+1} de ${cargos.length}</b> · ${c}`;
+ const lista=CAND.filter(x=>x.c===c);
+ $('#votoArea').innerHTML=`<h2 style="font-size:20px;margin-bottom:4px">${c}</h2><p class="small" style="margin-bottom:12px">Escolha 1 opção. Você pode votar <b>branco</b> ou <b>nulo</b>.</p>
+ ${lista.map(x=>`<div class="opt" onclick="selCand(${CAND.indexOf(x)})" role="button" tabindex="0"><div class="av" style="background:${cor(x.n)}">${ini(x.n)}</div><div style="flex:1"><b>${x.n}</b><div class="small">${x.p}</div></div><span class="badge num">${x.num}</span></div>`).join('')}
+ <div class="row"><button class="btn btn-ghost" onclick="selEspecial('branco')">Branco</button><button class="btn btn-ghost" onclick="selEspecial('nulo')">Nulo</button></div>`;}
+function selCand(i){temp={tipo:'candidato',cand:i};renderConfirma();}
+function selEspecial(t){temp={tipo:t};renderConfirma();}
+function renderConfirma(){const c=cargos[idx];renderStep();$('#stepTxt').innerHTML=`Passo <b>${idx+1} de ${cargos.length}</b> · Confirme sua escolha`;
+ $('#votoArea').innerHTML=`<h2 style="font-size:20px;margin-bottom:12px">${c}</h2>
+ <div class="opt" style="border-color:var(--accent)"><div class="av" style="background:${temp.tipo==='candidato'?cor(CAND[temp.cand].n):'#777'}">${temp.tipo==='candidato'?ini(CAND[temp.cand].n):'—'}</div><div style="flex:1"><b>${lbl(temp)}</b><div class="small">sua escolha pra ${c}</div></div></div>
+ <button class="btn btn-accent btn-block btn-lg" onclick="confirmaTemp()"><i class="fa-solid fa-check"></i> Confirmar escolha</button>
+ <button class="btn btn-ghost btn-block" style="margin-top:10px" onclick="renderCargo()"><i class="fa-solid fa-rotate-left"></i> Trocar</button>`;}
+function confirmaTemp(){ballot[cargos[idx]]=temp;temp=null;prox();}
+function prox(){idx++;if(idx<cargos.length){renderCargo();}else{revisao();}}
+function revisao(){renderStep();$('#stepTxt').innerHTML=`Passo <b>${cargos.length+1} de ${cargos.length+2}</b> · Revisão (R10)`;
+ $('#votoArea').innerHTML=`<h2 style="font-size:20px;margin-bottom:12px">Revise sua cédula</h2>
+ ${cargos.map((c,i)=>`<div class="opt"><div style="flex:1"><b>${c}</b><div class="small">${lbl(ballot[c])}</div></div><button class="btn btn-ghost btn-sm" onclick="idx=${i};renderCargo()">trocar</button></div>`).join('')}
+ <button class="btn btn-accent btn-block btn-lg" onclick="renderR3()">Confirmar</button>`;}
+function renderR3(){if(_timer10)clearInterval(_timer10);renderStep();$('#stepTxt').innerHTML=`Passo <b>${cargos.length+2} de ${cargos.length+2}</b> · Confirmação final`;
+ $('#votoArea').innerHTML=`<div class="warn"><i class="fa-solid fa-circle-info"></i> <b>Você poderá revogar seu voto após a posse</b> (e durante o mandato) se o eleito não corresponder às suas expectativas.</div>
+ <h2 style="font-size:16px;margin:10px 0">Seus votos:</h2>
+ ${cargos.map(c=>`<div class="opt"><div style="flex:1"><b>${c}</b><div class="small">${lbl(ballot[c])}</div></div></div>`).join('')}
+ <button class="btn btn-ghost btn-block" onclick="refazer()"><i class="fa-solid fa-rotate-left"></i> Fiz errado — voltar às escolhas</button>
+ <p class="small" id="cdWrap" style="text-align:center;margin:12px 0">Respira: gerando em <b id="cd">10</b>s — tempo pra conferir com calma 🙏</p>
+ <button class="btn btn-accent btn-block btn-lg off" id="btnGerar" onclick="gerarCodigo()"><i class="fa-solid fa-key"></i> Entendi, gerar meu código</button>`;
+ let s=10;_timer10=setInterval(()=>{s--;const e=$('#cd');if(e)e.textContent=s;if(s<=0){clearInterval(_timer10);const b=$('#btnGerar');if(b)b.classList.remove('off');const w=$('#cdWrap');if(w)w.style.display='none';}},1000);}
+function gerarCodigo(){if($('#btnGerar').classList.contains('off')){toast('Aguarde a contagem pra confirmar com calma 🙏');return;}if(!sess){pendente=true;ir('scrLogin');return;}emit();}
+function emit(){let h=0;const s=JSON.stringify(ballot)+Date.now();for(const c of s)h=(h*31+c.charCodeAt(0))>>>0;
+ codigo={code:genCode(h),ballot,data:Date.now()};LS.set('mb_codigo',codigo);LS.set('mb_ballot',ballot);setupHome();
+ $('#votoArea').innerHTML=`<h2 style="font-size:22px;text-align:center;margin-bottom:12px">✅ Voto registrado</h2>
+ <p class="small" style="text-align:center;margin-bottom:12px">Guarde este código (1 por cédula). Ele também fica salvo no app, em <b>Meu voto</b>. Com ele + login você confere/revoga no <b>site</b>.</p>
+ <div class="codebox">${fmt(codigo.code)}</div>
+ <button class="btn btn-gold btn-block" style="margin-top:14px" onclick="copiar()"><i class="fa-regular fa-copy"></i> Copiar código</button>
+ <button class="btn btn-blue btn-block" style="margin-top:10px" onclick="verMeuVoto()">Ver meu voto</button>`;atualizaSticky();}
+function genCode(seed){let s=String(seed);while(s.length<19)s+=String((seed=(seed*9301+49297)%233280));const b=s.slice(0,19);let sum=0;for(const c of b)sum+=+c;return b+((10-sum%10)%10);}
+function fmt(c){return (c||'').replace(/(.{4})/g,'$1 ').trim();}
+function copiar(){navigator.clipboard.writeText(codigo.code).then(()=>toast('Código copiado! 📋'));}
+function verMeuVoto(){if(!codigo){toast('Você ainda não votou.');ir('scrHome');return;}ir('scrVer');const b=codigo.ballot;const p=pesoVoto(codigo.data);
+ const idade=(Date.now()-codigo.data)/864e5;const man=LS.get('mb_manter',0);
+ const ritual=(idade>30&&(Date.now()-man)>30*864e5)?`<div class="warn"><i class="fa-solid fa-heart"></i> <b>Seu voto continua valendo?</b> Toque pra manter ou mudar. Isso alimenta o termômetro com dados frescos.</div>
+ <div class="row" style="margin-bottom:12px"><button class="btn btn-accent" onclick="manter()">Manter meu voto 💪</button><button class="btn btn-ghost" onclick="comecarVoto()">Mudar</button></div>`:'';
+ $('#verArea').innerHTML=ritual+`<div class="codebox" style="margin-bottom:12px">${fmt(codigo.code)}</div>
+ <span class="etq" style="margin-bottom:12px"><i class="fa-solid fa-tag"></i> código salvo no app · peso atual ${Math.round(p*100)}% ${p===1?'(cheio)':'(esfriando)'}</span>
+ <div style="height:10px"></div>`+
+ Object.keys(b).map(c=>{const v=b[c];const nome=v.tipo==='candidato'?CAND[v.cand].n:(v.tipo==='branco'?'BRANCO':'NULO');
+  return `<div class="opt"><div style="flex:1"><b>${c}</b><div class="small"><span class="mask" id="m-${c}">••••••</span><span id="v-${c}" style="display:none">${nome}</span></div></div><button class="btn btn-ghost btn-sm" onclick="reveal('${c}')">mostrar</button><button class="btn btn-danger btn-sm" onclick="revogar('${c}')">revogar</button></div>`;}).join('');}
+function manter(){LS.set('mb_manter',Date.now());toast('Voto mantido! Obrigado por acompanhar 💪');verMeuVoto();}
+function reveal(c){const m=$('#m-'+c),v=$('#v-'+c);const on=v.style.display!=='none';v.style.display=on?'none':'inline';m.style.display=on?'inline':'none';}
+function revogar(c){ir('scrRev');
+ $('#revArea').innerHTML=`<div class="card" style="padding:16px;margin-bottom:12px"><b>O que é a revogação?</b>
+ <p class="small" style="margin-top:6px">É o seu poder de <b>retirar</b> o voto de quem não correspondeu: descumprir promessa, corrupção, condenação. O voto vira "devolvido" no termômetro e conta no ICM do político.</p>
+ <p class="small" style="margin-top:8px"><b>Quando é possível:</b> a partir da <b>posse</b> dos eleitos do mandato 2026 (jan/fev 2027) até o <b>fim do mandato</b>. Antes disso, o botão fica inativo.</p>
+ <p class="small" style="margin-top:8px"><b>Onde:</b> por segurança (R1), a revogação é feita no <b>site</b> (Conferir meu voto), com login + código. O app nunca mostra sua lista de votos pra evitar print/coerção.</p></div>
+ <div class="codebox" style="margin-bottom:12px">${fmt(codigo.code)}</div>
+ <button class="btn btn-blue btn-block btn-lg ${janela?'':'off'}" onclick="irRevSite()">${janela?'Revogar no site':'Revogação indisponível agora'} <i class="fa-solid fa-${janela?'arrow-up-right-from-square':'lock'}"></i></button>`;}
+function irRevSite(){if(!janela){abrir('popNao');return;}location.href='../conferir.html';}
+function toggleJanela(){janela=!janela;LS.set('mb_janela',janela);$('#btnJanela').textContent=janela?'Fechar janela de revogação':'Abrir janela de revogação';toast(janela?'Janela ABERTA (simula pós-posse).':'Janela fechada.');}
+/* PLs curados: leis reais + tradução em bom português */
+const PLS_CUR=[
+ {id:'pl5085',num:'PL 5085/2026',pop:'Remédios pra doenças graves ficam mais baratos: tira o imposto de importação desses medicamentos.',of:'Concede isenção do Imposto de Importação (II) sobre medicamentos destinados ao tratamento de enfermidades graves ou doenças raras.'},
+ {id:'pl5086',num:'PL 5086/2026',pop:'Cria regras claras pra associações sem fins lucrativos (ONGs e grupos comunitários) declaradas de utilidade pública.',of:'Dispõe sobre o regime jurídico específico das associações civis sem fins lucrativos de utilidade pública.'},
+ {id:'pl5088',num:'PL 5088/2026',pop:'Padroniza as guardas municipais do país: treinamento, uniforme e atribuições iguais pra proteger melhor a sua cidade.',of:'Altera o Estatuto Geral das Guardas Municipais para instituir diretrizes de capacitação e padronização.'}];
+function renderPLs(){const el=$('#plArea');if(!el)return;const votos=LS.get('mb_voto_pl',{});
+ el.innerHTML=PLS_CUR.map(p=>{const v=votos[p.id];return `<div class="card" style="padding:16px;margin-bottom:12px">
+ <b style="color:var(--blue)">${p.num}</b>
+ <p style="margin:8px 0;font-weight:700">💬 Em bom português: ${p.pop}</p>
+ <p class="small">📄 O que diz o texto oficial: ${p.of}</p>
+ <div class="row" style="margin-top:10px"><button class="btn btn-sm ${v==='sim'?'btn-accent':'btn-ghost'}" style="flex:1" onclick="votoPL('${p.id}','sim')"><i class="fa-solid fa-thumbs-up"></i> Aprovo</button>
+ <button class="btn btn-sm ${v==='nao'?'btn-danger':'btn-ghost'}" style="flex:1" onclick="votoPL('${p.id}','nao')"><i class="fa-solid fa-thumbs-down"></i> Não aprovo</button></div>
+ <a class="small" style="display:inline-block;margin-top:8px;color:var(--accent)" href="https://www.camara.leg.br/busca/proposicoes?q=${encodeURIComponent(p.num.replace(' ','/'))}" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> ver na Câmara</a></div>`;}).join('');}
+function votoPL(id,v){const votos=LS.get('mb_voto_pl',{});votos[id]=v;LS.set('mb_voto_pl',votos);toast('Opinião registrada no termômetro do povo 🏛️');renderPLs();}
+function atualizaSticky(){const el=$('#sticky');if(!el)return;
+ if(codigo){const p=pesoVoto(codigo.data);el.innerHTML=`<span class="etq" style="margin:0">🗳️ Seu voto: ${p===1?'peso cheio':'peso '+Math.round(p*100)+'%'}</span>`;}
+ else{el.innerHTML=`<span class="etq" style="margin:0">"Seu voto coloca, seu voto tira."</span>`;}
+ el.style.display='flex';}
+function panico(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));$('#scrHome').classList.add('on');window.scrollTo(0,0);toast('Tela ocultada 🔒');}
+let _sh=0;window.addEventListener('devicemotion',e=>{const a=e.accelerationIncludingGravity;if(!a)return;
+ const m=Math.max(Math.abs(a.x||0),Math.abs(a.y||0),Math.abs(a.z||0));
+ if(m>25&&Date.now()-_sh>3000){_sh=Date.now();panico();}},{passive:true});
+if(local){setupHome();ir('scrHome');renderPLs();}
+renderPLs();
+atualizaSticky();
+</script>
+</body>
+</html>

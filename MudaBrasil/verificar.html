@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verificação de político · MudaBrasil</title>
+<meta name="description" content="É político ou de gabinete? Comprove sua identidade e ganhe o selo Verificado.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0B132B">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600..900&family=Manrope:wght@400..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-t1nt8BQoYMLFN5p42tRAtuAAFQaCQODekUVeKKZrEnEyp4H2R0RHFz0KWpmj7i8g" crossorigin="anonymous">
+<link rel="stylesheet" href="tokens.css">
+<script src="config.js"></script>
+<script src="core.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:40px 18px 90px}.passo{display:flex;gap:14px;margin:14px 0}.passo .n{width:40px;height:40px;flex:none;border-radius:50%;background:linear-gradient(135deg,#1c5fd6,#0e2f8a);color:#fff;display:flex;align-items:center;justify-content:center;font:900 17px var(--font-t)}</style>
+</head>
+<body>
+<a class="skip" href="#main">Pular para o conteúdo</a>
+<header style="position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;padding:12px 18px;background:color-mix(in srgb,var(--bg) 84%,transparent);backdrop-filter:blur(var(--blur));border-bottom:1px solid var(--line)">
+  <a class="logo" href="index.html" style="font:900 20px var(--font-t);text-decoration:none;color:var(--ink)">Muda<b style="color:var(--accent)">Brasil</b></a>
+  <span class="filete" style="flex:1;height:2px"></span>
+  <button id="btnTema" aria-label="Alternar tema" style="background:var(--surface2);border:1px solid var(--line);color:var(--ink);border-radius:10px;width:40px;height:40px;cursor:pointer">◐</button>
+</header>
+<main id="main" class="wrap">
+  <span class="selo v" style="font-size:14px"><i class="fa-solid fa-certificate"></i> Verificado</span>
+  <h1 style="font-size:clamp(26px,4vw,38px);margin-top:10px">Verificação de político</h1>
+  <p style="color:var(--muted)">O selo <b style="color:var(--ink)">Verificado</b> prova que o perfil é da pessoa certa — e que ela <b>sabe</b> que está sendo medida. Sem o selo não é acusação: significa apenas <i>"aguardando verificação"</i>.</p>
+
+  <div class="card">
+    <h3>Como funciona (3 passos)</h3>
+    <div class="passo"><span class="n">1</span><div><b>Prove quem é</b><br><span style="color:var(--muted);font-size:14px">Documento oficial + vídeo curto dizendo o próprio nome e "quero meu perfil no MudaBrasil".</span></div></div>
+    <div class="passo"><span class="n">2</span><div><b>Confirme que está ciente</b><br><span style="color:var(--muted);font-size:14px">Você reconhece que o povo pode medir, cobrar e revogar confiança — e ganha canais de resposta oficiais.</span></div></div>
+    <div class="passo"><span class="n">3</span><div><b>Ganhe o selo azul</b><br><span style="color:var(--muted);font-size:14px">Perfil verificado, direito de resposta em destaque e acesso ao Contrato com o Eleitor (em breve).</span></div></div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h3>Solicitar verificação (mock do protótipo)</h3>
+    <input class="opt" id="vNome" style="width:100%;margin-bottom:10px" placeholder="Nome completo">
+    <input class="opt" id="vCargo" style="width:100%;margin-bottom:10px" placeholder="Cargo e UF (ex.: Deputado Federal SP)">
+    <input class="opt" id="vMail" style="width:100%" type="email" placeholder="E-mail oficial do gabinete">
+    <button class="btn primary" style="width:100%;margin-top:12px" id="vOk">Enviar solicitação (simulada)</button>
+    <p style="color:var(--muted);font-size:12.5px;margin-top:10px">No protótipo nada é enviado — na fase real, curadoria humana com dupla checagem. Sem auto-aprovação.</p>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h3>FAQ</h3>
+    <p><b>Verificar muda meu ICM?</b><br><span style="color:var(--muted)">Não. O selo é de identidade; o ICM mede resposta, cumprimento e confiança — não dá pra comprar reputação.</span></p>
+    <p><b>E se eu ignorar?</b><br><span style="color:var(--muted)">O perfil fica "Não verificado" (cinza). O povo continua medindo — transparência não é opcional, verificação sim.</span></p>
+    <p style="margin:0"><b>Quem paga?</b><br><span style="color:var(--muted)">Nada. Verificação é gratuita — cobrar por selo mataria a credibilidade.</span></p>
+  </div>
+</main>
+<div class="toast" role="status"></div>
+<script>
+initTema();$('#btnTema').onclick=toggleTema;
+$('#vOk').onclick=()=>{
+  if(!$('#vNome').value.trim()||!$('#vMail').value.includes('@')){toast('Preencha nome e e-mail oficial');return}
+  toast('Solicitação simulada! Na fase real: curadoria humana ✅');
+  $('#vNome').value=$('#vCargo').value=$('#vMail').value='';
+};
+registrarSW('sw.js');
+</script>
+</body>
+</html>

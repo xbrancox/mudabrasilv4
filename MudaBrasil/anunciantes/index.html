@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Área de Anunciantes · MudaBrasil</title>
+<script src="../config.js"></script>
+<style>
+body{font-family:'Manrope',system-ui,sans-serif;background:#0F1620;color:#EAF0F7;display:grid;place-items:center;min-height:100vh;margin:0;padding:22px}
+.box{background:#16202C;border:1px solid #243240;border-radius:20px;padding:36px;max-width:440px;width:100%;text-align:center;box-shadow:0 28px 60px rgba(0,0,0,.5)}
+h1{font-family:'Montserrat',sans-serif;font-weight:900;font-size:24px;margin:14px 0 8px}
+p{color:#93A4B8;font-size:14.5px;line-height:1.6}
+.ic{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#D4AF37,#b8941f);display:grid;place-items:center;font-size:28px;margin:0 auto;color:#241a00}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:'Montserrat';font-weight:700;border:none;cursor:pointer;border-radius:999px;min-height:50px;padding:0 26px;font-size:15px;margin-top:18px;width:100%}
+.btn-gold{background:linear-gradient(135deg,#D4AF37,#b8941f);color:#241a00}
+.btn-ghost{background:#1C2836;color:#EAF0F7;border:1.5px solid #243240;margin-top:10px}
+input{width:100%;min-height:48px;padding:0 14px;border:1.5px solid #243240;border-radius:12px;background:#101a25;color:#EAF0F7;font-size:15px;margin-top:10px;box-sizing:border-box}
+.tag{display:inline-block;font-family:'Montserrat';font-weight:800;font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:rgba(229,72,77,.15);color:#ff8a8e;padding:6px 12px;border-radius:999px;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="ic"><i class="fa-solid fa-bullhorn"></i></div>
+  <h1>Área de Anunciantes</h1>
+  <div id="content"></div>
+</div>
+<script>
+const c=window.MB_CONFIG||{portalAnunciantesAtivo:false};
+const el=document.getElementById('content');
+if(!c.portalAnunciantesAtivo){
+  el.innerHTML='<span class="tag">Recurso desativado</span><p style="margin-top:12px">O portal de anunciantes está <b>temporariamente indisponível</b> nesta versão. A publicidade só será ativada quando o projeto estiver com a estrutura legal completa (ME, políticas validadas e moderação).</p><button class="btn btn-ghost" onclick="location.href=\'../\'"><i class="fa-solid fa-arrow-left"></i> Voltar ao site</button>';
+}else{
+  el.innerHTML='<p>Acesso restrito a anunciantes verificados (KYC). Faça login para montar sua campanha.</p><input placeholder="E-mail ou CNPJ"><input type="password" placeholder="Senha"><button class="btn btn-gold" onclick="alert(\'Login simulado. Na fase final: KYC + pagamento + moderação + NFS-e.\')"><i class="fa-solid fa-right-to-bracket"></i> Entrar</button><button class="btn btn-ghost" onclick="location.href=\'../\'"><i class="fa-solid fa-arrow-left"></i> Voltar ao site</button>';
+}
+</script>
+</body>
+</html>

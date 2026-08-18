@@ -1,0 +1,44 @@
+{
+  "produto": "ICM — Índice de Confiança MudaBrasil",
+  "versao": "v1.0",
+  "vigenteDesde": "14/08/2026",
+  "atualizadoEm": "2026-08-16",
+  "formula": "ICM = 0.40*resposta + 0.35*cumprimento + 0.25*(1 - votosRevogaveis)",
+  "margem": "±1/sqrt(N), confiança 95%",
+  "licenca": "Uso livre com crédito MudaBrasil e link para mudabrasil.com.br",
+  "politicos": [
+    {
+      "id": "maria",
+      "nome": "Maria Silva",
+      "cargo": "Deputada Federal (SP)",
+      "partido": "PV",
+      "icm": 82,
+      "variacaoMes": 2,
+      "componentes": { "resposta": 95, "cumprimento": 80, "revogaram": 6 },
+      "n": 1240,
+      "promessas": { "cumprida": 2, "andamento": 1, "naoCumprida": 0 }
+    },
+    {
+      "id": "carlos",
+      "nome": "Carlos Rocha",
+      "cargo": "Deputado Federal (MG)",
+      "partido": "PSD",
+      "icm": 54,
+      "variacaoMes": -3,
+      "componentes": { "resposta": 50, "cumprimento": 55, "revogaram": 30 },
+      "n": 980,
+      "promessas": { "cumprida": 0, "andamento": 2, "naoCumprida": 1 }
+    },
+    {
+      "id": "joao",
+      "nome": "João Lima",
+      "cargo": "Senador (RJ)",
+      "partido": "PL",
+      "icm": 31,
+      "variacaoMes": -8,
+      "componentes": { "resposta": 15, "cumprimento": 22, "revogaram": 51 },
+      "n": 1510,
+      "promessas": { "cumprida": 0, "andamento": 0, "naoCumprida": 3 }
+    }
+  ]
+}

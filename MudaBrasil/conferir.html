@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>MudaBrasil · Conferir meu voto</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="config.js"></script><link rel="stylesheet" href="tokens.css"><script src="core.js"></script>
+<style>.wrap{max-width:720px;margin:0 auto;padding:20px}.muted{color:var(--muted);font-size:14px}.hrow{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}.rank{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid var(--line);border-radius:14px;margin-bottom:10px;background:var(--card)}</style>
+</head><body>
+<div class="wrap">
+ <div class="hrow"><a class="btn ghost" href="index.html"><i class="fa-solid fa-arrow-left"></i> Voltar ao site</a><h2 style="margin:0">Conferir / Revogar voto</h2></div>
+ <p class="muted">Ambiente separado do app (R1). Insira o comprovante (código) e faça login pra ver sua cédula e revogar.</p>
+ <div class="card"><input class="codebox" id="code" placeholder="0000 0000 0000 0000 0000" style="text-align:center"/>
+  <div class="hrow"><button class="btn primary" onclick="conferir()"><i class="fa-solid fa-magnifying-glass"></i> Conferir voto</button>
+  <button class="btn ghost" onclick="usarDemo()">Testar com um exemplo (sem ter votado)</button></div></div>
+ <div id="res"></div>
+ <div class="card" style="margin-top:16px"><b><i class="fa-solid fa-ranking-star"></i> Consulta ao político</b>
+  <p class="muted">Fonte: Ranking dos Políticos (crédito).</p>
+  <div class="rank"><div style="font:900 18px var(--font-t);color:var(--accent)">72</div><div style="flex:1"><b>Maria Santos</b><div class="muted">Presidente · PT · responde 92%</div></div><span class="badge ok">confiança alta</span></div>
+  <div class="rank"><div style="font:900 18px var(--font-t);color:var(--gold)">48</div><div style="flex:1"><b>Carlos Mendes</b><div class="muted">Presidente · PSDB · responde 78%</div></div><span class="badge peso">misto</span></div>
+  <div class="rank"><div style="font:900 18px var(--font-t);color:var(--coral)">21</div><div style="flex:1"><b>João Oliveira</b><div class="muted">Presidente · PL · responde 45%</div></div><span class="badge rev">confiança baixa</span></div>
+  <a class="btn gold btn-sm" href="https://www.rankingpoliticos.com.br/" target="_blank" rel="noopener">rankingpoliticos.com.br <i class="fa-solid fa-arrow-up-right-from-square"></i></a></div>
+</div>
+<script>
+initTema();
+const DEMO={'Presidente':{tipo:'presidente',cand:2},'Governador':{tipo:'governador',cand:0},'Senador':{tipo:'senador',cand:'B'}};
+function usarDemo(){render('35001500100212345789',DEMO)}
+function conferir(){const raw=($('#code').value||'').replace(/\D/g,'');if(!validCode(raw))return toast('Código inválido (20 dígitos + verificador).');
+ const st=LS.get('mb_codigo',null);const bal=(st&&st.code===raw)?st.ballot:LS.get('mb_ballot',null);render(raw,bal||DEMO)}
+function render(code,bal){const jan=LS.get('mb_janela',false);const rev=LS.get('mb_rev',{});
+ $('#res').innerHTML=`<div class="card" style="margin-top:14px"><div class="codebox">${code.replace(/(.{4})/g,'$1 ').trim()}</div>${jan?'':'<p class="muted" style="margin-top:10px"><i class="fa-solid fa-lock"></i> Revogação travada (R5). Abre a partir da posse.</p>'}
+ ${Object.keys(bal).map(c=>{const v=bal[c];const nome=nomeCand(v.tipo,v.cand);
+  return `<div class="opt" style="margin-top:10px"><span style="flex:1"><b>${c}</b><div class="muted"><span id="m-${c}">••••••</span><span id="v-${c}" style="display:none">${esc(nome)}</span></div></span><button class="btn ghost btn-sm" onclick="mostra('${c}')">mostrar</button>${rev[c]?'':`<button class="btn coral btn-sm" onclick="revogar('${c}')">revogar</button>`}</div>`}).join('')}</div>`}
+function mostra(c){const m=document.getElementById('m-'+c),v=document.getElementById('v-'+c);const on=v.style.display!=='none';v.style.display=on?'none':'inline';m.style.display=on?'inline':'none'}
+function revogar(c){if(!LS.get('mb_janela',false))return toast('Ainda não pode revogar (R5).');const r=LS.get('mb_rev',{});r[c]=true;LS.set('mb_rev',r);toast('Voto revogado.')}
+</script></body></html>

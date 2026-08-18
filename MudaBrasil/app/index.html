@@ -1,0 +1,176 @@
+1<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>MudaBrasil · App</title>
+<link rel="manifest" href="../manifest.webmanifest"/><link rel="icon" href="../icon.svg" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="../config.js"></script><link rel="stylesheet" href="../tokens.css"><script src="../core.js"></script>
+<style>
+.screen{display:none;padding:14px 16px 96px;max-width:560px;margin:0 auto}.screen.on{display:block}
+.top{display:flex;align-items:center;gap:10px;padding:10px 0;position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(var(--blur))}
+.logo{font:900 19px var(--font-t)}.logo b{color:var(--accent)}
+.panic{margin-left:auto;width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);color:var(--muted);display:grid;place-items:center;cursor:pointer}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;justify-content:space-around;background:color-mix(in srgb,var(--bg) 84%,transparent);backdrop-filter:blur(var(--blur));border-top:1px solid var(--line);padding:6px 4px calc(8px + env(safe-area-inset-bottom))}
+.nav button{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:58px;padding:7px 2px;border:none;background:none;color:var(--muted);font:700 10.5px var(--font-t);cursor:pointer;border-radius:10px}
+.nav button i{font-size:19px}.nav .on{color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent)}
+.step{display:flex;gap:6px;margin:10px 0}.step i{flex:1;height:5px;border-radius:3px;background:var(--surface2)}.step i.on{background:var(--gold)}
+.micro{font-size:11.5px;color:var(--muted);margin-top:4px}
+.selbox{display:flex;gap:10px;margin-top:10px}.selbox .btn{flex:1}
+.calc{position:fixed;inset:0;z-index:120;background:#111;color:#eee;display:none;flex-direction:column;padding:20px}
+.calc.on{display:flex}.calc .disp{flex:0 0 90px;background:#000;border-radius:12px;display:flex;align-items:flex-end;justify-content:flex-end;padding:14px;font-size:34px;overflow:hidden}
+.calc .keys{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+.calc .keys button{min-height:62px;border:none;border-radius:14px;background:#222;color:#eee;font-size:22px;cursor:pointer}
+.calc .keys .eq{background:var(--accent);color:#04231F}
+.contagem{position:fixed;inset:0;z-index:130;background:rgba(4,8,20,.9);display:none;align-items:center;justify-content:center;flex-direction:column;color:#fff;text-align:center;padding:20px}
+.contagem.on{display:flex}.contagem .n{font:900 84px var(--font-t);color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="overlay" id="popSim"><div class="modal">
+ <h3>🧪 Isto é uma simulação</h3>
+ <p class="muted">O seu voto e a conferência são um <b>termômetro sem valor jurídico</b>. Notícias, Radar e dados públicos são <b>reais</b>. A tecnologia mostrada é a mesma que permitiria o voto real (Gov.br + biometria + ICP-Brasil) integrado ao TSE.</p>
+ <p class="micro">💡 Chacoalhe o celular (ou toque no olho riscado) pra ocultar tudo rapidinho.</p>
+ <button class="btn primary btn-block" onclick="fechar('popSim');LS.set('mb_site_pop',1);ir('scrInstr')">Entendi, quero testar</button>
+</div></div>
+<button class="panic" title="Chacoalhe ou toca aqui pra ocultar" onclick="panico()"><i class="fa-solid fa-eye-slash"></i></button>
+<div class="calc" id="calc"><div class="disp" id="cdisp">0</div><div class="keys" id="ckeys"></div></div>
+<div class="contagem" id="contagem"><div class="n" id="cn">10</div><div id="cnomes" style="color:#93A4B8;max-width:320px"></div><div class="micro" style="color:#93A4B8">Registrando sua cédula…</div></div>
+
+<div class="screen" id="scrInstr">
+ <div class="top"><div class="logo">Muda<b>Brasil</b></div></div>
+ <h2>Como funciona o seu voto</h2>
+ <div class="scrolly">
+  <section><div class="passo on"><div class="num">CAP·01</div><h3>Vote</h3><p class="muted">Escolha por cargo (ou branco/nulo). No fim, <b>1 código</b> pra cédula inteira (R4).</p></div></section>
+  <section><div class="passo"><div class="num">CAP·02</div><h3>Guarde o código</h3><p class="muted">É seu comprovante. Com ele + login, você confere e revoga no <b>site</b> (R1).</p></div></section>
+  <section><div class="passo"><div class="num">CAP·03</div><h3>Revogue após a posse</h3><p class="muted">Se o eleito não corresponder, você tira o voto de volta — a partir da <b>posse</b> (R5).</p></div></section>
+  <section><div class="passo"><div class="num">CAP·04</div><h3>Anti-coerção</h3><p class="muted">O app <b>nunca</b> mostra sua lista pra print. Chacoalhe pra ocultar tudo.</p></div></section>
+ </div>
+ <button class="btn primary btn-block" onclick="ir('scrLocal')">Continuar</button>
+</div>
+
+<div class="screen" id="scrLocal">
+ <div class="top"><div class="logo">Muda<b>Brasil</b></div></div>
+ <h2>Onde você vota?</h2>
+ <div class="card"><label class="micro">Estado (UF)</label><select id="uf"></select>
+ <label class="micro" style="margin-top:10px">Cidade</label><input id="cidade" placeholder="Ex.: São Paulo"/>
+ <label class="micro" style="margin-top:10px">Simular 2º turno?</label><select id="st"><option value="0">Não</option><option value="1">Sim</option></select>
+ <button class="btn primary btn-block" style="margin-top:14px" onclick="salvarLocal()">Continuar</button></div>
+</div>
+
+<div class="screen" id="scrLogin">
+ <div class="top"><div class="logo">Muda<b>Brasil</b></div></div>
+ <h2>Entrar</h2>
+ <button class="btn ghost btn-block" style="margin-bottom:10px" onclick="login()"><i class="fab fa-google"></i> Entrar com Google</button>
+ <button class="btn ghost btn-block" style="margin-bottom:10px" onclick="login()"><i class="fa-solid fa-fingerprint"></i> Entrar com passkey</button>
+ <button class="btn primary btn-block" onclick="login()">Enviar código SMS</button>
+</div>
+
+<div class="screen" id="scrHome">
+ <div class="top"><div class="logo">Muda<b>Brasil</b></div><span class="badge" id="locBadge"></span></div>
+ <div class="card" style="border-left:4px solid var(--accent)"><b>Seu voto coloca, seu voto tira.</b><p class="muted" style="margin:6px 0 0">Vote agora e, <b>após a posse</b>, revogue se o eleito não corresponder.</p></div>
+ <div style="height:12px"></div>
+ <button class="btn gold btn-block btn-lg" onclick="comecarVoto()"><i class="fa-solid fa-check-to-slot"></i> Votar</button>
+ <div style="height:10px"></div>
+ <button class="btn primary btn-block" id="btnVer" style="display:none" onclick="verMeuVoto()"><i class="fa-solid fa-eye"></i> Ver meu voto</button>
+ <div id="manterBox"></div>
+</div>
+
+<div class="screen" id="scrVotar">
+ <div class="top"><button class="btn ghost" onclick="ir('scrHome')"><i class="fa-solid fa-arrow-left"></i></button><h3 style="margin:0">Votar</h3></div>
+ <div class="step" id="stepbar"></div>
+ <div id="votoArea"></div>
+</div>
+
+<div class="screen" id="scrVer">
+ <div class="top"><button class="btn ghost" onclick="ir('scrHome')"><i class="fa-solid fa-arrow-left"></i></button><h3 style="margin:0">Meu voto</h3></div>
+ <div class="card" style="border-left:4px solid var(--gold)"><i class="fa-solid fa-user-secret"></i> Seus votos ficam <b>mascarados</b> (anti-print).</div>
+ <div id="verArea" style="margin-top:12px"></div>
+</div>
+
+<div class="screen" id="scrPls">
+ <div class="top"><button class="btn ghost" onclick="ir('scrHome')"><i class="fa-solid fa-arrow-left"></i></button><h3 style="margin:0">PLs da semana</h3></div>
+ <div id="plsList" style="margin-top:12px"></div>
+</div>
+
+<div class="screen" id="scrAdmin">
+ <div class="top"><button class="btn ghost" onclick="ir('scrHome')"><i class="fa-solid fa-arrow-left"></i></button><h3 style="margin:0">Painel</h3></div>
+ <div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div><b>Janela de revogação (R5)</b></div><span class="switch" id="swJan" onclick="tgJan()"><i class="fa-solid fa-lock"></i></span></div></div>
+ <div class="card" style="margin-top:10px"><div style="display:flex;justify-content:space-between;align-items:center"><div><b>Modo disfarce</b></div><span class="switch" id="swDis" onclick="tgDis()"><i class="fa-solid fa-calculator"></i></span></div></div>
+ <div class="card" style="margin-top:10px"><b>Trilha cívica</b><div class="micro" id="trilhaInfo"></div><button class="btn ghost btn-sm" style="margin-top:8px" onclick="aula()">Fazer aula de hoje (+XP)</button></div>
+</div>
+
+<nav class="nav">
+ <button onclick="ir('scrHome')" id="nHome"><i class="fa-solid fa-house"></i>Início</button>
+ <button onclick="comecarVoto()" id="nVotar"><i class="fa-solid fa-check-to-slot" style="color:var(--gold)"></i>Votar</button>
+ <button onclick="ir('scrPls')" id="nPls"><i class="fa-solid fa-scale-balanced" style="color:var(--blue)"></i>PLs</button>
+ <button onclick="verMeuVoto()" id="nVer"><i class="fa-solid fa-eye" style="color:var(--accent)"></i>Meu voto</button>
+ <button onclick="ir('scrAdmin')" id="nAdm"><i class="fa-solid fa-gauge-high" style="color:var(--roxo)"></i>Painel</button>
+</nav>
+
+<script>
+/* CORREÇÃO: NÃO redeclarar $ / $$ (já vêm do core.js). Só adicionar o que falta. */
+function fechar(id){document.getElementById(id).classList.remove('open')}
+initTema();registrarSW('../sw.js');
+let local=LS.get('mb_local',null),sess=LS.get('mb_sess',null),ballot={},cargos=[],idx=0;
+$('#uf').innerHTML=UFS.map(u=>`<option>${u}</option>`).join('');
+if(!LS.get('mb_site_pop',0))$('#popSim').classList.add('open');
+const NAVMAP={scrHome:'nHome',scrVotar:'nVotar',scrPls:'nPls',scrVer:'nVer',scrAdmin:'nAdm'};
+function ir(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');
+ $$('.nav button').forEach(b=>b.classList.remove('on'));const n=NAVMAP[id];if(n)document.getElementById(n).classList.add('on');
+ if(id=='scrHome')setupHome();if(id=='scrPls')loadPLS();if(id=='scrAdmin')syncAdm();window.scrollTo(0,0)}
+function setupHome(){$('#locBadge').textContent=local?(local.uf+' · '+local.cidade):'—';const c=LS.get('mb_codigo',null);$('#btnVer').style.display=c?'':'none';
+ const ts=c?c.data:0;$('#manterBox').innerHTML=(ts&&(Date.now()-ts)>30*864e5&&!LS.get('mb_manter',0))?`<div class="card" style="margin-top:10px;border-left:4px solid var(--amber,#F5A623)"><b>Seu voto esfriou.</b><div class="micro">Confirme pra manter o peso cheio.</div><button class="btn ghost btn-sm" style="margin-top:8px" onclick="LS.set('mb_manter',1);toast('Voto mantido. 🔥');setupHome()">Manter meu voto</button></div>`:''}
+function salvarLocal(){local={uf:$('#uf').value,cidade:$('#cidade').value||'—',st:$('#st').value};LS.set('mb_local',local);sess?ir('scrHome'):ir('scrLogin')}
+function login(){sess={nome:'Cidadão BR'};LS.set('mb_sess',sess);hapt(20);toast('Identidade verificada (simulado). 🔐');ir('scrHome')}
+function cargosDisp(){let b=['presidente','governador','senador','depfederal','depestadual'];if(local&&local.st==='1')b=['presidente','governador'];return b}
+function comecarVoto(){if(!local){ir('scrLocal');return}ballot={};cargos=cargosDisp();idx=0;ir('scrVotar');renderCargo()}
+function renderStep(){$('#stepbar').innerHTML=cargos.map((c,i)=>`<i class="${i<=idx?'on':''}"></i>`).join('')}
+function renderCargo(){renderStep();const c=cargos[idx];const nome=(CARGOS.find(x=>x.key==c)||{}).nome||c;const lista=CAND[c]||[];
+ $('#votoArea').innerHTML=`<h3>${nome}</h3><p class="micro">Escolha 1 opção · branco/nulo disponíveis (R2).</p>
+ ${lista.map((x,i)=>`<button class="opt" onclick="selCand(${i})">${avatar(x.nome)}<span style="flex:1"><b>${esc(x.nome)}</b><div class="micro">${x.sigla}</div></span><span class="badge peso">${x.num}</span></button>`).join('')}
+ <div class="selbox"><button class="btn ghost" id="bB">Branco</button><button class="btn ghost" id="bN">Nulo</button></div>
+ <div class="micro" id="bnInfo"></div>`;
+ $('#bB').onclick=()=>{$('#bnInfo').textContent='Branco = indiferença · Nulo = protesto. Ambos contam, nenhum anula os outros cargos.';selEsp('B')};
+ $('#bN').onclick=()=>{$('#bnInfo').textContent='Branco = indiferença · Nulo = protesto. Ambos contam, nenhum anula os outros cargos.';selEsp('N')}}
+function selCand(i){ballot[cargos[idx]]={tipo:cargos[idx],cand:i};hapt(15);prox()}
+function selEsp(t){ballot[cargos[idx]]={tipo:cargos[idx],cand:t};hapt(15);prox()}
+function prox(){idx++;if(idx<cargos.length)renderCargo();else revisao()}
+function revisao(){renderStep();$('#votoArea').innerHTML=`<h3>Revise sua cédula (R10)</h3>
+ ${cargos.map((c,i)=>{const v=ballot[c];return `<div class="opt"><span style="flex:1"><b>${(CARGOS.find(x=>x.key==c)||{}).nome||c}</b><div class="micro">${esc(nomeCand(v.tipo,v.cand))}</div></span><button class="btn ghost btn-sm" onclick="trocar(${i})">trocar</button></div>`}).join('')}
+ <button class="btn primary btn-block btn-lg" style="margin-top:12px" onclick="confirmar()">Confirmar</button>
+ <button class="btn ghost btn-block" style="margin-top:8px" onclick="idx=0;renderCargo()">Fiz errado — voltar às escolhas</button>`}
+function trocar(i){idx=i;renderCargo()}
+function confirmar(){$('#votoArea').innerHTML=`<div class="card" style="border-left:4px solid var(--gold)"><i class="fa-solid fa-circle-info"></i> <b>Você poderá revogar após a posse</b> se o eleito não corresponder (R3).</div>
+ <button class="btn primary btn-block btn-lg" style="margin-top:12px" onclick="preCodigo()">Entendi, gerar meu código</button>`}
+function preCodigo(){if(!sess){toast('Entre pra gerar o código (login só agora).');ir('scrLogin');return}contagem()}
+function contagem(){$('#contagem').classList.add('on');$('#cnomes').textContent=cargos.map(c=>esc(nomeCand(ballot[c].tipo,ballot[c].cand))).join(' · ');let n=10;$('#cn').textContent=n;
+ const t=setInterval(()=>{n--;$('#cn').textContent=n;if(n<=0){clearInterval(t);$('#contagem').classList.remove('open');gerar()}},1000)}
+function gerar(){const code=genCode();LS.set('mb_codigo',{code,ballot,data:Date.now()});LS.set('mb_ballot',ballot);hapt([40,60,40]);voo();
+ $('#votoArea').innerHTML=`<h3>✅ Voto registrado</h3><div class="codebox">${code.replace(/(.{4})/g,'$1 ').trim()}</div>
+ <button class="btn gold btn-block" style="margin-top:12px" onclick="navigator.clipboard.writeText('${code}').then(()=>toast('Código copiado! 📋'))"><i class="fa-regular fa-copy"></i> Copiar código</button>
+ <button class="btn primary btn-block" style="margin-top:8px" onclick="verMeuVoto()">Ver meu voto</button>`}
+function voo(){const el=document.createElement('div');el.className='voo';el.textContent='✓';el.style.left='40%';el.style.top='60%';document.body.appendChild(el);setTimeout(()=>el.remove(),1200)}
+function verMeuVoto(){const reg=LS.get('mb_codigo',null);if(!reg){toast('Você ainda não votou.');ir('scrHome');return}ir('scrVer');const peso=pesoVoto(reg.data);
+ $('#verArea').innerHTML=`<div class="codebox">${reg.code.replace(/(.{4})/g,'$1 ').trim()}</div><div class="card" style="margin-top:10px">${renderTempo(peso)}<div class="micro">O voto nunca morre; só esfria.</div></div>`+
+ Object.keys(reg.ballot).map(c=>{const v=reg.ballot[c];const nome=nomeCand(v.tipo,v.cand);const rev=(LS.get('mb_rev',{})||{})[c];
+  return `<div class="opt" style="margin-top:10px"><span style="flex:1"><b>${(CARGOS.find(x=>x.key==c)||{}).nome||c}</b><div class="micro"><span id="m-${c}">••••••</span><span id="v-${c}" style="display:none">${esc(nome)}</span></div><div style="margin-top:4px">${rev?'<span class="badge rev">revogado</span>':'<span class="badge ok">ativo</span>'}</div></span><button class="btn ghost btn-sm" onclick="mostra('${c}')">mostrar</button>${rev?'':`<button class="btn coral btn-sm" onclick="revogar('${c}')">revogar</button>`}</div>`}).join('')}
+function mostra(c){const m=document.getElementById('m-'+c),v=document.getElementById('v-'+c);const on=v.style.display!=='none';v.style.display=on?'none':'inline';m.style.display=on?'inline':'none'}
+function revogar(c){if(!LS.get('mb_janela',false)){toast('Ainda não pode revogar (R5). Abre após a posse.');return}location.href='../conferir.html'}
+async function loadPLS(){let pls=LS.get('mb_pls_v1',null);if(!pls||Date.now()-pls.t>3600000){try{const r=await fetch('https://dadosabertos.camara.leg.br/api/v2/proposicoes?siglaTipo=PL&itens=6&ordem=desc&ordenarPor=id');const j=await r.json();pls={t:Date.now(),items:(j.dados||[]).map(d=>({id:String(d.id),num:(d.siglaTipo||'PL')+' '+(d.numero||'')+'/'+(d.ano||''),resumo:esc(d.ementa||d.titulo||'').slice(0,160)}))};LS.set('mb_pls_v1',pls)}catch(e){pls=null}}
+ const list=(pls&&pls.items&&pls.items.length)?pls.items:PLS_FALLBACK;
+ $('#plsList').innerHTML=list.map(pl=>`<div class="card" style="margin-bottom:10px"><b>${esc(pl.num)}</b><p class="muted">${esc(pl.resumo)}</p><div class="selbox"><button class="btn primary btn-sm" onclick="hapt(20);toast('Aprovo registrado.')">Aprovo</button><button class="btn coral btn-sm" onclick="hapt(20);toast('Não aprovo registrado.')">Não aprovo</button></div></div>`).join('')}
+function syncAdm(){$('#swJan').classList.toggle('on',LS.get('mb_janela',false));$('#swDis').classList.toggle('on',LS.get('mb_disfarce',false));$('#trilhaInfo').textContent=`XP: ${LS.get('mb_xp',0)} · sequência: ${Trilha.estado().streak.count}🔥`}
+function tgJan(){LS.set('mb_janela',!LS.get('mb_janela',false));syncAdm();toast(LS.get('mb_janela')?'Janela ABERTA (pós-posse).':'Janela fechada.')}
+function tgDis(){const on=!LS.get('mb_disfarce',false);LS.set('mb_disfarce',on);syncAdm();on?abrirCalc():$('#calc').classList.remove('on')}
+let cbuf='';function abrirCalc(){$('#calc').classList.add('on');$('#ckeys').innerHTML=['7','8','9','4','5','6','1','2','3','0','C','='].map(k=>`<button class="${k=='='?'eq':''}" onclick="calcK('${k}')">${k}</button>`).join('')}
+function calcK(k){if(k=='C'){cbuf='';$('#cdisp').textContent='0';return}if(k=='='){if(cbuf=='202613'){$('#calc').classList.remove('on');LS.set('mb_disfarce',false);toast('Bem-vindo de volta.')}else{$('#cdisp').textContent='·'}cbuf='';return}cbuf+=k;$('#cdisp').textContent=cbuf}
+function panico(){hapt([60,40,60]);ballot={};ir('scrHome');toast('Tudo ocultado. Seu voto segue seguro no código.')}
+let lastAcc=0;addEventListener('devicemotion',e=>{const a=e.accelerationIncludingGravity;if(!a)return;const m=Math.abs(a.x||0)+Math.abs(a.y||0)+Math.abs(a.z||0);const now=Date.now();if(m>38&&now-lastAcc>1500){lastAcc=now;panico()}});
+function aula(){Trilha.acertar('aula_'+Date.now());syncAdm();toast('Aula concluída! +XP 🎓')}
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on')}),{threshold:.6});$$('.passo').forEach(p=>io.observe(p));
+ir(local&&sess?'scrHome':'scrInstr');
+</script>
+</body>
+</html>

@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>MudaBrasil · Seu voto coloca, seu voto tira.</title>
+<meta name="description" content="Plataforma cívica de voto contínuo e revogável: meça a opinião do povo, cobre promessas no Radar, vote nos PLs da semana e confira seu voto num ambiente separado."/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="config.js"></script>
+<style>
+:root{--accent:#00E5C9;--accent-ink:#067A6C;--gold:#D4AF37;--coral:#FF6B6B;--azul:#012169;--verde:#009739;--amarelo:#FEDB00;--blue:#3aa5ff;--r:18px;--tap:48px;--maxw:1240px}
+body{--bg:#0B132B;--card:rgba(18,26,51,.78);--solid:#121A33;--surface2:#182242;--sunken:#0E1626;--line:#243052;--ink:#EAF0F7;--muted:#93A4B8;--topbar:rgba(11,19,43,.85);--foot:#070b12;--sh1:0 2px 10px rgba(0,0,0,.25);--sh2:0 14px 34px rgba(0,0,0,.4)}
+body[data-theme=light]{--bg:#F4F6FB;--card:rgba(255,255,255,.82);--solid:#fff;--surface2:#EDF1F7;--sunken:#E4E9F2;--line:#D6DEE9;--ink:#0E1726;--muted:#5A6B7E;--topbar:rgba(244,246,251,.85);--foot:#0a1430;--sh1:0 2px 10px rgba(13,30,60,.07);--sh2:0 14px 34px rgba(13,30,60,.12)}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}html,body{overflow-x:hidden;max-width:100%}
+body{font-family:Manrope,sans-serif;color:var(--ink);line-height:1.55;background:var(--bg)}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(700px 340px at 85% -80px,rgba(0,229,201,.08),transparent),radial-gradient(600px 300px at -80px 40%,rgba(1,33,105,.3),transparent)}
+h1,h2,h3,h4{font-family:Montserrat,sans-serif;letter-spacing:-.02em}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px;position:relative;z-index:1}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:Montserrat;font-weight:700;border:none;cursor:pointer;border-radius:999px;min-height:var(--tap);padding:0 24px;font-size:15px;transition:transform .15s,filter .15s}
+.btn:active{transform:scale(.97)}
+.btn:hover{filter:brightness(1.06)}
+.btn.off,.btn[aria-disabled=true]{opacity:.5;cursor:not-allowed}
+.btn-accent{background:linear-gradient(135deg,var(--accent),#00b39c);color:#04271f}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#b8941f);color:#241a00}
+.btn-blue{background:linear-gradient(135deg,var(--azul),#011845);color:#fff}
+.btn-ghost{background:var(--solid);color:var(--ink);border:2px solid var(--line)}
+.btn-danger{background:rgba(255,107,107,.14);color:var(--coral)}
+.btn-block{width:100%}.btn-lg{min-height:56px}.btn-sm{min-height:40px;font-size:13px;padding:0 15px}
+.card{background:var(--card);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh1)}
+.expl{border:2px solid var(--accent);background:rgba(0,229,201,.07);border-radius:var(--r);padding:20px;margin-bottom:20px}
+body[data-theme=light] .expl{background:rgba(6,122,108,.06);border-color:var(--accent-ink)}
+.expl h3{font-size:16px;margin-bottom:10px;color:var(--accent)}body[data-theme=light] .expl h3{color:var(--accent-ink)}
+.expl p,.expl li{font-size:13.5px;color:var(--ink);margin-top:6px}
+.expl ul{margin:8px 0 0 18px}
+.badge{font-family:Montserrat;font-weight:700;font-size:11px;padding:4px 10px;border-radius:999px;background:rgba(0,229,201,.14);color:var(--accent)}
+body[data-theme=light] .badge{color:var(--accent-ink)}
+.badge.ok{background:rgba(0,151,57,.15);color:#22b573}body[data-theme=light] .badge.ok{color:#007a2e}
+.badge.rev{background:rgba(255,107,107,.16);color:var(--coral)}
+.badge.peso{background:rgba(212,175,55,.16);color:var(--gold)}
+.etq{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-family:Montserrat;font-weight:700;color:var(--muted);background:var(--sunken);border:1px solid var(--line);border-radius:999px;padding:5px 10px}
+.selo-ok{display:inline-flex;align-items:center;gap:7px;font-family:Montserrat;font-weight:800;font-size:11.5px;color:#fff;background:linear-gradient(135deg,#1d8fe0,#3aa5ff);border-radius:999px;padding:6px 14px;cursor:help;box-shadow:0 2px 10px rgba(58,165,255,.35)}
+.selo-ok i{font-size:15px;color:#bfe3ff}
+.selo-wait{display:inline-flex;align-items:center;gap:7px;font-family:Montserrat;font-weight:800;font-size:11.5px;color:#6b7684;background:rgba(138,151,168,.14);border:1px solid rgba(138,151,168,.4);border-radius:999px;padding:6px 14px;cursor:help}
+.selo-wait i{font-size:15px;color:#8a97a8}
+#tip{position:fixed;z-index:700;max-width:260px;background:#0c1726;color:#fff;font-size:12px;line-height:1.5;padding:10px 12px;border-radius:10px;display:none;box-shadow:var(--sh2);border:1px solid var(--line)}
+header.top{position:sticky;top:0;z-index:200;background:var(--topbar);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:12px;height:66px}
+.logo{font-family:Montserrat;font-weight:900;font-size:21px;cursor:pointer}.logo b{color:var(--ink)}.logo span{color:var(--accent)}
+body[data-theme=light] .logo span{color:var(--accent-ink)}
+.filete{height:3px;border-radius:2px;background:linear-gradient(90deg,var(--verde) 0 33%,var(--amarelo) 33% 66%,var(--azul) 66%);opacity:.85}
+nav.main{margin-left:auto;display:flex;gap:2px}
+nav.main a{font-family:Montserrat;font-weight:600;font-size:13px;color:var(--muted);padding:9px 10px;border-radius:10px;cursor:pointer}
+nav.main a:hover{color:var(--ink);background:var(--surface2)}
+nav.main a.active{color:var(--ink)}nav.main a.active::after{content:"";display:block;height:3px;border-radius:3px;background:var(--accent)}
+.iconbtn{width:42px;height:42px;border-radius:12px;border:1.5px solid var(--line);background:var(--solid);color:var(--muted);display:grid;place-items:center;cursor:pointer;font-size:16px}
+main{min-height:60vh}.sec{padding:48px 0}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.sec-head h2{font-size:clamp(24px,3.2vw,40px);font-weight:900}.sec-head h2 em{font-style:normal;color:var(--accent)}
+body[data-theme=light] .sec-head h2 em{color:var(--accent-ink)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:Montserrat;font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);background:rgba(0,229,201,.12);padding:7px 14px;border-radius:999px}
+body[data-theme=light] .eyebrow{color:var(--accent-ink)}
+.adslot{border:2px dashed var(--line);border-radius:12px;background:var(--surface2);color:var(--muted);display:flex;align-items:center;justify-content:center;font-family:Montserrat;font-weight:700;font-size:12px;letter-spacing:.06em}
+.hero{padding:44px 0 6px}.hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:36px;align-items:center}
+.hero h1{font-size:clamp(36px,5.4vw,66px);font-weight:900;line-height:.95}.hero h1 .y{color:var(--gold)}.hero h1 .g{color:var(--accent)}
+body[data-theme=light] .hero h1 .g{color:var(--accent-ink)}
+.hero .slogan{font-family:Montserrat;font-weight:800;font-style:italic;color:var(--gold);margin-top:14px}
+.hero .lede{color:var(--muted);margin-top:14px;max-width:520px}
+.livepanel{background:var(--card);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:24px;box-shadow:var(--sh2);padding:24px}
+.live{display:flex;align-items:center;gap:9px;font-family:Montserrat;font-weight:800;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+body[data-theme=light] .live{color:var(--accent-ink)}
+.live .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);animation:pulseDot 1.8s infinite}
+@keyframes pulseDot{0%,100%{box-shadow:0 0 0 0 rgba(0,229,201,.5)}70%{box-shadow:0 0 0 10px rgba(0,229,201,0)}100%{box-shadow:0 0 0 0 rgba(0,229,201,0)}}
+.livepanel .bignum{font-family:Montserrat;font-weight:900;font-size:48px;margin-top:10px}
+.lp-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.lp-stat{background:var(--sunken);border-radius:14px;padding:12px}.lp-stat .v{font-family:Montserrat;font-weight:900;font-size:20px}.lp-stat .l{font-size:11px;color:var(--muted)}
+.ticker{margin-top:30px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--surface2);overflow:hidden}
+.ticker .tk-in{display:flex;align-items:center}
+.ticker .tk-tag{flex:0 0 auto;background:var(--azul);color:#fff;font-family:Montserrat;font-weight:800;font-size:11px;padding:13px 16px}
+.ticker .tk-track{display:flex;gap:42px;white-space:nowrap;padding:13px 24px;animation:marquee 40s linear infinite}
+.ticker:hover .tk-track{animation-play-state:paused}
+.ticker .tk-item{font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:10px}.ticker .tk-item i{color:var(--gold)}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.carousel{border-radius:22px;overflow:hidden;position:relative;box-shadow:var(--sh2);aspect-ratio:21/8.4;min-height:280px}
+.slides{display:flex;height:100%;transition:transform .6s}
+.slide{min-width:100%;height:100%;position:relative;display:flex;align-items:flex-end;padding:32px;color:#fff;background-size:cover;background-position:center}
+.slide .veil{position:absolute;inset:0;background:linear-gradient(0deg,rgba(8,18,40,.9),rgba(8,18,40,.1) 62%,transparent)}
+.slide .stxt{position:relative;max-width:640px}
+.slide .stag{font-family:Montserrat;font-weight:700;font-size:11px;background:var(--gold);color:#241a00;padding:5px 12px;border-radius:999px;display:inline-block;margin-bottom:10px}
+.slide h3{font-size:clamp(19px,2.5vw,30px);font-weight:800}.slide p{opacity:.92;margin-top:6px}
+.slide a.src{display:inline-flex;gap:6px;margin-top:10px;font-family:Montserrat;font-weight:700;font-size:12.5px;color:var(--amarelo)}
+.car-btn{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:none;background:rgba(255,255,255,.9);color:var(--azul);cursor:pointer;z-index:3}
+.car-prev{left:14px}.car-next{right:14px}
+.dots{position:absolute;bottom:14px;left:32px;display:flex;gap:7px;z-index:3}
+.dots button{width:9px;height:9px;border-radius:50%;border:none;background:rgba(255,255,255,.5);cursor:pointer}.dots button.on{background:var(--gold);width:24px;border-radius:5px}
+.news-layout{display:grid;grid-template-columns:1.5fr 1fr;gap:18px}
+.news-feat{position:relative;border-radius:var(--r);overflow:hidden;min-height:340px;display:flex;align-items:flex-end;color:#fff;box-shadow:var(--sh2);background-size:cover;background-position:center;background-color:var(--surface2)}
+.news-feat .veil{position:absolute;inset:0;background:linear-gradient(0deg,rgba(8,18,40,.92),rgba(8,18,40,.1) 60%,transparent)}
+.news-feat .nf-b{position:relative;padding:26px}.news-feat h3{font-size:clamp(20px,2.4vw,28px);font-weight:800}.news-feat p{opacity:.9;margin-top:8px}
+.seal{display:inline-flex;align-items:center;gap:6px;font-family:Montserrat;font-weight:800;font-size:10.5px;padding:5px 10px;border-radius:999px;background:rgba(0,229,201,.14);color:var(--accent)}
+body[data-theme=light] .seal{color:var(--accent-ink)}
+.news-side{display:flex;flex-direction:column;gap:12px}
+.news-mini{display:flex;gap:13px;padding:14px}
+.news-mini .nm-th{width:96px;height:84px;border-radius:14px;flex:0 0 auto;overflow:hidden;background:linear-gradient(135deg,#012169,#0a3aa0);display:grid;place-items:center;color:#fff;font-size:22px;background-size:cover;background-position:center}
+.news-mini .nm-th.hasimg i{display:none}
+.news-mini .nm-b{flex:1;min-width:0}.news-mini h4{font-size:15px;font-weight:700}.news-mini .meta{font-size:11.5px;color:var(--muted);margin-top:6px;display:flex;gap:8px;flex-wrap:wrap}
+.news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.news-card{overflow:hidden}.news-card .nc-th{height:150px;background:linear-gradient(135deg,#0a3a35,#0E9F8E);display:grid;place-items:center;color:#fff;font-size:30px;overflow:hidden;background-size:cover;background-position:center}
+.news-card .nc-th.hasimg i{display:none}
+.news-card .nc-b{padding:16px}.news-card h4{font-size:16px;font-weight:700}.news-card p{color:var(--muted);font-size:13px;margin-top:7px}
+.news-card .meta{font-size:11.5px;color:var(--muted);margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+.sk{background:linear-gradient(90deg,var(--sunken) 25%,var(--surface2) 50%,var(--sunken) 75%);background-size:200% 100%;animation:sk 1.2s infinite;border-radius:10px}
+@keyframes sk{to{background-position:-200% 0}}
+.rank{display:flex;align-items:center;gap:10px;padding:12px;border:1.5px solid var(--line);border-radius:14px;margin-bottom:10px;background:var(--card)}
+.rank .score{font-family:Montserrat;font-weight:900;font-size:18px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.row{display:flex;gap:10px;flex-wrap:wrap}.row .btn{flex:1 1 auto}
+.pol-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.trust-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}
+.trust-card{padding:14px;border-left:4px solid var(--accent)}
+.trust-card:nth-child(2){border-left-color:var(--gold)}.trust-card:nth-child(3){border-left-color:var(--blue)}
+.trust-card b{font-family:Montserrat;font-size:13px}.trust-card p{font-size:12.5px;color:var(--muted);margin-top:4px}
+.chart-card{padding:22px}.chart-box{position:relative;height:250px}
+#map{height:420px;border-radius:var(--r);box-shadow:var(--sh1);border:1px solid var(--line);z-index:1}
+.filters{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}.filters .field{flex:1;min-width:160px}
+select,input{width:100%;min-height:var(--tap);padding:0 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--sunken);color:var(--ink);font-size:15px}
+.check-hero{border-radius:24px;padding:34px;background:linear-gradient(125deg,var(--azul),#0a3aa0);color:#fff}
+.check-card{padding:26px;margin-top:-40px;position:relative;z-index:2;box-shadow:var(--sh2)}
+.code-input{font-family:Montserrat;font-weight:800;letter-spacing:1px;text-align:center;font-size:15px}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px dashed var(--line);font-size:14px}.kv .k{color:var(--muted)}.kv .vv{font-weight:700;text-align:right}
+.opt{display:flex;align-items:center;gap:12px;padding:14px;border:1.5px solid var(--line);border-radius:14px;margin-bottom:10px;background:var(--card);flex-wrap:wrap}
+.opt .av{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;color:#fff;font-family:Montserrat;font-weight:800}
+.mask{letter-spacing:2px;color:var(--muted)}
+.lock{background:rgba(255,107,107,.1);color:var(--coral);border-radius:12px;padding:12px;font-size:13px;margin:12px 0}
+.topic{padding:20px;display:flex;gap:16px}.topic .ti{width:50px;height:50px;border-radius:15px;display:grid;place-items:center;color:#fff;font-size:19px;flex:0 0 auto}
+.topic h4{font-size:17px;font-weight:800}.topic p{color:var(--muted);margin-top:6px}
+.topic .quote{margin-top:10px;border-left:3px solid var(--gold);padding:7px 13px;font-style:italic;background:rgba(212,175,55,.16);border-radius:0 8px 8px 0}
+.topic .fact{margin-top:10px;display:inline-flex;gap:7px;background:rgba(0,151,57,.13);color:#22b573;font-family:Montserrat;font-weight:700;font-size:12px;padding:7px 12px;border-radius:10px}
+body[data-theme=light] .topic .fact{color:#007a2e}
+.myth-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.myth{overflow:hidden}.myth-q{padding:16px 18px;background:rgba(255,107,107,.1);border-left:4px solid var(--coral)}.myth-a{padding:16px 18px;background:rgba(0,229,201,.08);border-left:4px solid var(--accent)}
+.myth .t{font-size:14px;margin-top:7px;font-weight:600}
+.pitch{display:flex;gap:16px;padding:20px;border:1px solid var(--line);border-radius:var(--r);background:var(--card);margin-bottom:14px}
+.pitch .pn{font-family:Montserrat;font-weight:900;font-size:30px;color:var(--gold);flex:0 0 auto;width:40px}
+.pitch .pg{font-family:Montserrat;font-weight:800;font-size:18px}.pitch .pc{color:var(--muted);margin-top:7px}
+.pitch .pf{margin-top:10px;display:inline-flex;gap:7px;background:rgba(0,151,57,.13);color:#22b573;font-family:Montserrat;font-weight:700;font-size:12px;padding:7px 12px;border-radius:10px}
+.pitch .pa{display:flex;gap:9px;margin-top:12px}
+.tone-toggle{display:inline-flex;background:var(--surface2);border:1.5px solid var(--line);border-radius:999px;padding:4px}
+.tone-toggle button{border:none;background:none;font-family:Montserrat;font-weight:700;font-size:12.5px;color:var(--muted);padding:8px 16px;border-radius:999px;cursor:pointer}
+.tone-toggle button.on{background:var(--solid);color:var(--ink);box-shadow:var(--sh1)}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.stat{padding:20px}.stat .ic{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;color:#fff;font-size:19px;margin-bottom:12px}
+.stat .v{font-family:Montserrat;font-weight:900;font-size:28px}.stat .l{color:var(--muted);font-size:13px}
+.switch{position:relative;width:56px;height:32px;border-radius:999px;background:var(--sunken);border:1.5px solid var(--line);cursor:pointer;display:inline-block}
+.switch.on{background:var(--verde)}.switch i{position:absolute;top:50%;transform:translateY(-50%);left:3px;width:24px;height:24px;border-radius:50%;background:#fff;color:#241a00;display:grid;place-items:center;font-size:11px;transition:.2s}
+.switch.on i{left:27px}
+.pol{display:flex;gap:16px;padding:20px;align-items:center;flex-wrap:wrap}
+.pol .av{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;color:#fff;font-family:Montserrat;font-weight:900;font-size:22px;flex:0 0 auto}
+.pie{width:130px;height:130px;border-radius:50%;margin:12px auto;box-shadow:var(--sh1)}
+.pie.mini{width:74px;height:74px;margin:6px 0}
+.prom{padding:16px;border:1.5px solid var(--line);border-radius:14px;margin-bottom:12px;background:var(--card)}
+.agora{max-height:260px;overflow:auto;display:flex;flex-direction:column;gap:8px;padding:12px;background:var(--sunken);border-radius:12px}
+.msg{max-width:85%;padding:9px 12px;border-radius:12px;font-size:13px}
+.msg.them{background:var(--solid);border:1px solid var(--line);align-self:flex-start}
+.msg.me{background:linear-gradient(135deg,var(--accent),#00b39c);color:#04271f;align-self:flex-end}
+footer{background:var(--foot);color:#cdd7e6;margin-top:30px;padding:50px 0 26px}
+footer .cols{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:30px}
+footer h4{color:#fff;font-size:13px;text-transform:uppercase;margin-bottom:14px}
+footer a{display:block;color:#aebbd0;font-size:14px;padding:4px 0;cursor:pointer}footer a:hover{color:var(--amarelo)}
+footer .slogan{margin-top:14px;font-family:Montserrat;font-weight:900;font-style:italic;color:var(--amarelo);font-size:20px}
+footer .bottom{border-top:1px solid rgba(255,255,255,.1);margin-top:30px;padding-top:18px;font-size:13px;color:#8ea0bb;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.mobile-nav{display:none;position:fixed;left:0;right:0;bottom:0;z-index:260;background:var(--solid);border-top:1px solid var(--line);box-shadow:0 -10px 30px rgba(0,0,0,.22)}
+.mobile-nav button{border:none;background:none;color:var(--muted);font-family:Montserrat;font-weight:700;font-size:9px;padding:9px 2px 11px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
+.mobile-nav button i{font-size:18px}.mobile-nav button.on{background:var(--surface2);color:var(--ink)}
+.overlay{position:fixed;inset:0;background:rgba(4,10,26,.66);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
+.overlay.on{display:flex}
+.modal{background:var(--solid);border:1px solid var(--line);border-radius:20px;padding:26px;max-width:480px;width:100%;max-height:86vh;overflow:auto}
+#toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#0c1726;color:#fff;padding:12px 18px;border-radius:12px;z-index:600;display:none;max-width:90%}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media(max-width:900px){body{padding-bottom:70px}.hero-grid,.news-layout,.grid2,.myth-grid,.stat-grid,.trust-grid,.pol-grid{grid-template-columns:1fr}nav.main{display:none}.mobile-nav{display:grid;grid-template-columns:repeat(6,1fr)}.news-grid{grid-template-columns:1fr}.lp-stats{grid-template-columns:1fr}.top .wrap{height:auto;min-height:66px;flex-wrap:wrap}.top .btn{padding:0 16px}.hero{padding-top:28px}}
+</style>
+</head>
+<body>
+<div id="toast" role="status"></div>
+<div id="tip" role="tooltip"></div>
+<div class="overlay" id="popSite"><div class="modal" role="dialog" aria-modal="true">
+ <h2 style="font-size:22px">🧪 O que é simulação e o que é real aqui?</h2>
+ <p style="margin:12px 0;color:var(--ink);font-size:14px">
+ · <b>Simulação (sem valor jurídico):</b> a votação, o termômetro e a revogação — uma pesquisa viva da opinião do povo. Ninguém é eleito nem destituído de verdade.<br><br>
+ · <b>Real:</b> as notícias da Central — jornalismo de fontes verificadas, com link pra matéria original.<br><br>
+ · <b>Seus dados:</b> ficam somente no seu navegador; não rastreamos o eleitor.<br><br>
+ · <b>O futuro:</b> a tecnologia mostrada (comprovante com código + conferência separada) é a mesma que permitiria o voto real integrado ao TSE (Gov.br + biometria + blockchain).</p>
+ <button class="btn btn-accent btn-block" onclick="fechar('popSite');LS.set('mb_site_pop',1)">Entendi</button>
+</div></div>
+<div class="overlay" id="legalModal"><div class="modal" role="dialog" aria-modal="true"><div id="legalBody"></div><button class="btn btn-ghost btn-block" style="margin-top:14px" onclick="fechar('legalModal')">Fechar</button></div></div>
+<div class="overlay" id="mMet"><div class="modal" role="dialog" aria-modal="true">
+ <h2 style="font-size:20px"><i class="fa-solid fa-square-root-variable"></i> Metodologia do ICM · <span id="icmV"></span></h2>
+ <p style="margin:10px 0;font-size:13px;color:var(--muted)">Vigente desde <b id="icmD"></b>. Toda mudança de fórmula gera versão nova e pública.</p>
+ <div style="background:linear-gradient(135deg,var(--azul),#011845);color:#fff;border-radius:14px;padding:14px;font-family:Montserrat;font-weight:800;text-align:center;font-size:12.5px">ICM = 0,40·resposta + 0,35·cumprimento + 0,25·(1 − votos revogáveis usados)</div>
+ <p style="margin:12px 0;font-size:13px;color:var(--muted)">· <b>Resposta</b> = % de cobranças que o político respondeu no prazo · <b>Cumprimento</b> = % de promessas com lastro verificado · <b>Votos revogáveis</b> = votos que os eleitores <b>revogaram</b> (tiraram de volta) no termômetro — todo voto nasce revogável a partir da posse · <b>Decaimento</b>: peso cheio até 90 dias → linear até 0,5 aos 180 → piso 0,5. O voto nunca morre; só esfria.</p>
+ <button class="btn btn-ghost btn-block" onclick="fechar('mMet')">Fechar</button>
+</div></div>
+<div class="overlay" id="mAud"><div class="modal" role="dialog" aria-modal="true">
+ <h2 style="font-size:20px"><i class="fa-solid fa-magnifying-glass-chart"></i> Auditoria</h2>
+ <p style="margin:12px 0;font-size:13px;color:var(--muted)">· <b>Comprovante</b>: código de 20 dígitos com dígito verificador (soma mod 10 = 0).<br>· <b>Cédula</b>: lida do armazenamento do SEU navegador — o servidor nunca vê em quem você votou.<br>· <b>Etiqueta honesta</b>: todo número exibe amostra + data + margem (1/√n, 95%).<br>· <b>Fase final</b>: ledger público + Gov.br pra auditoria externa total.</p>
+ <button class="btn btn-ghost btn-block" onclick="fechar('mAud')">Fechar</button>
+</div></div>
+<header class="top"><div class="wrap">
+ <div class="logo" onclick="nav('home')"><b>Muda</b><span>Brasil</span></div>
+ <nav class="main" id="navMain"></nav>
+ <button class="iconbtn" onclick="toggleTheme()" aria-label="Alternar tema"><i class="fa-solid fa-moon"></i></button>
+ <button class="iconbtn" onclick="nav('admin')" aria-label="Painel do fundador"><i class="fa-solid fa-gauge-high"></i></button>
+ <button class="btn btn-accent btn-sm" onclick="location.href='app/index.html'"><i class="fa-solid fa-mobile-screen"></i> Votar no app</button>
+</div></header>
+<main id="app"></main>
+<footer><div class="wrap">
+ <div class="cols">
+  <div><div class="logo" style="cursor:default"><b style="color:#fff">Muda</b><span>Brasil</span></div>
+   <p style="margin-top:12px;font-size:14px;max-width:340px">Plataforma cívica de <b>voto contínuo e revogável</b>: meça a opinião do povo, cobre promessas no Radar, vote nos PLs da semana no Congresso Espelho e confira seu voto num ambiente separado.</p>
+   <div class="slogan">"Seu voto coloca, seu voto tira."</div></div>
+  <div><h4>Participar</h4><a onclick="location.href='app/index.html'">Votar no app</a><a onclick="nav('conferir')">Conferir voto</a><a onclick="nav('radar')">Radar de Promessas</a><a onclick="nav('congresso')">Congresso Espelho</a></div>
+  <div><h4>Entender</h4><a onclick="nav('entenda')">Por que existe</a><a onclick="nav('entenda')">Espalhe a ideia</a><a onclick="nav('noticias')">Notícias verificadas</a><a onclick="abrir('mMet')">Metodologia do ICM</a><a onclick="abrir('mAud')">Auditoria</a></div>
+  <div><h4>Institucional & legal</h4><a onclick="openLegal('privacidade')">Política de Privacidade</a><a onclick="openLegal('cookies')">Política de Cookies</a><a onclick="openLegal('publicidade')">Política de Publicidade</a><a onclick="openLegal('conteudo')">Política de Conteúdo</a><a onclick="openLegal('denuncia')">Canal de Denúncia</a><a href="verificar.html">Sou político — verificar perfil</a></div>
+ </div>
+ <div class="bottom"><span id="footId"></span><span>Notícias de fontes verificadas · sem rastrear o eleitor</span></div>
+</div></footer>
+<nav class="mobile-nav" id="mobileNav" aria-label="Navegação principal mobile"></nav>
+<script>
+const $=s=>document.querySelector(s);
+const CFG=window.MB_CONFIG||{};
+const AV=['#009739','#012169','#D4AF37','#e3000f','#7b3ff2','#0a8f8f'];
+const cor=n=>AV[[...n].reduce((a,c)=>a+c.charCodeAt(0),0)%AV.length];
+const ini=n=>n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+function toast(m){const t=$('#toast');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',3000);}
+function fechar(id){$('#'+id).classList.remove('on');}
+function abrir(id){$('#'+id).classList.add('on');}
+function tip(e,t){const d=$('#tip');d.textContent=t;d.style.display='block';const r=e.target.getBoundingClientRect();d.style.top=Math.min(window.innerHeight-120,r.bottom+8)+'px';d.style.left=Math.max(8,Math.min(window.innerWidth-270,r.left))+'px';}
+function tipOff(){$('#tip').style.display='none';}
+document.body.dataset.theme=(()=>{const t=LSget('mb_theme',null);if(t)return t;return matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';})();
+function toggleTheme(){const d=document.body.dataset.theme==='dark'?'light':'dark';document.body.dataset.theme=d;LS.set('mb_theme',d);}
+function LSget(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}}
+const LS={get:LSget,set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))};
+function pubAtiva(){return LS.get('mb_pub',CFG.publicidadeAtiva===true);}
+function etq(t){return `<span class="etq"><i class="fa-solid fa-tag"></i> ${t}</span>`;}
+function pesoVoto(ts){const a=(Date.now()-ts)/864e5,c=(CFG.decadencia||{cheioDias:90,pisoDias:180,piso:.5});if(a<=c.cheioDias)return 1;if(a>=c.pisoDias)return c.piso;return Math.round((1-(a-c.cheioDias)/(c.pisoDias-c.cheioDias)*(1-c.piso))*100)/100;}
+const fmtD=ts=>new Date(ts).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'});
+const TIP_ICM='ICM = Índice de Confiança MudaBrasil (0–100). Junta 3 comportamentos: responde às cobranças (40%), cumpre promessas (35%) e tem poucos votos revogáveis usados (25%). Toque ou abra "Metodologia do ICM" pra ver a fórmula completa.';
+/* notícias */
+function N(o){o=o||{};return{t:o.t||o.titulo||'Sem título',r:o.r||o.resumo||'',f:o.f||o.fonte||'Fonte',c:o.c||o.cat||'Notícia',link:o.link||'#',img:o.img||'',g:o.g||'',data:o.data?new Date(o.data):new Date()};}
+const FALLBACK=[
+ {t:'Empate técnico acirra corrida presidencial',r:'Os três primeiros separados por menos de 3 pontos.',f:'MudaBrasil Data',c:'Política'},
+ {t:'Projeto de transparência de emendas avança',r:'Publicação em tempo real dos votos nominais.',f:'Agência Brasil',c:'Transparência'},
+ {t:'Voto contínuo bate recorde de adesão',r:'Mais de 120 mil cidadãos atualizaram suas escolhas.',f:'MudaBrasil Data',c:'Cidadania'},
+ {t:'1 em 5 lares ainda sem internet no Brasil',r:'Déficit concentra-se nas classes D/E e no rural.',f:'IBGE / Cetic.br',c:'Inclusão'},
+ {t:'TSE amplia programa contra desinformação',r:'Checagem e rotulagem ganham caráter permanente.',f:'TSE',c:'Eleitoral & Reforma'}];
+const GRADS=['linear-gradient(135deg,#012169,#0a3aa0)','linear-gradient(135deg,#009739,#0a8f8f)','linear-gradient(135deg,#7b3ff2,#012169)','linear-gradient(135deg,#D4AF37,#b8941f)','linear-gradient(135deg,#e3000f,#7a0008)'];
+const ICONS={'Política':'fa-landmark','Eleitoral & Reforma':'fa-check-to-slot','Transparência':'fa-magnifying-glass','Cidadania':'fa-people-group','Inclusão':'fa-universal-access','Economia':'fa-coins','Regional':'fa-map-location-dot','Tecnologia & Voto':'fa-microchip'};
+function firstImg(h){const m=(h||'').match(/<img[^>]+src=["']([^"']+)["']/i);return m?m[1]:'';}
+function clean(h){const d=document.createElement('div');d.innerHTML=h||'';return (d.textContent||'').replace(/\s+/g,' ').trim();}
+async function fetchFeed(src){try{const r=await fetch('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(src.url));const j=await r.json();if(!j||j.status!=='ok'||!j.items)return[];return j.items.slice(0,6).map(it=>N({t:clean(it.title),r:clean(it.description||'').slice(0,160),f:src.nome,c:src.cat,link:it.link,img:firstImg(it.description||it.content)}));}catch(e){return[];}}
+async function loadNews(force){
+ const cache=LS.get('mb_news_v3',null);
+ if(!force&&cache&&(Date.now()-cache.t<3600000))return cache.items.map(N);
+ let all=[];
+ if((CFG.noticiasAutomaticas!==false)){for(const s of (CFG.newsSources||[])){all=all.concat(await fetchFeed(s));}}
+ all=all.map(N);
+ const BOOST=['Política','Eleitoral & Reforma','Regional'];
+ all.sort((a,b)=>((BOOST.includes(b.c)?1:0)-(BOOST.includes(a.c)?1:0))||(new Date(b.data)-new Date(a.data)));
+ all=all.slice(0,24);
+ if(!all.length)all=FALLBACK.map((n,i)=>N({...n,data:new Date(Date.now()-i*3600000)}));
+ all=all.map((n,i)=>({...n,g:n.g||GRADS[i%GRADS.length]}));
+ LS.set('mb_news_v3',{t:Date.now(),items:all});return all;}
+function upgradeThumbs(){document.querySelectorAll('[data-bgimg]').forEach(el=>{const u=el.getAttribute('data-bgimg');if(!u||/\.svg(\?|$)/i.test(u)||/logo|icone|icon|selo|badge|marca/i.test(u))return;const im=new Image();im.onload=()=>{const w=im.naturalWidth,h=im.naturalHeight;if(w>=200&&h>=120&&w/h>=1.1&&w/h<=4){el.style.backgroundImage=`url('${u}')`;el.style.backgroundSize='cover';el.style.backgroundPosition='center';el.classList.add('hasimg');}};im.onerror=()=>{};im.src=u;});}
+function thumb(n){return `<i class="fa-solid ${ICONS[n.c]||'fa-newspaper'}"></i>`;}
+let _lq=[];function ensureLeaflet(cb){if(window.L)return cb();_lq.push(cb);if(ensureLeaflet._l)return;ensureLeaflet._l=1;const l=document.createElement('link');l.rel='stylesheet';l.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';document.head.appendChild(l);const s=document.createElement('script');s.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';s.onload=()=>{const q=_lq;_lq=[];q.forEach(f=>f());};document.head.appendChild(s);}
+let _cq=[];function ensureChart(cb){if(window.Chart)return cb();_cq.push(cb);if(ensureChart._l)return;ensureChart._l=1;const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js';s.onload=()=>{const q=_cq;_cq=[];q.forEach(f=>f());};document.head.appendChild(s);}
+let current='home',_map=null,charts={};
+function nav(p){current=p;tipOff();render();window.scrollTo(0,0);}
+function buildNav(){const items=[['home','Início','fa-house'],['radar','Radar','fa-satellite-dish'],['congresso','Congresso','fa-landmark'],['conferir','Conferir','fa-magnifying-glass'],['noticias','Notícias','fa-newspaper'],['entenda','Entenda','fa-circle-info']];$('#navMain').innerHTML=items.map(i=>`<a class="${current===i[0]?'active':''}" onclick="nav('${i[0]}')">${i[1]}</a>`).join('');const mob=$('#mobileNav');if(mob)mob.innerHTML=items.map(i=>`<button class="${current===i[0]?'on':''}" onclick="nav('${i[0]}')" aria-label="${i[1]}"><i class="fa-solid ${i[2]}"></i>${i[1]}</button>`).join('');$('#footId').textContent='© 2026 '+(CFG.nome||'MudaBrasil')+' · protótipo de voto contínuo e revogável · dados simulados';}
+function render(){killCharts();buildNav();$('#app').innerHTML=PAGES[current]();try{afterRender();}catch(e){console.warn(e);}observeReveal();}
+function afterRender(){
+ if(current==='home'){animateCounts();loadNews().then(i=>{renderHomeNews(i);initCarousel();buildTicker(i);upgradeThumbs();});ensureChart(()=>{pie('hPres',['Maria','Carlos','Ana','João','Outros'],[28,25,20,16,11]);bar('hGov',['Carlos','Maria','João'],[31,28,22]);});ensureLeaflet(initMap);}
+ if(current==='noticias'){loadNews().then(renderNewsPage);setTimeout(upgradeThumbs,300);}
+ if(current==='radar'){renderRadar();}
+ if(current==='congresso'){carregarPLs();}
+ if(current==='entenda'){renderPitches();}
+ if(current==='admin'){ensureChart(()=>line('adLine',['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],[8200,9100,7600,11200,12800,9400,10300]));}
+}
+function countUp(el,t,d=1100){const st=performance.now();(function tick(n){const p=Math.min(1,(n-st)/d);el.textContent=Math.round(+t*(1-Math.pow(1-p,3))).toLocaleString('pt-BR');if(p<1)requestAnimationFrame(tick);})(st);}
+function animateCounts(){document.querySelectorAll('[data-count]').forEach(el=>countUp(el,+el.dataset.count));}
+let _io=null;function observeReveal(){if(_io)_io.disconnect();_io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');_io.unobserve(e.target);}}),{threshold:.08});document.querySelectorAll('.reveal').forEach(el=>_io.observe(el));setTimeout(()=>document.querySelectorAll('.reveal').forEach(el=>el.classList.add('in')),1200);}
+const RANK=[{s:72,n:'Maria Santos',d:'Presidente · PT · responde 92%',b:'ok',l:'confiança alta',c:'var(--accent)'},{s:48,n:'Carlos Mendes',d:'Presidente · PSDB · responde 78%',b:'num',l:'misto',c:'var(--gold)'},{s:21,n:'João Oliveira',d:'Presidente · PL · responde 45%',b:'rev',l:'confiança baixa',c:'var(--coral)'}];
+function rankHTML(){return `<b><i class="fa-solid fa-ranking-star"></i> Ranking dos Políticos</b><p style="color:var(--muted);font-size:13px;margin:6px 0 10px">Consulte o desempenho real antes de votar ou revogar. <b>Fonte: Ranking dos Políticos</b> (crédito).</p>${RANK.map(r=>`<div class="rank"><div class="score" style="color:${r.c}">${r.s}</div><div style="flex:1"><b>${r.n}</b><div style="color:var(--muted);font-size:12px">${r.d}</div></div><span class="badge ${r.b}">${r.l}</span></div>`).join('')}<a class="btn btn-gold btn-sm" href="https://www.rankingpoliticos.com.br/" target="_blank" rel="noopener">rankingpoliticos.com.br <i class="fa-solid fa-arrow-up-right-from-square"></i></a>`;}
+function adsHTML(){if(!pubAtiva())return '';return `<div class="adslot" style="height:90px;margin:18px 0">PUBLICIDADE · Google Ads (728×90)</div>`;}
+function adsBottom(){if(!pubAtiva())return '';return `<div class="grid2" style="margin-top:18px"><div class="adslot" style="height:250px">PUBLICIDADE (300×250)</div><div class="adslot" style="height:250px">PUBLICIDADE (300×250)</div></div>`;}
+/* ===== RADAR ===== */
+const POLITICOS=[
+ {id:'maria',nome:'Maria Santos',p:'PT',cargo:'Presidente',selo:true,icm:{resposta:92,cumprimento:78,devolucoes:8},
+  promessas:[{t:'Criar 2 milhões de vagas em creches até 2027',st:'cumprida',lastro:'https://agenciabrasil.ebc.com.br',cobras:14320},
+   {t:'Pacto nacional contra a fome',st:'andamento',lastro:'',cobras:9870},
+   {t:'Reforma ministerial com corte de cargos',st:'nao',lastro:'https://www12.senado.leg.br',cobras:22140}],
+  resposta:'O PL da creche foi protocolado sob nº 123/2026. Clique para ler o andamento.'},
+ {id:'carlos',nome:'Carlos Mendes',p:'PSDB',cargo:'Presidente',selo:false,icm:{resposta:60,cumprimento:45,devolucoes:40},
+  promessas:[{t:'Zerar fila de exames no SUS',st:'andamento',lastro:'',cobras:11200},{t:'Desonerar folha de pagamento',st:'cumprida',lastro:'https://www12.senado.leg.br',cobras:4300}],resposta:''},
+ {id:'joao',nome:'João Oliveira',p:'PL',cargo:'Presidente',selo:false,icm:{resposta:30,cumprimento:20,devolucoes:60},
+  promessas:[{t:'Reduzir ministérios pela metade',st:'nao',lastro:'https://agenciabrasil.ebc.com.br',cobras:30110},{t:'Auditoria pública de verbas',st:'andamento',lastro:'',cobras:7600}],resposta:''}];
+function calcICM(p){const c=(CFG.icm&&CFG.icm.pesos)||{resposta:.4,cumprimento:.35,devolucao:.25};return Math.round(c.resposta*p.icm.resposta+c.cumprimento*p.icm.cumprimento+c.devolucao*(100-p.icm.devolucoes));}
+function pieICM(p){const c=(CFG.icm&&CFG.icm.pesos)||{resposta:.4,cumprimento:.35,devolucao:.25};
+ const a=c.resposta*p.icm.resposta,b=c.cumprimento*p.icm.cumprimento,d=c.devolucao*(100-p.icm.devolucoes);
+ const t=a+b+d,p1=Math.round(a/t*100),p2=Math.round(b/t*100);
+ return `<div class="pie" style="background:conic-gradient(var(--accent) 0 ${p1}%, var(--gold) ${p1}% ${p1+p2}%, var(--coral) ${p1+p2}% 100%)" role="img" aria-label="Composição do ICM"></div>
+ <div class="small" style="color:var(--muted);display:flex;flex-direction:column;gap:4px">
+ <span><i class="fa-solid fa-circle" style="color:var(--accent)"></i> Responde às cobranças: <b>${a.toFixed(1)} pts</b></span>
+ <span><i class="fa-solid fa-circle" style="color:var(--gold)"></i> Cumpre promessas: <b>${b.toFixed(1)} pts</b></span>
+ <span><i class="fa-solid fa-circle" style="color:var(--coral)"></i> Baixo uso de votos revogáveis: <b>${d.toFixed(1)} pts</b></span></div>`;}
+function pieProm(p){const c1=p.promessas.filter(x=>x.st==='cumprida').length,c2=p.promessas.filter(x=>x.st==='andamento').length,c3=p.promessas.filter(x=>x.st==='nao').length;
+ const t=Math.max(1,p.promessas.length),p1=Math.round(c1/t*100),p2=Math.round(c2/t*100);
+ return `<div class="pie mini" style="background:conic-gradient(var(--accent) 0 ${p1}%, var(--gold) ${p1}% ${p1+p2}%, var(--coral) ${p1+p2}% 100%)" role="img" aria-label="Promessas"></div>
+ <div class="small" style="color:var(--muted)">${c1} cumprida(s) · ${c2} em andamento · <b style="color:var(--coral)">${c3} não cumprida(s)</b></div>`;}
+let radarSel=null,cmpA='maria',cmpB='joao';
+function seloHTML(p){return p.selo?`<span class="selo-ok" onmouseenter="tip(event,'VERIFICADO: ${p.nome} entrou no MudaBrasil, comprovou identidade e mandato, e está ciente do que acontece aqui. Tem selo azul e direito de resposta.')" onmouseleave="tipOff()"><i class="fa-solid fa-certificate"></i> Verificado</span>`
+:`<span class="selo-wait" onmouseenter="tip(event,'NÃO VERIFICADO: ${p.nome} ainda não comprovou o mandato no MudaBrasil — até agora não deu importância. Você pode fiscalizar e cobrar do mesmo jeito. Político: verifique-se em verificar.html')" onmouseleave="tipOff()"><i class="fa-solid fa-certificate"></i> Não verificado</span>`;}
+function renderRadar(){const el=$('#radarArea');if(!el)return;
+ if(!radarSel){el.innerHTML=`
+ <div class="expl"><h3><i class="fa-solid fa-satellite-dish"></i> O que é o Radar de Promessas e o que você faz aqui</h3>
+ <p>O Radar é a página onde você <b>fiscaliza</b> os políticos: cada um tem uma ficha pública com as promessas que fez, o que cumpriu e o que não cumpriu — sempre com <b>lastro</b> (link pra notícia ou Diário Oficial), nunca "achismo".</p>
+ <ul>
+ <li><b>Ver promessas</b> em gráfico de pizza: cumpridas / em andamento / não cumpridas.</li>
+ <li><b>Cobrar cumprimento</b>: 1 clique por dia por pessoa — alimenta o contador público ("X pessoas cobrando hoje").</li>
+ <li><b>Enviar prova</b>: link de notícia ou Diário Oficial; a comunidade vota se a prova é útil.</li>
+ <li><b>Conferir o <span onmouseenter="tip(event,'${TIP_ICM}')" onmouseleave="tipOff()" style="cursor:help;text-decoration:underline dotted">ICM</span></b> (0–100) em gráfico de pizza, com metodologia pública.</li>
+ <li><b>Seguir</b> o político pra receber alertas · <b>Comparar</b> dois lado a lado · <b>Gerar cartão</b> pra compartilhar.</li>
+ </ul>
+ <p><b>O que esperar:</b> fiscalização <b>neutra</b> — mostramos o dado e o direito de resposta do político. Nunca pedimos voto, a favor ou contra.</p>
+ <p><b>Verificação:</b> o político que entra no site, comprova identidade e mandato e acompanha a própria ficha ganha o selo azul <b>Verificado</b>. Quem não se manifesta fica com o selo cinza <b>Não verificado</b>. Passe o mouse no selo pra entender cada um.</p></div>
+ <div class="card" style="padding:16px;margin-bottom:16px;border-left:4px solid var(--blue)"><b><i class="fa-solid fa-certificate" style="color:var(--blue)"></i> É político e quer o selo azul?</b>
+ <p class="small" style="color:var(--muted);margin:6px 0">A verificação leva ~48h: você comprova identidade e mandato, e passa a ter selo + direito de resposta. <a href="verificar.html" style="color:var(--blue)"><b>Verificar meu perfil agora →</b></a></p></div>
+ <div class="pol-grid">${POLITICOS.map(p=>{const icm=calcICM(p);return `<div class="card pol" style="flex-direction:column;align-items:flex-start;cursor:pointer" onclick="radarSel='${p.id}';renderRadar()">
+  <div class="av" style="background:${cor(p.nome)}">${ini(p.nome)}</div>
+  <b>${p.nome}</b><div class="small" style="color:var(--muted)">${p.cargo} · ${p.p}</div>
+  <div style="margin-top:8px"><span class="badge ${icm>=70?'ok':icm>=50?'peso':'rev'}" onmouseenter="tip(event,'${TIP_ICM}')" onmouseleave="tipOff()">ICM ${icm}</span></div>
+  <div style="margin:8px 0">${pieProm(p)}</div>
+  <div style="margin-top:6px">${seloHTML(p)}</div></div>`;}).join('')}</div>
+ <div class="card" style="padding:16px;margin-top:16px"><h3 style="font-size:18px"><i class="fa-solid fa-scale-balanced"></i> Compare dois políticos</h3>
+ <p class="small" style="color:var(--muted);margin:6px 0">Escolha dois nomes e veja <b>lado a lado</b>: <span onmouseenter="tip(event,'${TIP_ICM}')" onmouseleave="tipOff()" style="cursor:help;text-decoration:underline dotted">ICM</span>, promessas cumpridas, votos revogáveis usados e selo de verificação. É a forma mais rápida de comparar desempenhos — e é neutra: mostramos os números, você tira a conclusão.</p>
+ <div class="grid2" style="margin-top:10px"><select onchange="cmpA=this.value;renderRadar()" aria-label="Político A">${POLITICOS.map(p=>`<option value="${p.id}" ${p.id===cmpA?'selected':''}>${p.nome}</option>`).join('')}</select>
+ <select onchange="cmpB=this.value;renderRadar()" aria-label="Político B">${POLITICOS.map(p=>`<option value="${p.id}" ${p.id===cmpB?'selected':''}>${p.nome}</option>`).join('')}</select></div>
+ ${comparador()}</div>`;return;}
+ const p=POLITICOS.find(x=>x.id===radarSel);const icm=calcICM(p);const cob=LS.get('mb_cobrancas',{});const watch=LS.get('mb_watchlist',[]);const seguindo=watch.includes(p.id);
+ el.innerHTML=`
+ <div class="expl"><h3><i class="fa-solid fa-id-card"></i> Ficha do político — o que é esta página</h3>
+ <p>Este é o <b>perfil público</b> de ${p.nome} no MudaBrasil. Aqui você acompanha, com dados e lastro: o <b>ICM</b> (índice de confiança, no gráfico de pizza), as <b>promessas</b> e o status de cada uma, o <b>selo de verificação</b> e o <b>direito de resposta</b> dele. <b>O que esperar:</b> transparência dos dois lados — você cobra, ele responde, o número muda.</p></div>
+ <button class="btn btn-ghost btn-sm" onclick="radarSel=null;renderRadar()"><i class="fa-solid fa-arrow-left"></i> Voltar</button>
+ <div class="card pol" style="margin-top:12px"><div class="av" style="background:${cor(p.nome)}">${ini(p.nome)}</div>
+ <div style="flex:1"><b style="font-size:18px">${p.nome}</b>
+ <div class="small" style="color:var(--muted)">${p.cargo} · ${p.p} · mandato 2027–2030</div>
+ <div style="margin-top:8px">${seloHTML(p)}</div></div>
+ <div style="text-align:right"><div style="font-family:Montserrat;font-weight:900;font-size:34px;color:${icm>=70?'var(--accent)':icm>=50?'var(--gold)':'var(--coral)'}" onmouseenter="tip(event,'${TIP_ICM}')" onmouseleave="tipOff()">${icm}</div><div class="small" style="color:var(--muted)">ICM ${(CFG.icm&&CFG.icm.versao)||'v1.0'}</div></div></div>
+ <div class="grid2" style="margin-top:14px"><div class="card" style="padding:16px"><b style="font-size:13px">Composição do ICM</b>${pieICM(p)}</div>
+ <div class="card" style="padding:16px"><b style="font-size:13px">Promessas (pizza)</b>${pieProm(p)}
+ <p class="small" style="color:var(--muted);margin-top:10px"><b>Votos revogáveis</b> = votos que os eleitores <b>revogaram</b> (tiraram de volta) dele no termômetro: <b style="color:var(--coral)">${p.icm.devolucoes}%</b>. Quanto mais alto, pior pro ICM.</p></div></div>
+ <div class="row" style="margin:12px 0">
+  <button class="btn ${seguindo?'btn-accent':'btn-ghost'} btn-sm" onclick="seguir('${p.id}')">${seguindo?'<i class=\'fa-solid fa-star\'></i> Seguindo':'<i class=\'fa-regular fa-star\'></i> Seguir'}</button>
+  <button class="btn btn-ghost btn-sm" onclick="shareCard('${p.id}')"><i class="fa-solid fa-image"></i> Gerar cartão</button>
+  <button class="btn btn-ghost btn-sm" onclick="radarSel=null;renderRadar()"><i class="fa-solid fa-scale-balanced"></i> Comparar</button></div>
+ ${p.promessas.map((pr,i)=>{const c=cob[p.id+'_'+i]||{n:pr.cobras};
+  return `<div class="prom"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><b>${pr.t}</b>
+  <span class="badge ${pr.st==='cumprida'?'ok':pr.st==='andamento'?'peso':'rev'}">${pr.st==='cumprida'?'cumprida':pr.st==='andamento'?'em andamento':'não cumprida'}</span></div>
+  ${pr.lastro?`<a class="small" style="color:var(--accent)" href="${pr.lastro}" target="_blank" rel="noopener"><i class="fa-solid fa-link"></i> lastro da avaliação</a>`:''}
+  <div class="row" style="margin-top:10px"><button class="btn btn-gold btn-sm" onclick="cobrar('${p.id}',${i})"><i class="fa-solid fa-bullhorn"></i> Cobrar cumprimento</button>
+  <span class="etq" style="margin:0"><i class="fa-solid fa-users"></i> ${c.n.toLocaleString('pt-BR')} pessoas cobrando hoje</span></div>
+  <p class="small" style="color:var(--muted);margin-top:6px">"Cobrar cumprimento" = enviar um lembrete público de que os eleitores seguem aguardando esta promessa ser cumprida. 1× por dia por pessoa.</p>
+  <div class="row" style="margin-top:8px"><input id="prova-${i}" placeholder="Cole um link de prova (notícia / Diário Oficial)"/>
+  <button class="btn btn-ghost btn-sm" onclick="enviarProva(${i})">Enviar prova</button></div></div>`;}).join('')}
+ ${p.resposta?`<div class="card" style="padding:16px;border-left:4px solid var(--blue)"><b><i class="fa-solid fa-reply"></i> Direito de resposta do político</b><p class="small" style="margin-top:6px">${p.resposta}</p></div>`:''}
+ <div class="card" style="padding:16px;margin-top:12px"><b>As vias oficiais (quando a cobrança não basta)</b>
+ <p class="small" style="margin-top:6px;color:var(--muted)">O Radar é <b>fiscalização cidadã</b> — não aplicamos punição. Crime ou improbidade se denuncia nos órgãos que têm esse poder. Se é o seu caso, use os canais certos:</p>
+ <div class="row" style="margin-top:10px"><a class="btn btn-ghost btn-sm" href="https://www.mpf.mp.br" target="_blank" rel="noopener"><i class="fa-solid fa-gavel"></i> Ministério Público</a>
+ <a class="btn btn-ghost btn-sm" href="https://www12.senado.leg.br/ouvidoria" target="_blank" rel="noopener"><i class="fa-solid fa-headset"></i> Ouvidoria</a>
+ <a class="btn btn-ghost btn-sm" href="https://www.tse.jus.br" target="_blank" rel="noopener"><i class="fa-solid fa-landmark"></i> TSE</a></div></div>`;}
+function comparador(){const a=POLITICOS.find(x=>x.id===cmpA),b=POLITICOS.find(x=>x.id===cmpB);
+ const row=(l,va,vb)=>`<div class="kv"><span class="k">${l}</span><span class="vv">${va} × ${vb}</span></div>`;
+ return row('ICM (0–100)',calcICM(a),calcICM(b))+row('Promessas cumpridas',a.promessas.filter(p=>p.st==='cumprida').length,b.promessas.filter(p=>p.st==='cumprida').length)+row('Promessas não cumpridas',a.promessas.filter(p=>p.st==='nao').length,b.promessas.filter(p=>p.st==='nao').length)+row('Votos revogáveis usados (revogados)',a.icm.devolucoes+'%',b.icm.devolucoes+'%')+row('Verificação',a.selo?'✔ Verificado':'✖ Não verificado',b.selo?'✔ Verificado':'✖ Não verificado');}
+function cobrar(pid,i){const cob=LS.get('mb_cobrancas',{});const k=pid+'_'+i;const hoje=new Date().toDateString();
+ if(cob[k]&&cob[k].d===hoje){toast('Você já cobrou esta promessa hoje. 1×/dia 😉');return;}
+ cob[k]={d:hoje,n:(cob[k]?cob[k].n:POLITICOS.find(p=>p.id===pid).promessas[i].cobras)+1};LS.set('mb_cobrancas',cob);toast('Cobrança registrada! 📢');renderRadar();}
+function enviarProva(i){const v=$('#prova-'+i);if(!v||!v.value.trim()){toast('Cole um link de prova.');return;}toast('Prova enviada pra curadoria da comunidade ✅ (demo)');v.value='';}
+function seguir(pid){let w=LS.get('mb_watchlist',[]);w=w.includes(pid)?w.filter(x=>x!==pid):[...w,pid];LS.set('mb_watchlist',w);toast(w.includes(pid)?'Seguindo '+POLITICOS.find(p=>p.id===pid).nome+' ⭐':'Deixou de seguir.');renderRadar();}
+function shareCard(pid){const p=POLITICOS.find(x=>x.id===pid);const icm=calcICM(p);
+ const c=document.createElement('canvas');c.width=1080;c.height=1080;const x=c.getContext('2d');
+ x.fillStyle='#0B132B';x.fillRect(0,0,1080,1080);
+ x.fillStyle='#00E5C9';x.fillRect(0,0,360,10);x.fillStyle='#FEDB00';x.fillRect(360,0,360,10);x.fillStyle='#012169';x.fillRect(720,0,360,10);
+ x.fillStyle='#EAF0F7';x.font='900 64px Montserrat,sans-serif';x.fillText('MudaBrasil',70,150);
+ x.font='700 30px Montserrat,sans-serif';x.fillStyle='#93A4B8';x.fillText('Radar de Promessas · ICM '+((CFG.icm&&CFG.icm.versao)||'v1.0'),70,205);
+ x.fillStyle=icm>=70?'#00E5C9':icm>=50?'#D4AF37':'#FF6B6B';x.font='900 300px Montserrat,sans-serif';x.fillText(icm,70,520);
+ x.fillStyle='#EAF0F7';x.font='900 72px Montserrat,sans-serif';x.fillText(p.nome,70,660);
+ x.font='700 36px Montserrat,sans-serif';x.fillStyle='#93A4B8';x.fillText(p.cargo+' · '+p.p,70,720);
+ x.font='700 34px Montserrat,sans-serif';x.fillStyle='#FEDB00';x.fillText('"Seu voto coloca, seu voto tira."',70,960);
+ const a=document.createElement('a');a.download='mudabrasil-'+p.id+'.png';a.href=c.toDataURL('image/png');a.click();toast('Cartão gerado! Compartilhe 📣');}
+/* ===== CONGRESSO ===== */
+const PLS_FALLBACK=[
+ {id:'2643856',titulo:'PL 5088/2026',ementa:'Altera o Estatuto Geral das Guardas Municipais para instituir diretrizes de capacitação, controle e transparência para o armamento das guardas municipais.',data:'2026-08-14T15:28'},
+ {id:'2643842',titulo:'PL 5086/2026',ementa:'Dispõe sobre o regime jurídico específico das associações civis sem fins lucrativos de utilidade pública que instituam sistemas de beneficência e assistência mútua.',data:'2026-08-14T14:44'},
+ {id:'2643824',titulo:'PL 5085/2026',ementa:'Concede isenção do Imposto de Importação sobre medicamentos destinados ao tratamento de enfermidades graves ou doenças raras quando importados para uso próprio.',data:'2026-08-14T13:23'}
+];
+let _pls=[],_agoraSel=null;
+function plLink(p){return p.link||'https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao='+encodeURIComponent(p.id);}
+function normalizaPL(p){if(p.titulo)return p;if(p.txt){const a=p.txt.split(' — ');return{id:String(p.id),titulo:a[0]||'PL',ementa:a.slice(1).join(' — ')||'Sem ementa disponível.',data:p.data||Date.now(),link:p.link};}return{id:String(p.id),titulo:(p.siglaTipo||'PL')+' '+p.numero+'/'+p.ano,ementa:p.ementa||'Sem ementa disponível.',data:p.dataApresentacao||Date.now(),link:plLink({id:String(p.id)})};}
+function resumoPL(p){return (p.ementa||'Sem ementa disponível.').replace(/\s+/g,' ').trim();}
+async function carregarPLs(){const el=$('#congressoArea');if(!el)return;
+ el.innerHTML='<div class="sk" style="height:90px"></div><div class="sk" style="height:90px;margin-top:12px"></div>';
+  const cache=LS.get('mb_pls_v1',null);
+ if(cache&&(Date.now()-cache.t<3600000)){_pls=cache.items.map(normalizaPL);renderCongresso();return;}
+  try{const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),6000);
+   const r=await fetch('https://dadosabertos.camara.leg.br/api/v2/proposicoes?siglaTipo=PL&itens=6&ordem=desc&ordenarPor=id',{signal:ctl.signal});clearTimeout(to);
+   const j=await r.json();if(j&&j.dados&&j.dados.length){_pls=j.dados.map(normalizaPL);LS.set('mb_pls_v1',{t:Date.now(),items:_pls});renderCongresso();return;}throw 0;
+  }catch(e){_pls=PLS_FALLBACK.map(normalizaPL);renderCongresso();}}
+function renderCongresso(){const el=$('#congressoArea');if(!el)return;const votos=LS.get('mb_voto_pl',{});
+ el.innerHTML=`<div class="expl"><h3><i class="fa-solid fa-landmark"></i> O que é o Congresso Espelho e o que acontece aqui</h3>
+ <p>Entre uma eleição e outra, o povo fica <b>4 anos sem ser consultado</b>. O Congresso Espelho existe pra isso acabar: aqui você opina sobre os <b>projetos de lei (PLs) reais</b> que estão sendo discutidos AGORA na Câmara dos Deputados — puxados automaticamente dos <b>dados abertos</b> da Câmara.</p>
+ <ul>
+ <li><b>"Aprovo" / "Não aprovo"</b>: seu voto em cada PL, sem login, em 1 toque.</li>
+ <li><b>Termômetro do povo</b>: o resultado vira a "opinião do Brasil" sobre cada projeto — um espelho do que o Congresso vota.</li>
+ <li><b>Ágora</b>: debate <b>focado só neste PL</b> (nada de briga generalizada): argumentos, não pessoas.</li>
+ <li><b>Sua opinião fica registrada</b> no seu navegador e alimenta o painel público.</li>
+ </ul>
+ <p><b>Por que importa:</b> deputado que vota contra o que o povo aprova aqui… aparece no Radar. É a soberania contínua na prática.</p></div>`+
+ _pls.map(p=>{const v=votos[p.id];return `<div class="card" style="padding:18px;margin-bottom:14px">
+ <b>${p.titulo}</b><p style="color:var(--muted);font-size:13.5px;margin-top:7px">${resumoPL(p)}</p><div style="margin-top:8px">${etq('PL em tramitação · dados abertos da Câmara · medido '+fmtD(Date.now()))}</div>
+  <div class="row" style="margin-top:12px"><button class="btn ${v==='sim'?'btn-accent':'btn-ghost'}" onclick="votoPL('${p.id}','sim')"><i class="fa-solid fa-thumbs-up"></i> Aprovo</button>
+  <button class="btn ${v==='nao'?'btn-danger':'btn-ghost'}" onclick="votoPL('${p.id}','nao')"><i class="fa-solid fa-thumbs-down"></i> Não aprovo</button>
+ <button class="btn btn-ghost" onclick="toggleAgora('${p.id}')"><i class="fa-solid fa-comments"></i> Ágora</button>
+ <a class="btn btn-ghost" href="${plLink(p)}" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Câmara</a></div>
+ <div id="agora-${p.id}" style="display:${_agoraSel===p.id?'block':'none'};margin-top:12px">${agoraHTML(p.id)}</div></div>`;}).join('');}
+function votoPL(id,v){const votos=LS.get('mb_voto_pl',{});votos[id]=v;LS.set('mb_voto_pl',votos);toast('Opinião registrada no Congresso Espelho 🏛️');renderCongresso();}
+function toggleAgora(id){_agoraSel=_agoraSel===id?null:id;renderCongresso();}
+function agoraHTML(id){const a=LS.get('mb_agora_'+id,[{w:'ModeraBot',t:'Debate focado NESTE projeto. Respeito é regra.',me:0},{w:'Marina_RJ',t:'Esse PL muda o jogo da transparência.',me:0}]);
+ return `<div class="agora">${a.map(m=>`<div class="msg ${m.me?'me':'them'}"><b style="font-size:11px;opacity:.7">${m.w}</b><br>${m.t}</div>`).join('')}</div>
+ <div class="row" style="margin-top:8px"><input id="agoraTxt-${id}" placeholder="Comente sobre este PL"/><button class="btn btn-accent btn-sm" onclick="sendAgora('${id}')"><i class="fa-solid fa-paper-plane"></i></button></div>`;}
+function sendAgora(id){const i=$('#agoraTxt-'+id);const t=i.value.trim();if(!t)return;i.value='';const a=LS.get('mb_agora_'+id,[]);a.push({w:'Você',t,me:1});LS.set('mb_agora_'+id,a);renderCongresso();}
+/* ===== CONFERIR ===== */
+const DEMO={'Presidente':{tipo:'candidato',nome:'Maria Santos',p:'PT',num:'13'},'Governador':{tipo:'candidato',nome:'Roberto Lima',p:'MDB',num:'15'},'Senador':{tipo:'branco'}};
+let janela=LS.get('mb_janela',false),rev=LS.get('mb_rev',{});
+function usarDemo(){renderBallot('35001500100212345783',DEMO,Date.now()-120*864e5);}
+function conferirVoto(){const raw=($('#chkInput').value||'').replace(/\D/g,'');const res=$('#chkResult');
+ if(raw.length!==20){res.innerHTML='<div class="card" style="padding:20px;margin-top:16px;text-align:center;color:var(--coral)">Código inválido (20 dígitos).</div>';return;}
+ const stored=LS.get('mb_codigo',null);
+ if(stored&&stored.code===raw){renderBallot(raw,stored.ballot,stored.data||Date.now());return;}
+ renderBallot(raw,DEMO,Date.now());}
+function renderBallot(code,ballot,data){const peso=pesoVoto(data);const el=$('#chkResult');
+ el.innerHTML=`<div class="card" style="padding:20px;margin-top:16px"><div class="kv"><span class="k">Código</span><span class="vv" style="font-family:Montserrat;font-size:12px">${fmt(code)}</span></div>
+ <div style="margin:8px 0">${etq('1 cédula · registrada em '+fmtD(data)+' · peso atual '+Math.round(peso*100)+'%')}</div>`+
+ (janela?'':'<div class="lock"><i class="fa-solid fa-lock"></i> Revogação <b>travada</b> (R5). Abre a partir da posse (jan/fev 2027) até o fim do mandato.</div>')+
+ Object.keys(ballot).map(c=>{const v=ballot[c];const nome=v.tipo==='candidato'?v.nome:(v.tipo==='branco'?'BRANCO':'NULO');
+  return `<div class="opt"><div class="av" style="background:${v.tipo==='candidato'?cor(nome):'#777'}">${v.tipo==='candidato'?ini(nome):'—'}</div><div style="flex:1;min-width:0"><b>${c}</b><div style="font-size:12.5px;color:var(--muted)"><span class="mask" id="m-${c}">••••••</span><span id="v-${c}" style="display:none">${nome}</span></div><div style="margin-top:4px">${rev[c]?'<span class="badge rev">revogado</span>':'<span class="badge ok">ativo</span>'} <span class="badge peso">${peso===1?'peso cheio':'peso '+Math.round(peso*100)+'%'}</span></div></div><button class="btn btn-ghost btn-sm" onclick="reveal('${c}')">mostrar</button>${rev[c]?'':`<button class="btn btn-danger btn-sm" onclick="revogar('${c}')">revogar</button>`}</div>`;}).join('')+`</div>`;}
+function fmt(c){return (c||'').replace(/(.{4})/g,'$1 ').trim();}
+function reveal(c){const m=$('#m-'+c),v=$('#v-'+c);const on=v.style.display!=='none';v.style.display=on?'none':'inline';m.style.display=on?'inline':'none';}
+function revogar(c){if(!janela){toast('Revogação travada até a posse (R5).');return;}rev[c]=true;LS.set('mb_rev',rev);toast('Voto em '+c+' REVOGADO.');conferirVoto();}
+/* ===== PÁGINAS ===== */
+const PAGES={
+home(){return `<div class="wrap hero"><div class="hero-grid">
+ <div><span class="eyebrow"><i class="fa-solid fa-landmark"></i> Plataforma cívica · voto contínuo e revogável</span>
+ <h1 style="margin-top:14px">O poder emana do <span class="g">povo</span>.<br>É hora de <span class="y">devolver</span>.</h1>
+ <div class="slogan">"Seu voto coloca, seu voto tira."</div>
+ <p class="lede">Meça a opinião do Brasil em tempo real, cobre promessas no Radar, vote nos PLs da semana no Congresso Espelho e confira seu voto num ambiente separado.</p>
+ <div style="display:flex;gap:12px;margin-top:22px;flex-wrap:wrap"><button class="btn btn-accent btn-lg" onclick="location.href='app/index.html'"><i class="fa-solid fa-mobile-screen"></i> Votar no app</button><button class="btn btn-blue btn-lg" onclick="nav('conferir')">Conferir meu voto</button></div></div>
+ <div class="livepanel"><div class="live"><span class="dot"></span> Termômetro do povo · ao vivo</div>
+ <div class="bignum"><span data-count="128940">0</span> <small style="font-size:15px;color:var(--muted)">opiniões</small></div>
+ <div style="margin-top:8px">${etq('dados simulados (beta) · amostra não aleatória · fase final: ledger público')}</div>
+ <div class="lp-stats"><div class="lp-stat"><div class="v" style="color:var(--accent)">94.210</div><div class="l">votos ativos</div></div><div class="lp-stat"><div class="v" style="color:var(--coral)">34.730</div><div class="l">votos revogáveis usados (revogados pelo eleitor)</div></div><div class="lp-stat"><div class="v" style="color:var(--gold)">73%</div><div class="l">confiança média</div></div></div></div>
+</div>
+<div class="ticker"><div class="tk-in"><div class="tk-tag">AGORA</div><div class="tk-track" id="tkTrack"></div></div></div>
+${adsHTML()}</div>
+<div class="wrap sec" style="padding-top:40px"><div class="sec-head"><div><span class="eyebrow"><i class="fa-regular fa-newspaper"></i> Painel Cívico</span><h2>Notícias de <em>fontes verificadas</em></h2></div><a class="btn btn-ghost btn-sm" onclick="nav('noticias')">Central completa</a></div>
+<div id="homeNews"><div class="sk" style="height:340px"></div></div>
+<div class="card" style="padding:16px;margin-top:18px">${rankHTML()}</div></div>
+<div class="wrap sec" style="padding-top:8px"><div class="sec-head"><h2 style="font-size:26px">Mapa & <em>números</em></h2></div>
+<div id="map"></div>
+<div class="grid2" style="margin-top:18px"><div class="card chart-card"><h4>Presidente</h4><div class="chart-box"><canvas id="hPres"></canvas></div></div><div class="card chart-card"><h4>Governador · SP</h4><div class="chart-box"><canvas id="hGov"></canvas></div></div></div>
+${adsBottom()}</div>`;},
+radar(){return `<div class="wrap" style="padding:40px 0"><div class="sec-head"><div><span class="eyebrow"><i class="fa-solid fa-satellite-dish"></i> Pacto eleitor–político</span><h2>Radar de <em>Promessas</em></h2></div></div>
+<div id="radarArea"></div></div>`;},
+congresso(){return `<div class="wrap" style="padding:40px 0"><div class="sec-head"><div><span class="eyebrow"><i class="fa-solid fa-landmark"></i> Voto contínuo 365 dias/ano</span><h2>Congresso <em>Espelho</em></h2></div></div>
+<div id="congressoArea"></div></div>`;},
+conferir(){return `<div class="wrap" style="padding:40px 0">
+<div class="check-hero"><h2 style="font-size:clamp(26px,3vw,40px);font-weight:900">Conferir voto</h2><p style="opacity:.9;margin-top:8px">Ambiente separado do app — onde você prova que seu voto existe, sem revelar em quem foi.</p></div>
+<div class="card check-card"><label style="font-size:12.5px;color:var(--muted)">Código de verificação</label>
+<input class="code-input" id="chkInput" placeholder="0000 0000 0000 0000 0000"/>
+<button class="btn btn-blue btn-block btn-lg" style="margin-top:14px" onclick="conferirVoto()"><i class="fa-solid fa-magnifying-glass"></i> Conferir voto</button>
+<button class="btn btn-ghost btn-block btn-sm" style="margin-top:8px" onclick="usarDemo()"><i class="fa-solid fa-flask"></i> Testar com um exemplo (sem ter votado)</button>
+<p class="small" style="margin-top:8px;color:var(--muted)">Este botão só preenche uma cédula de exemplo pra você testar o conferir/revogar. Não é um voto real.</p></div>
+<div id="chkResult"></div>
+<div class="card" style="padding:16px;margin-top:18px">${rankHTML()}</div></div>`;},
+noticias(){return `<div class="wrap" style="padding:40px 0"><div class="sec-head"><h2>Notícias <em>verificadas</em></h2></div>
+<div class="filters"><div class="field"><label>Tema</label><select id="nCat" onchange="renderNewsGrid()"><option>Todos</option>${(CFG.newsTopics||[]).map(t=>`<option>${t}</option>`).join('')}</select></div><div class="field"><label>Atualização</label><button class="btn btn-ghost btn-block" onclick="refreshNews()"><i class="fa-solid fa-rotate"></i> Atualizar</button></div></div>
+<div id="newsArea"></div></div>`;},
+entenda(){const T=[
+ ['fa-scroll','#D4AF37','A lei que está sendo descumprida','A Constituição diz que o poder emana do povo. Na prática, a engrenagem trata o mandato como se fosse do partido.','"Todo o poder emana do povo…" — CF, art. 1º, parágrafo único.','A fidelidade partidária (Res. TSE 22.610/2007) permite PERDER o mandato por votar contra o partido.'],
+ ['fa-people-arrows','#1D4ED8','A captura partidária + o voto que some','No proporcional, a cadeira vai pra legenda pelo quociente eleitoral. O "puxador" arrasta quem teve votação mínima.','','Em 2002, Enéas puxou 5 deputados; em 2010, Tiririca arrastou a bancada do PR em SP.'],
+ ['fa-rotate','#009739','A ideia: voto contínuo e revogável','E se o eleitor pudesse registrar, acompanhar e DEVOLVER suas escolhas o tempo todo? O voto vira termômetro vivo.','',''],
+ ['fa-bolt','#0E9F8E','Se o PIX é seguro, por que votar não seria?','Gov.br + biometria facial viva e assinatura ICP-Brasil — que já existe e tem valor jurídico.','',''],
+ ['fa-gavel','#E5484D','Recall: termômetro hoje, reforma amanhã','Revogar só abre a partir da POSSE e fica aberto durante o mandato, com travas.','','Precedentes: Colômbia, ~19 estados dos EUA, cantões suíços.'],
+ ['fa-universal-access','#0a8f8f','Inclusão primeiro','Voto remoto + postos avançados pra PcD, acamados e quem não tem celular.','','Cerca de 1 em 5 lares ainda sem internet (Cetic.br/IBGE).']];
+ const M=[['"Voto pelo app é fraude certa."','O comprovante criptográfico (ICP-Brasil + hash em ledger) permite auditoria independente — sem revelar em quem você votou.'],['"O app vai saber meu voto e vender."','LGPD: no livro público o voto vai com pseudônimo, não CPF.'],['"Idoso e PcD não vão conseguir."','É o oposto: remoto + terminal acessível ajudam quem a urna física barra.'],['"Recall vira bagunça."','Recall sério tem trava. No protótipo é termômetro, não destituição.'],['"É inconstitucional."','Protótipo é pesquisa de opinião, sem valor jurídico.'],['"Nulo anula a eleição."','Mito na lei atual. Nulo/branco viram métrica de protesto.']];
+ return `<div class="wrap" style="padding:40px 0"><div class="sec-head"><h2>Por que o <em>MudaBrasil</em> existe</h2></div>
+ <div style="display:flex;flex-direction:column;gap:14px">${T.map(t=>`<div class="card topic"><div class="ti" style="background:${t[1]}"><i class="fa-solid ${t[0]}"></i></div><div><h4>${t[2]}</h4><p>${t[3]}</p>${t[4]?`<div class="quote">${t[4]}</div>`:''}${t[5]?`<span class="fact"><i class="fa-solid fa-circle-info"></i> ${t[5]}</span>`:''}</div></div>`).join('')}</div>
+ <div class="sec-head" style="margin-top:30px"><h2 style="font-size:26px">Mito <span style="color:var(--coral)">x</span> <span style="color:var(--accent)">Verdade</span></h2></div>
+ <div class="myth-grid">${M.map(m=>`<div class="card myth"><div class="myth-q"><span style="color:var(--coral);font-family:Montserrat;font-weight:800;font-size:11px">MITO</span><div class="t">${m[0]}</div></div><div class="myth-a"><span style="color:var(--accent);font-family:Montserrat;font-weight:800;font-size:11px">VERDADE</span><div class="t">${m[1]}</div></div></div>`).join('')}</div>
+ <div class="sec-head" style="margin-top:36px"><h2 style="font-size:26px">Espalhe a <em>ideia</em></h2>
+ <div class="tone-toggle"><button class="${kitTone==='pop'?'on':''}" onclick="setTone('pop')">Tom popular</button><button class="${kitTone==='inst'?'on':''}" onclick="setTone('inst')">Tom institucional</button></div></div>
+ <div id="pitchList"></div>
+ <div class="card" style="padding:20px;margin-top:20px"><h4>Quem Somos</h4><p style="color:var(--muted);margin-top:8px">Plataforma cívica de <b>voto contínuo e revogável</b> (protótipo, sem valor jurídico). O app assina; o site prova.</p>
+ <div class="kv"><span class="k">Razão social</span><span class="vv" style="font-size:12px">${CFG.razaoSocial||'—'}</span></div>
+ <div class="kv"><span class="k">CNPJ</span><span class="vv">${CFG.cnpj||'—'}</span></div>
+ <div class="kv"><span class="k">DPO</span><span class="vv" style="font-size:12px">${(CFG.emails&&CFG.emails.dpo)||'—'}</span></div></div></div>`;},
+admin(){return `<div class="wrap" style="padding:40px 0"><div class="sec-head"><h2>Painel do fundador <em>(admin)</em></h2></div>
+<div class="stat-grid"><div class="card stat"><div class="ic" style="background:#009739"><i class="fa-solid fa-check-to-slot"></i></div><div class="v">128.940</div><div class="l">Escolhas hoje</div></div><div class="card stat"><div class="ic" style="background:#D4AF37"><i class="fa-solid fa-bullhorn"></i></div><div class="v">34</div><div class="l">Anúncios ativos</div></div><div class="card stat"><div class="ic" style="background:#E5484D"><i class="fa-solid fa-rotate-left"></i></div><div class="v">34.730</div><div class="l">Votos revogáveis usados</div></div><div class="card stat"><div class="ic" style="background:#7b3ff2"><i class="fa-solid fa-shield-halved"></i></div><div class="v">17</div><div class="l">Ocultadas pela IA</div></div></div>
+<div class="card" style="padding:16px;margin-top:16px"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><div><b>Publicidade (kill switch)</b><div style="color:var(--muted);font-size:13px">Liga/desliga os espaços de anúncio (genéricos).</div></div><span class="switch ${pubAtiva()?'on':''}" onclick="togglePub()"><i class="fa-solid fa-power-off"></i></span></div></div>
+<div class="card" style="padding:16px;margin-top:12px"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><div><b>Janela de revogação (R5)</b><div style="color:var(--muted);font-size:13px">Simula se já passou da posse.</div></div><span class="switch ${LS.get('mb_janela',false)?'on':''}" onclick="toggleJanela()"><i class="fa-solid fa-lock"></i></span></div></div>
+<div class="card chart-card" style="margin-top:16px"><h4>Opiniões por dia</h4><div class="chart-box"><canvas id="adLine"></canvas></div></div></div>`;}
+};
+function buildTicker(items){const tk=$('#tkTrack');if(!tk)return;const its=(items||[]).slice(0,8).map(n=>`<span class="tk-item"><i class="fa-solid fa-bolt"></i> ${n.t}</span>`).join('');tk.innerHTML=its+its;}
+function renderHomeNews(items){const el=$('#homeNews');if(!el)return;const feat=items[0],side=items.slice(1,4);
+ el.innerHTML=`<div class="news-layout"><div class="news-feat" ${feat.img?`data-bgimg="${feat.img}"`:''} style="${feat.img?'':`background-image:${feat.g}`}"><div class="veil"></div><div class="nf-b"><span class="seal"><i class="fa-solid fa-circle-check"></i> Fonte verificada</span><h3 style="margin-top:10px">${feat.t}</h3><p>${feat.r}</p><a class="src" href="${feat.link}" target="_blank" rel="noopener">Ler na fonte <i class="fa-solid fa-arrow-up-right-from-square"></i></a></div></div>
+ <div class="news-side">${side.map(n=>`<div class="card news-mini"><div class="nm-th" ${n.img?`data-bgimg="${n.img}"`:''}>${thumb(n)}</div><div class="nm-b"><h4>${n.t}</h4><div class="meta"><span class="seal">Fonte verificada</span><span><i class="fa-solid fa-link"></i> ${n.f}</span></div></div></div>`).join('')}</div></div>
+ <div class="carousel" id="carousel" style="margin-top:18px"><div class="slides" id="slides">${items.slice(0,5).map(n=>`<div class="slide" ${n.img?`data-bgimg="${n.img}"`:''} style="${n.img?'':`background-image:${n.g}`}"><div class="veil"></div><div class="stxt"><span class="stag">${n.c} · ${n.f}</span><h3>${n.t}</h3><p>${n.r}</p><a class="src" href="${n.link}" target="_blank" rel="noopener">Ler na fonte <i class="fa-solid fa-arrow-up-right-from-square"></i></a></div></div>`).join('')}</div>
+ <button class="car-btn car-prev" onclick="carMove(-1)" aria-label="Anterior"><i class="fa-solid fa-chevron-left"></i></button><button class="car-btn car-next" onclick="carMove(1)" aria-label="Próximo"><i class="fa-solid fa-chevron-right"></i></button><div class="dots" id="dots"></div></div>`;}
+let carIdx=0,carTimer=null;
+function initCarousel(){const s=$('#slides');if(!s)return;const n=s.children.length;$('#dots').innerHTML=Array.from({length:n}).map((_,i)=>`<button class="${i===0?'on':''}" onclick="carGo(${i})" aria-label="Slide ${i+1}"></button>`).join('');carIdx=0;carGo(0);clearInterval(carTimer);carTimer=setInterval(()=>carMove(1),5000);}
+function carGo(i){const s=$('#slides');if(!s)return;const n=s.children.length;carIdx=(i+n)%n;s.style.transform=`translateX(-${carIdx*100}%)`;document.querySelectorAll('#dots button').forEach((d,k)=>d.classList.toggle('on',k===carIdx));}
+function carMove(d){carGo(carIdx+d);}
+function renderNewsPage(items){window._news=items;renderNewsGrid();}
+function renderNewsGrid(){const items=(window._news||[]);const cat=$('#nCat')?$('#nCat').value:'Todos';const list=items.filter(n=>cat==='Todos'||n.c===cat);const area=$('#newsArea');if(!area)return;
+ if(!list.length){area.innerHTML='<div class="card" style="padding:40px;text-align:center;color:var(--muted)">Sem notícias neste tema. <button class="btn btn-ghost btn-sm" style="margin-top:10px" onclick="refreshNews()">Atualizar</button></div>';return;}
+ const feat=list[0],rest=list.slice(1);
+ area.innerHTML=`<div class="news-layout" style="margin-bottom:20px"><div class="news-feat" ${feat.img?`data-bgimg="${feat.img}"`:''} style="${feat.img?'':`background-image:${feat.g}`}"><div class="veil"></div><div class="nf-b"><span class="seal">Fonte verificada</span><h3 style="margin-top:10px">${feat.t}</h3><p>${feat.r}</p><a class="src" href="${feat.link}" target="_blank" rel="noopener" style="display:inline-flex;gap:6px;margin-top:10px;font-family:Montserrat;font-weight:700;font-size:12.5px;color:var(--amarelo)">Ler na fonte</a></div></div>
+ <div class="news-side">${rest.slice(0,3).map(n=>`<div class="card news-mini"><div class="nm-th" ${n.img?`data-bgimg="${n.img}"`:''}>${thumb(n)}</div><div class="nm-b"><h4>${n.t}</h4><div class="meta"><span class="seal">Fonte verificada</span></div></div></div>`).join('')}</div></div>
+ <div class="news-grid">${rest.slice(3).map(n=>`<div class="card news-card"><div class="nc-th" ${n.img?`data-bgimg="${n.img}"`:''}>${thumb(n)}</div><div class="nc-b"><h4>${n.t}</h4><p>${n.r}</p><div class="meta"><span class="seal">Fonte verificada</span><span><i class="fa-solid fa-link"></i> ${n.f}</span></div></div></div>`).join('')}</div>`;setTimeout(upgradeThumbs,100);}
+function refreshNews(){toast('Atualizando…');loadNews(true).then(i=>{if(current==='home'){renderHomeNews(i);buildTicker(i);upgradeThumbs();}else renderNewsPage(i);});}
+function killCharts(){Object.keys(charts).forEach(k=>{try{charts[k].destroy()}catch(e){}delete charts[k];});}
+function pie(id,l,d){const c=$('#'+id);if(!c||!window.Chart)return;charts[id]=new Chart(c,{type:'doughnut',data:{labels:l,datasets:[{data:d,backgroundColor:['#00E5C9','#012169','#FEDB00','#FF6B6B','#7b3ff2'],borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}});}
+function bar(id,l,d){const c=$('#'+id);if(!c||!window.Chart)return;charts[id]=new Chart(c,{type:'bar',data:{labels:l,datasets:[{data:d,backgroundColor:'#FF6B6B',borderRadius:8}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});}
+function line(id,l,d){const c=$('#'+id);if(!c||!window.Chart)return;charts[id]=new Chart(c,{type:'line',data:{labels:l,datasets:[{data:d,borderColor:'#00E5C9',fill:true,tension:.4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});}
+const estadosMap=[{uf:'SP',lat:-23.55,lng:-46.63,l:'Carlos Mendes',c:'#012169'},{uf:'RJ',lat:-22.9,lng:-43.17,l:'Maria Santos',c:'#e3000f'},{uf:'MG',lat:-19.91,lng:-43.93,l:'Ana Silva',c:'#009739'},{uf:'RS',lat:-30.03,lng:-51.23,l:'João Oliveira',c:'#D4AF37'},{uf:'BA',lat:-12.97,lng:-38.51,l:'Maria Santos',c:'#e3000f'},{uf:'DF',lat:-15.79,lng:-47.88,l:'João Oliveira',c:'#D4AF37'}];
+function initMap(){const el=$('#map');if(!el||!window.L)return;if(_map){try{_map.remove()}catch(e){}_map=null;}_map=L.map('map',{scrollWheelZoom:false,attributionControl:false}).setView([-14.5,-52],4);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:8}).addTo(_map);estadosMap.forEach(e=>{L.circleMarker([e.lat,e.lng],{radius:13,color:'#fff',weight:2,fillColor:e.c,fillOpacity:.92}).addTo(_map).bindPopup('<b>'+e.uf+'</b><br>Líder: '+e.l);});setTimeout(()=>_map&&_map.invalidateSize(),250);}
+const PITCHES=[
+ {pop:'Seu voto pode estar elegendo quem você NÃO escolheu.',inst:'O sistema proporcional de lista distorce a vontade nominal do eleitor.',corpo:'No proporcional, a cadeira vai pro partido pelo quociente eleitoral — o "puxador" arrasta quem teve votação mínima.',fato:'Em 2002, Enéas puxou 5 deputados; em 2010, Tiririca arrastou a bancada do PR em SP.'},
+ {pop:'O eleito vota como o partido manda — não como você quer.',inst:'A fidelidade partidária transfere o mandato do eleitor para a legenda.',corpo:'A fidelidade partidária pune com perda de mandato quem vota contra a legenda.',fato:'CF, art. 1º, parágrafo único: "todo o poder emana do povo".'},
+ {pop:'Se o PIX é seguro, por que votar pelo app não seria?',inst:'A infraestrutura de identidade e assinatura digital já protege transações críticas.',corpo:'Gov.br + biometria facial viva e assinatura ICP-Brasil protegem seu voto como protegem seu dinheiro.',fato:'A ICP-Brasil já tem valor jurídico (MP 2.200-2/2001).'},
+ {pop:'Perdeu a confiança? Perdeu o voto.',inst:'O voto contínuo e revogável devolve ao eleitor o poder de ajuste entre eleições.',corpo:'Você coloca e tira quando quiser, a partir da posse, durante o mandato.',fato:'Recall existe na Colômbia, em ~19 estados dos EUA e em cantões suíços.'}];
+let kitTone='pop';
+function setTone(t){kitTone=t;renderPitches();}
+function renderPitches(){const el=$('#pitchList');if(!el)return;el.innerHTML=PITCHES.map((p,i)=>`<div class="pitch"><div class="pn">${String(i+1).padStart(2,'0')}</div><div style="flex:1"><div class="pg">${kitTone==='pop'?p.pop:p.inst}</div><div class="pc">${p.corpo}</div><div class="pf"><i class="fa-solid fa-circle-info"></i> ${p.fato}</div><div class="pa"><button class="btn btn-ghost btn-sm" onclick="copyText(pitchText(${i}),'Gancho copiado! 📋')"><i class="fa-regular fa-copy"></i> Copiar</button></div></div></div>`).join('');}
+function pitchText(i){const p=PITCHES[i];return (kitTone==='pop'?p.pop:p.inst)+'\n\n'+p.corpo+'\n\nFato: '+p.fato+'\n\n— MudaBrasil · voto contínuo e revogável';}
+function copyText(t,m){if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>toast(m));else toast(m);}
+function togglePub(){const v=!pubAtiva();LS.set('mb_pub',v);toast('Publicidade '+(v?'ATIVADA':'DESATIVADA')+'.');render();}
+function toggleJanela(){const j=!LS.get('mb_janela',false);LS.set('mb_janela',j);toast(j?'Janela de revogação ABERTA (pós-posse).':'Janela fechada.');render();}
+const LEGAL={privacidade:'<h3>Política de Privacidade</h3><p>LGPD: tratamos o mínimo; o livro público usa pseudônimo, não CPF; direitos do titular via dpo@.</p>',cookies:'<h3>Política de Cookies</h3><p>Cookies essenciais + medição first-party. Sem rastreadores de terceiro.</p>',publicidade:'<h3>Política de Publicidade</h3><p>Dois regimes (opinião/eleitoral), rotulagem obrigatória, Biblioteca Pública, kill switch. Nesta fase, só publicidade genérica.</p>',conteudo:'<h3>Política de Conteúdo</h3><p>Vedamos ódio, desinformação, deepfake não rotulado e pedido de voto fora do período.</p>',denuncia:'<h3>Canal de Denúncia</h3><p>Denuncie por denuncia@ ou pelo botão Reportar. Direito de resposta garantido.</p>'};
+function openLegal(k){$('#legalBody').innerHTML=LEGAL[k];abrir('legalModal');}
+$('#icmV').textContent=(CFG.icm&&CFG.icm.versao)||'v1.0';$('#icmD').textContent=(CFG.icm&&CFG.icm.vigenteDesde)||'14/08/2026';
+render();
+if(!LS.get('mb_site_pop',0)){abrir('popSite');}
+</script>
+</body>
+</html>
