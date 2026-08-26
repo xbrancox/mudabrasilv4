@@ -1,0 +1,11 @@
+{
+  "name": "MudaBrasil — Seu voto coloca, seu voto tira.",
+  "short_name": "MudaBrasil",
+  "description": "Plataforma cívica de voto contínuo e revogável.",
+  "start_url": "./app/index.html",
+  "display": "standalone",
+  "background_color": "#0B132B",
+  "theme_color": "#0B132B",
+  "lang": "pt-BR",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
