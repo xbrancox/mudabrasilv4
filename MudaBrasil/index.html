@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>MudaBrasil · Voto Contínuo e Revogável</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="config.js"></script>
+<style>
+:root{--bg:#0A1628;--card:#122036;--card2:#16263e;--line:#1e3350;--ink:#EAF0F7;--muted:#8fa3bc;--gold:#E0A82E;--gold2:#F0CB60;--green:#2ECC71;--blue:#3B82F6;--red:#E74C3C;--purple:#A855F7;--r:14px}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 Inter,sans-serif;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:48px 48px}
+h1,h2,h3,h4{font-weight:800;line-height:1.15}a{color:var(--gold);text-decoration:none}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--ink);font:600 14px Inter;padding:12px 20px;cursor:pointer;transition:.15s}
+.btn:hover{filter:brightness(1.15)}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:#1a1400;font-weight:700}
+.btn.green{background:var(--green);border-color:var(--green);color:#fff}
+.btn.red{background:transparent;border-color:var(--red);color:var(--red)}
+.btn.sm{padding:8px 14px;font-size:12.5px}
+header{position:sticky;top:0;z-index:100;background:rgba(10,22,40,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.hd{display:flex;align-items:center;gap:14px;padding:12px 20px;max-width:1280px;margin:0 auto;flex-wrap:wrap}
+.lg{display:flex;align-items:center;gap:10px}
+.lg .ic{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#2ECC71,#E0A82E);display:grid;place-items:center;color:#0A1628;font-size:18px}
+.lg b{font-size:18px}.lg small{display:block;color:var(--muted);font-size:11px}
+nav{margin-left:auto;display:flex;gap:2px;flex-wrap:wrap}
+nav a{color:var(--muted);font:600 13px Inter;padding:9px 12px;border-radius:8px;cursor:pointer}
+nav a.on{background:var(--gold);color:#1a1400;font-weight:700}
+.hact{display:flex;gap:8px}
+.sec{display:none;padding:44px 0 70px}.sec.on{display:block}
+.kick{color:var(--gold);font:700 11px Inter;letter-spacing:.2em;text-transform:uppercase}
+.hero{text-align:center;padding:60px 20px 20px}
+.hero h1{font-size:clamp(34px,6vw,56px);font-weight:900}
+.hero .l2{font-size:clamp(18px,3vw,24px);font-weight:700;margin-top:22px}
+.hero .l2 .g{color:var(--green)}.hero .l2 .y{color:var(--gold)}
+.hero .l3{font-size:clamp(16px,2.4vw,20px);font-weight:800;margin-top:14px}
+.hero .l3 .g{color:var(--green)}.hero .l3 .r{color:var(--red)}
+.hero p{color:var(--muted);max-width:640px;margin:22px auto}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+.tag{display:inline-block;background:var(--green);color:#fff;font:700 10px Inter;letter-spacing:.12em;padding:6px 14px;border-radius:999px;text-transform:uppercase}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px;text-align:center}
+.step .n{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;margin:0 auto 14px;font-weight:800;color:#fff}
+.explore{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:24px}
+.exp{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.exp .ic{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-size:17px;margin-bottom:14px}
+.exp h3{font-size:15px;margin-bottom:8px}.exp p{color:var(--muted);font-size:12.5px}.exp a{font-size:12.5px;font-weight:700;cursor:pointer}
+.donuts{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+.don{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.don h4{font-size:14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.don .pill{font-size:10px;border:1px solid var(--line);border-radius:999px;padding:3px 8px;color:var(--muted);cursor:pointer}
+.don .pill.on{border-color:var(--gold);color:var(--gold)}
+.dchart{height:140px;margin:12px 0 8px;display:grid;place-items:center}
+.donut{width:115px;height:115px;border-radius:50%;position:relative}
+.donut::after{content:"";position:absolute;inset:26%;background:var(--card);border-radius:50%}
+.leg{display:flex;flex-wrap:wrap;gap:8px;font-size:10.5px;color:var(--muted)}
+.leg i{width:8px;height:8px;border-radius:2px;display:inline-block;margin-right:4px}
+.filtros{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}
+input,select{background:var(--card2);border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:11px 14px;font:500 14px Inter;width:100%}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.grid{display:grid;gap:14px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}
+.muted{color:var(--muted);font-size:13px}
+.av{width:46px;height:46px;border-radius:50%;object-fit:cover;object-position:top center;background:var(--card2)}
+.avf{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#0A1628;flex:none}
+.badge{font:700 10px Inter;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.badge.ok{color:var(--green);border-color:rgba(46,204,113,.4)}
+.badge.red{color:var(--red);border-color:rgba(231,76,60,.4)}
+.badge.blue{color:var(--blue);border-color:rgba(59,130,246,.4)}
+.badge.amb{color:var(--gold);border-color:rgba(224,168,46,.4)}
+.rank{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px}
+.rank .pos{font:900 16px Inter;color:var(--gold);width:26px}
+.bar70{height:10px;border-radius:6px;background:var(--card2);position:relative;overflow:hidden;margin:8px 0 4px}
+.bar70 i{display:block;height:100%;border-radius:6px}
+.bar70 .mk{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--gold)}
+.news{max-width:420px}
+.ncard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.ncard .th{height:160px;background:linear-gradient(135deg,#123a2e,#122036);display:grid;place-items:center;color:#2ECC71;font-size:28px;position:relative}
+.ncard .cat{position:absolute;top:12px;left:12px;background:var(--green);color:#fff;font:700 9px Inter;letter-spacing:.1em;padding:5px 10px;border-radius:999px;text-transform:uppercase}
+.ncard .bd{padding:18px}.ncard h4{font-size:15px}.ncard p{color:var(--muted);font-size:12.5px;margin:10px 0}
+.seal{background:rgba(46,204,113,.15);color:var(--green);border:1px solid rgba(46,204,113,.4);font:700 10px Inter;padding:5px 10px;border-radius:8px}
+.ctabox{background:linear-gradient(135deg,#122036,#16263e);border:1px solid var(--line);border-radius:20px;padding:44px 26px;text-align:center;margin-top:50px}
+footer{background:#0d1626;border-top:1px solid var(--line);padding:44px 0 20px;margin-top:60px}
+.ft{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:26px}
+.ft h5{font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:14px}
+.ft a{display:block;color:var(--muted);font-size:13px;padding:4px 0;cursor:pointer}
+.fbot{border-top:1px solid var(--line);margin-top:30px;padding-top:16px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:11.5px}
+.doss{display:grid;gap:10px}.doss .blk{border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--card2)}.doss .src{font-size:11.5px;color:var(--muted)}
+.overlay{position:fixed;inset:0;background:rgba(4,8,20,.8);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center;padding:18px}
+.overlay.open{display:flex}
+.modal{background:var(--bg);border:1px solid var(--line);border-radius:20px;max-width:560px;width:100%;max-height:86vh;overflow:auto;padding:26px}
+#toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#16263e;border:1px solid var(--line);color:var(--ink);padding:12px 18px;border-radius:12px;z-index:300;display:none;max-width:90%}
+@media(max-width:960px){.explore{grid-template-columns:repeat(2,1fr)}.donuts{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:1fr}.filtros{grid-template-columns:1fr 1fr}.ft{grid-template-columns:1fr 1fr}nav{display:none}}
+</style>
+</head>
+<body>
+<header><div class="hd">
+<div class="lg"><div class="ic"><i class="fa-solid fa-layer-group"></i></div><div><b>MudaBrasil</b><small>Participação Cívica</small></div></div>
+<nav id="nav">
+<a data-p="inicio" class="on">Início</a><a data-p="radar">Radar</a><a data-p="candidatos">Candidatos</a><a data-p="congresso">Congresso</a>
+<a data-p="conferir">Conferir Voto</a><a data-p="revogar">Revogar Voto</a><a data-p="revogados">Políticos com votos revogados</a><a data-p="ajuda">Ajuda</a><a data-p="quem">Quem Somos</a>
+</nav>
+<div class="hact"><button class="btn sm" onclick="toast('Login na fase final (Gov.br).')">Entrar</button><button class="btn gold sm">Cadastrar</button></div>
+</div></header>
+<main>
+<section class="sec on" id="sec-inicio"><div class="hero">
+<h1>O poder emana do povo</h1>
+<div class="l2"><span class="g">não acaba</span> no <span class="y">dia da eleição.</span></div>
+<div class="l3">Seu voto <span class="g">coloca</span>. Seu voto <span class="r">tira</span>.</div>
+<p>Acompanhe a opinião do Brasil, cobre promessas no Radar Político, <b style="color:var(--ink)">participe dos Projetos de Leis no Congresso</b>, confira seu voto com segurança. Analise o currículo dos candidatos. Tenha a oportunidade de tirar o mal político revogando seu voto.</p>
+<div class="cta"><button class="btn" onclick="toast('Votação somente no app.')"><i class="fa-solid fa-check-to-slot"></i> Votar <small>Somente no App</small></button><button class="btn" onclick="go('conferir')">Conferir Voto</button><button class="btn" onclick="go('revogar')">Revogar Voto</button></div>
+</div>
+<div class="wrap">
+<div style="text-align:center"><span class="tag">COMO FUNCIONA</span><h2 style="margin-top:14px">Três passos, zero burocracia</h2></div>
+<div class="steps">
+<div class="step"><div class="n" style="background:var(--green)">1</div><h3>Escolha no app</h3><p class="muted">Escolha seus candidatos, vote com total segurança.</p></div>
+<div class="step"><div class="n" style="background:var(--blue)">2</div><h3>Guarde o código</h3><p class="muted">Cada voto gera um código de 20 dígitos. É o seu comprovante.</p></div>
+<div class="step"><div class="n" style="background:var(--gold)">3</div><h3>Confira aqui</h3><p class="muted">No site, você cola o código e confere em quem votou.</p></div>
+</div>
+<div style="text-align:center;margin-top:60px"><h2>Explore o MudaBrasil</h2><p class="muted">Tudo o que você precisa para uma participação cívica informada e ativa.</p></div>
+<div class="explore">
+<div class="exp"><div class="ic" style="background:rgba(224,168,46,.15);color:var(--gold)"><i class="fa-regular fa-clock"></i></div><h3>Radar Político</h3><p>Cobre do seu político por promessas feitas e não realizadas.</p><a onclick="go('radar')">Acessar →</a></div>
+<div class="exp"><div class="ic" style="background:rgba(46,204,113,.15);color:var(--green)"><i class="fa-regular fa-user"></i></div><h3>Candidatos</h3><p>Veja quem é o candidato e seu histórico completo.</p><a onclick="go('candidatos')">Ver →</a></div>
+<div class="exp"><div class="ic" style="background:rgba(59,130,246,.15);color:var(--blue)"><i class="fa-regular fa-file-lines"></i></div><h3>PLs no Congresso</h3><p>Opine sobre leis em tramitação no congresso nacional.</p><a onclick="go('congresso')">Ir ao Congresso →</a></div>
+<div class="exp"><div class="ic" style="background:rgba(224,168,46,.15);color:var(--gold)"><i class="fa-solid fa-check"></i></div><h3>Conferir Voto</h3><p>Cole o código e confira os candidatos em quem votou.</p><a onclick="go('conferir')">Verificar →</a></div>
+<div class="exp"><div class="ic" style="background:rgba(231,76,60,.15);color:var(--red)"><i class="fa-regular fa-trash-can"></i></div><h3>Revogar Voto</h3><p>Não cumpriu? Revogue a confiança do seu voto.</p><a onclick="go('revogados')" style="color:var(--red)">Revogar →</a></div>
+</div>
+<div style="margin-top:60px"><span class="kick">02 — ACOMPANHAMENTO</span><h2 style="margin-top:8px">Acompanhe quem está na frente</h2><p class="muted">Dados atualizados em tempo real sobre a preferência do eleitorado</p></div>
+<div class="donuts" id="donuts"></div>
+<div style="margin-top:60px"><span class="kick">03 — ATUALIZAÇÕES</span><h2 style="margin-top:8px">Notícias</h2><p class="muted">Fique por dentro do que acontece na política</p></div>
+<div class="news" id="homeNews" style="margin-top:20px"></div>
+<div class="ctabox"><h2>Sua voz faz a <span style="color:var(--blue)">diferença</span></h2>
+<p class="muted">Participe ativamente da democracia brasileira. Acompanhe, opine, vote e fiscalize. O poder está em suas mãos.</p>
+<div class="cta" style="margin-top:8px"><button class="btn gold">Começar Agora</button><button class="btn">Conhecer Mais</button></div></div>
+</div></section>
+<section class="sec" id="sec-radar"><div class="wrap">
+<span class="kick">RADAR POLÍTICO</span><h2 style="margin:8px 0 6px">Cobre, acompanhe, elogie</h2>
+<p class="muted">Todos os cargos · busca por nome, número, partido e região. <span style="color:var(--blue)">■</span> Real · <span style="color:var(--gold)">■</span> Demo. O político só responde com <b>selo de verificado</b>.</p>
+<div class="filtros">
+<select id="fCargo" onchange="renderRadar()"></select>
+<select id="fUF" onchange="renderRadar()"></select>
+<select id="fPartido" onchange="renderRadar()"></select>
+<input id="rbusca" placeholder="Nome ou número…" oninput="renderRadar()"/>
+</div>
+<div class="g2"><div class="card"><h3 style="color:var(--red);font-size:15px"><i class="fa-solid fa-arrow-trend-down"></i> Mais Reclamações</h3><div id="maisRec"></div></div>
+<div class="card"><h3 style="color:var(--green);font-size:15px"><i class="fa-solid fa-arrow-trend-up"></i> Menos Reclamações</h3><div id="menosRec"></div></div></div>
+<div id="radarList" class="grid g3" style="margin-top:14px"></div>
+</div></section>
+<section class="sec" id="sec-candidatos"><div class="wrap">
+<span class="kick">CANDIDATOS</span><h2 style="margin:8px 0 6px">Compare com dados 100% públicos</h2>
+<p class="muted">Fontes oficiais: TSE · Portal da Transparência · Câmara/Senado · CNJ. Índice de integridade automático.</p>
+<div class="card" style="margin:18px 0"><table style="width:100%;font-size:13px;border-collapse:collapse"><tr style="color:var(--muted)"><th style="text-align:left;padding:6px">Fonte</th><th style="text-align:left">Dados</th></tr>
+<tr><td style="padding:6px">TSE</td><td class="muted">Registro, histórico eleitoral, bens, votos</td></tr>
+<tr><td style="padding:6px">Portal da Transparência</td><td class="muted">Rendimentos, patrimônio, gastos</td></tr>
+<tr><td style="padding:6px">Câmara / Senado</td><td class="muted">Proposituras, votação nominal, presença</td></tr>
+<tr><td style="padding:6px">CNJ</td><td class="muted">Processos judiciais públicos</td></tr></table></div>
+<div id="candList" class="grid g3"></div>
+</div></section>
+<section class="sec" id="sec-congresso"><div class="wrap">
+<span class="kick">CONGRESSO</span><h2 style="margin:8px 0 6px">PLs Tramitando no Congresso</h2>
+<p class="muted">Reais, via API da Câmara. Opine e leia o inteiro teor.</p>
+<div class="filtros" style="grid-template-columns:1fr"><input id="plBusca" placeholder="procurar por Nº do PL, autor, partido…" oninput="renderPLS()"/></div>
+<div id="plsList" class="grid"></div>
+</div></section>
+<section class="sec" id="sec-conferir"><div class="wrap" style="max-width:640px">
+<span class="kick">CONFERIR VOTO</span><h2 style="margin:8px 0 6px">Conferir voto</h2>
+<p class="muted">Local onde você prova que seu voto existe e confirma em quem realmente votou.</p>
+<div class="card" style="margin-top:18px"><label class="muted">Cole seu codigo de verificacao</label>
+<input id="chk" placeholder="0000 0000 0000 0000 0000" style="text-align:center;letter-spacing:2px;margin:10px 0"/>
+<button class="btn gold" style="width:100%" onclick="conferir()"><i class="fa-solid fa-magnifying-glass"></i> Conferir</button>
+<button class="btn sm" style="width:100%;margin-top:8px" onclick="usarDemo()">Testar com um exemplo</button></div>
+<div id="chkRes"></div>
+</div></section>
+<section class="sec" id="sec-revogar"><div class="wrap" style="max-width:640px">
+<span class="kick" style="color:var(--red)">REVOGAR VOTO</span><h2 style="margin:8px 0 6px">Não cumpriu? Revogue.</h2>
+<p class="muted">A revogação abre <b>a partir da posse</b> e fica aberta durante o mandato.</p>
+<div class="card" style="margin-top:18px"><p class="muted"><i class="fa-solid fa-lock" style="color:var(--red)"></i> Janela travada até a posse. Cole seu código no <b>Conferir Voto</b> para preparar a revogação.</p>
+<button class="btn red" style="width:100%" onclick="go('conferir')">Ir para Conferir Voto</button></div>
+</div></section>
+<section class="sec" id="sec-revogados"><div class="wrap">
+<span class="kick" style="color:var(--red)">POLÍTICOS COM VOTOS REVOGADOS</span><h2 style="margin:8px 0 6px">O povo devolvendo o poder</h2>
+<p class="muted">Regra: <b>70%</b> dos votos que elegeram = cassação. Busque por nome, número, partido ou estado.</p>
+<div class="filtros" style="grid-template-columns:1fr"><input id="revBusca" placeholder="nome, numero, partido, estado…" oninput="renderRevogados()"/></div>
+<div id="revList" class="grid g2"></div>
+</div></section>
+<section class="sec" id="sec-ajuda"><div class="wrap" style="max-width:700px">
+<span class="kick">AJUDA</span><h2 style="margin:8px 0 14px">Perguntas frequentes</h2>
+<div id="faqList" class="grid"></div>
+</div></section>
+<section class="sec" id="sec-quem"><div class="wrap" style="max-width:700px">
+<span class="kick">QUEM SOMOS</span><h2 style="margin:8px 0 14px">MudaBrasil</h2>
+<div class="card"><p>Plataforma cívica de <b>voto contínuo e revogável</b> (protótipo demonstrativo, sem valor jurídico). O poder emana do povo — e não acaba no dia da eleição.</p>
+<p style="color:var(--gold);font-weight:700">"Seu voto coloca, seu voto tira."</p></div>
+</div></section>
+</main>
+<footer><div class="wrap"><div class="ft">
+<div><div class="lg"><div class="ic"><i class="fa-solid fa-layer-group"></i></div><b>MudaBrasil</b></div>
+<p class="muted" style="margin:12px 0">Plataforma de opinião e participação para um Brasil com mais transparência, voz e poder de voto real.</p>
+<p style="color:var(--gold);font-weight:700;font-size:13px">"Seu voto coloca, seu voto tira."</p></div>
+<div><h5>Navegar</h5><a onclick="go('candidatos')">Pesquisa</a><a onclick="go('radar')">Radar Político</a><a onclick="go('candidatos')">Candidatos</a><a onclick="go('inicio')">Resultados</a><a onclick="go('inicio')">Notícias</a></div>
+<div><h5>Participar</h5><a onclick="go('conferir')">Meus Votos</a><a onclick="go('radar')">Reclame Aqui</a><a onclick="go('inicio')">Meu Estado</a><a onclick="toast('Chat cívico na fase final.')">Chat Cívico</a><a>Baixar App</a></div>
+<div><h5>Institucional</h5><a onclick="go('quem')">Sobre Nós</a><a>Termos de Uso</a><a>Privacidade</a><a>Contato</a><a>Imprensa</a></div>
+</div><div class="fbot"><span>© 2026 MudaBrasil. Protótipo demonstrativo. Dados simulados.</span><span>mudabrasil.app</span></div></div></footer>
+<div class="overlay" id="mDoss"><div class="modal"><div id="dossBody"></div><button class="btn" style="width:100%;margin-top:12px" onclick="fechar('mDoss')">Fechar</button></div></div>
+<div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+function toast(m){const t=$('#toast');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',2600)}
+function fechar(id){$( '#'+id).classList.remove('open')}
+function go(p){$$('.sec').forEach(s=>s.classList.remove('on'));$('#sec-'+p).classList.add('on');$$('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.p===p));window.scrollTo(0,0)}
+$$('#nav a').forEach(a=>a.onclick=()=>go(a.dataset.p));
+const LS={get:(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))};
+const CORES=['#2ECC71','#E0A82E','#3B82F6','#E74C3C','#A855F7'],NOMES=['Maria','Carlos','Ana','João','Outros'];
+function donut(el,d){const t=d.reduce((a,b)=>a+b,0);let a=0;const g=d.map((v,i)=>{const p=v/t*360;const s=`${CORES[i]} ${a}deg ${a+p}deg`;a+=p;return s}).join(',');el.innerHTML=`<div class="donut" style="background:conic-gradient(${g})"></div><div class="leg">${NOMES.map((n,i)=>`<span><i style="background:${CORES[i]}"></i>${n}</span>`).join('')}</div>`}
+function initDonuts(){$('#donuts').innerHTML=['Presidente','Governador','Senador','Deputado Federal','Deputado Estadual','Prefeito','Vereador'].map(c=>`<div class="don"><h4>${c} <span class="pill on">UF</span><span class="pill">Cidade</span></h4><div class="dchart"></div></div>`).join('');$$('.dchart').forEach(d=>donut(d,[28,25,20,16,11]))}
+/* ===== TODOS OS CARGOS + FILTROS ===== */
+const CARGOS_F=['Presidente','Governador','Senador','Deputado Federal','Deputado Estadual','Prefeito','Vereador'];
+let POL=[],ready=false;
+const DEMO=[{nome:'Ana Fontes',partido:'PV',uf:'SP',cargo:'Presidente',num:51,real:0},{nome:'Rui Bacelar',partido:'PSD',uf:'RJ',cargo:'Presidente',num:55,real:0},{nome:'Cida Moraes',partido:'PT',uf:'BA',cargo:'Presidente',num:13,real:0},
+{nome:'Helena Cruz',partido:'PSB',uf:'MG',cargo:'Governador',num:40,real:0},{nome:'Marcos Vilela',partido:'MDB',uf:'SP',cargo:'Governador',num:15,real:0},{nome:'Tereza Kahn',partido:'NOVO',uf:'PR',cargo:'Governador',num:30,real:0},
+{nome:'Beto Sampaio',partido:'PP',uf:'SP',cargo:'Deputado Estadual',num:11,real:0},{nome:'Vera Lins',partido:'PCdoB',uf:'RJ',cargo:'Deputado Estadual',num:65,real:0},{nome:'Nina Torres',partido:'PSOL',uf:'MG',cargo:'Deputado Estadual',num:50,real:0},
+{nome:'Paulo Anchieta',partido:'PSDB',uf:'SP',cargo:'Prefeito',num:45,real:0},{nome:'Lúcia Ferraz',partido:'REDE',uf:'RJ',cargo:'Prefeito',num:18,real:0},{nome:'Caio Bittar',partido:'Cidadania',uf:'MG',cargo:'Prefeito',num:23,real:0},
+{nome:'Ivan Duarte',partido:'Republicanos',uf:'SP',cargo:'Vereador',num:10,real:0},{nome:'Otto Prado',partido:'PL',uf:'RJ',cargo:'Vereador',num:22,real:0},{nome:'Maria Dias',partido:'PT',uf:'BA',cargo:'Vereador',num:13,real:0}];
+async function carregaPol(){POL=[];
+try{const r=await fetch('https://dadosabertos.camara.leg.br/api/v2/deputados?itens=513&ordem=ASC&ordenarPor=nome');const j=await r.json();(j.dados||[]).forEach(d=>POL.push({nome:d.nome,partido:d.siglaPartido||'',uf:d.siglaUf||'',cargo:'Deputado Federal',foto:d.urlFoto||'',num:d.id,real:1,rec:Math.floor(Math.random()*90)+5,selo:Math.random()>.4}));}catch(e){}
+try{const r=await fetch('https://legis.senado.leg.br/dadosabertos/senador/lista/legislatura/57?formato=json');const j=await r.json();const L=(j.lista&&j.lista.senador)||[];L.forEach(s=>{const p=s.IdentificacaoParlamentar||{};POL.push({nome:p.NomeParlamentar||'',partido:p.SiglaPartido||'',uf:p.Uf||'',cargo:'Senador',foto:p.UrlFotoParlamentar||'',num:p.CodigoParlamentar||'',real:1,rec:Math.floor(Math.random()*90)+5,selo:Math.random()>.4});});}catch(e){}
+POL.forEach(p=>{if(p.rec==null)p.rec=Math.floor(Math.random()*90)+5;if(p.selo==null)p.selo=Math.random()>.4});
+POL.push(...DEMO);ready=true;popula();renderRadar();renderCand()}
+function popula(){$('#fCargo').innerHTML='<option value="">Todos os cargos</option>'+CARGOS_F.map(c=>`<option>${c}</option>`).join('');
+const uf=[...new Set(POL.map(p=>p.uf))].filter(Boolean).sort();const pt=[...new Set(POL.map(p=>p.partido))].filter(Boolean).sort();
+$('#fUF').innerHTML='<option value="">Todas as regiões</option>'+uf.map(u=>`<option>${u}</option>`).join('');
+$('#fPartido').innerHTML='<option value="">Todos os partidos</option>'+pt.map(p=>`<option>${p}</option>`).join('')}
+function av(p){return p.foto?`<img class="av" src="${p.foto}" alt="">`:`<div class="avf" style="background:${CORES[p.nome.length%5]}">${p.nome[0]}</div>`}
+function renderRadar(){if(!ready)return;const cg=$('#fCargo').value,uf=$('#fUF').value,pt=$('#fPartido').value,q=($('#rbusca').value||'').toLowerCase();
+const l=POL.filter(p=>(!cg||p.cargo===cg)&&(!uf||p.uf===uf)&&(!pt||p.partido===pt)&&(!q||p.nome.toLowerCase().includes(q)||String(p.num).includes(q)));
+$('#radarList').innerHTML=l.slice(0,12).map(p=>`<div class="card">${av(p)}<div style="margin:10px 0"><b>${p.nome}</b><div class="muted">${p.partido} · ${p.uf} · ${p.cargo} · nº ${p.num}</div></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap">${p.selo?'<span class="badge ok">Verificado</span>':'<span class="badge">Sem selo</span>'}${p.real?'<span class="badge blue">Real</span>':'<span class="badge amb">Demo</span>'}<span class="badge">${p.rec} reclamações</span></div>
+<div style="display:flex;gap:8px;margin-top:12px"><button class="btn gold sm" onclick="toast('Cobrança enviada ao gabinete.')">Cobrar</button><button class="btn sm" onclick="toast('Elogio registrado.')">Elogiar</button><button class="btn sm" onclick="dossie(${POL.indexOf(p)})">Ficha</button></div></div>`).join('')||'<p class="muted">Nada encontrado.</p>';
+const mais=[...l].sort((a,b)=>b.rec-a.rec).slice(0,3),menos=[...l].sort((a,b)=>a.rec-b.rec).slice(0,3);
+$('#maisRec').innerHTML=mais.map(p=>`<div class="rank"><div class="pos">${p.rec}</div>${av(p)}<div><b style="font-size:13px">${p.nome}</b><div class="muted">${p.partido} · ${p.uf}</div></div></div>`).join('');
+$('#menosRec').innerHTML=menos.map(p=>`<div class="rank"><div class="pos" style="color:var(--green)">${p.rec}</div>${av(p)}<div><b style="font-size:13px">${p.nome}</b><div class="muted">${p.partido} · ${p.uf}</div></div></div>`).join('')}
+function renderCand(){if(!ready)return;$('#candList').innerHTML=POL.slice(0,12).map(p=>{const integ=Math.max(5,100-p.rec);return `<div class="card">${av(p)}<div style="margin:10px 0"><b>${p.nome}</b><div class="muted">${p.partido} · ${p.uf} · ${p.cargo}</div></div>
+<div class="muted">Índice de integridade</div><div class="bar70"><i style="width:${integ}%;background:${integ>=70?'var(--green)':integ>=40?'var(--gold)':'var(--red)'}"></i></div>
+<div class="muted" style="margin-top:6px">Transparência · processos · presença</div></div>`}).join('')}
+function dossie(i){const p=POL[i];const hoje=new Date().toLocaleDateString('pt-BR');
+$('#dossBody').innerHTML=`<h3>${p.nome} — Ficha completa</h3><p class="muted">Dados públicos com fonte e data (${hoje}). Presunção de inocência. Medir, não linchar.</p>
+<div class="doss">
+<div class="blk" style="border-left:4px solid var(--gold)"><b>🗳️ TSE — registro, bens e histórico</b><div class="src">Fonte: TSE · ${hoje}</div><a class="btn sm" style="margin-top:8px" href="https://divulgacandcontas.tse.jus.br/divulga/app/" target="_blank">Abrir no TSE</a></div>
+<div class="blk"><b>🏛️ Mandato / atividade</b><div class="muted">${p.cargo} · ${p.partido} · ${p.uf}.</div><div class="src">Fonte: ${p.real?(p.cargo==='Senador'?'Senado':'Câmara'):'demo'} · ${hoje}</div></div>
+<div class="blk"><b>💰 Gastos / transparência</b><div class="src">Fonte: Portal da Transparência / TCU</div></div>
+<div class="blk"><b>⚖️ Situação jurídica pública</b><div class="src">Fonte: CNJ / Justiça Eleitoral</div></div>
+</div>`;$('#mDoss').classList.add('open')}
+/* ===== PLs / CONFERIR / REVOGADOS ===== */
+let PLS=[];
+async function carregaPLS(){try{const r=await fetch('https://dadosabertos.camara.leg.br/api/v2/proposicoes?siglaTipo=PL&itens=8&ordem=DESC&ordenarPor=id');const j=await r.json();PLS=(j.dados||[]).map(d=>({num:(d.siglaTipo||'PL')+' '+(d.numero||'')+'/'+(d.ano||''),txt:(d.ementa||d.titulo||'').slice(0,180),id:d.id,autor:d.autor||''}))}catch(e){PLS=[]}
+if(!PLS.length)PLS=[{num:'PL 5183/2026',txt:'Altera a Lei Rouanet para assegurar critérios específicos de avaliação e cota mínima de recursos.',id:1},{num:'PL 5182/2026',txt:'Institui o Programa Nacional de Recuperação de Rodovias Municipais com materiais recicláveis.',id:2}];renderPLS()}
+function renderPLS(){const q=($('#plBusca').value||'').toLowerCase();const l=PLS.filter(p=>(p.num+' '+p.txt+' '+p.autor).toLowerCase().includes(q));
+$('#plsList').innerHTML=l.map(p=>`<div class="card"><b style="color:var(--gold)">${p.num}</b><p class="muted" style="margin:8px 0">${p.txt}…</p>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn green sm" onclick="toast('Aprovo registrado.')">Aprovo</button><button class="btn red sm" onclick="toast('Não aprovo registrado.')">Não aprovo</button><a class="btn sm" href="https://www.camara.leg.br/proposicoes/WebFichTramitacao?idProposicao=${p.id}" target="_blank">Inteiro teor</a></div></div>`).join('')||'<p class="muted">Nada encontrado.</p>'}
+const DEMO_BAL={'Presidente':'Maria Santos (PT 13)','Governador':'Roberto Lima (MDB 15)','Senador':'BRANCO'};
+function usarDemo(){renderCedula('35001500100212345789',DEMO_BAL)}
+function conferir(){const raw=($('#chk').value||'').replace(/\D/g,'');if(raw.length!==20){toast('Código inválido (20 dígitos).');return}
+const st=LS.get('mb_codigo',null);const bal=(st&&st.code===raw)?st.ballot:DEMO_BAL;renderCedula(raw,bal)}
+function renderCedula(code,bal){$('#chkRes').innerHTML=`<div class="card" style="margin-top:14px"><b style="color:var(--green)"><i class="fa-solid fa-circle-check"></i> Voto localizado</b>
+<div style="margin-top:10px">${Object.keys(bal).map(c=>`<div class="rank"><div><b style="font-size:13px">${c}</b><div class="muted">${bal[c]}</div></div><span class="badge ok">ativo</span></div>`).join('')}</div></div>`}
+const REV=[{n:'João Lima',p:'PL',uf:'RJ',el:1510,rev:1180},{n:'Carlos Rocha',p:'PSD',uf:'MG',el:980,rev:610},{n:'Pedro Alves',p:'PP',uf:'BA',el:1200,rev:700},{n:'Ana Souza',p:'PT',uf:'SP',el:800,rev:430}];
+function renderRevogados(){const q=($('#revBusca').value||'').toLowerCase();const l=REV.filter(p=>(p.n+' '+p.p+' '+p.uf).toLowerCase().includes(q)).sort((a,b)=>(b.rev/b.el)-(a.rev/a.el));
+$('#revList').innerHTML=l.map((p,i)=>{const pct=Math.round(p.rev/p.el*100);const falta=Math.max(0,Math.round(p.el*0.7)-p.rev);return `<div class="card"><div class="rank" style="border:none;padding:0;margin-bottom:8px"><div class="pos">${i+1}</div><div><b>${p.n}</b><div class="muted">${p.p} · ${p.uf}</div></div></div>
+<div class="muted">Elegeram: <b style="color:var(--ink)">${p.el}</b> · Revogados: <b style="color:var(--red)">${p.rev}</b></div>
+<div class="bar70"><i style="width:${Math.min(100,pct)}%;background:var(--red)"></i><span class="mk" style="left:70%"></span></div>
+<div class="muted">${pct}% dos 70% · ${falta>0?`faltam <b style="color:var(--gold)">${falta}</b>`:'<b style="color:var(--red)">atingiu 70% — cassação</b>'}</div></div>`}).join('')||'<p class="muted">Nada encontrado.</p>'}
+const FAQ=[['O que é simulação?','A votação/revogação não tem valor jurídico hoje. Notícias, políticos e PLs são reais.'],['Como revogo?','No site, com código + login, só após a posse.'],['Meu voto fica público?','Não. A cédula fica no seu navegador.'],['Branco vs nulo?','Branco = indiferença · Nulo = protesto.'],['O que é a regra dos 70%?','Proposta: 70% dos votos que elegeram = cassação.']];
+$('#faqList').innerHTML=FAQ.map(f=>`<div class="card"><b>${f[0]}</b><p class="muted" style="margin:6px 0 0">${f[1]}</p></div>`).join('');
+async function news(){try{const r=await fetch('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent('https://agenciabrasil.ebc.com.br/rss/ultimasnoticias/feed.xml'));const j=await r.json();const it=(j.items||[]).slice(0,2);
+$('#homeNews').innerHTML=it.map(n=>`<div class="ncard"><div class="th"><span class="cat">MEIO AMBIENTE</span><i class="fa-solid fa-layer-group"></i></div><div class="bd"><h4>${n.title}</h4><p>${(n.description||'').replace(/<[^>]+>/g,'').slice(0,140)}</p><div style="display:flex;gap:10px;align-items:center;font-size:11px;color:var(--muted)"><span class="seal">Fonte verificada</span><span>Agência Brasil</span><a href="${n.link}" target="_blank">Ler →</a></div></div></div>`).join('')}catch(e){$('#homeNews').innerHTML='<div class="ncard"><div class="th"><span class="cat">MEIO AMBIENTE</span><i class="fa-solid fa-layer-group"></i></div><div class="bd"><h4>Brasil promete restaurar 163 mil km² de terras degradadas até 2030</h4><p>O Brasil apresentou as primeiras metas de Neutralidade da Degradação da Terra em evento internacional.</p><div style="display:flex;gap:10px;align-items:center;font-size:11px;color:var(--muted)"><span class="seal">Fonte verificada</span><span>Agência Brasil</span><a>Ler →</a></div></div></div>'}}
+initDonuts();carregaPol();carregaPLS();news();
+</script>
+</body>
+</html>
