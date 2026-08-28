@@ -163,16 +163,23 @@ table.cmp th{color:var(--muted)}
 </div></section>
 <section class="sec" id="sec-candidatos"><div class="wrap">
 <span class="kick">CANDIDATOS</span><h2 style="margin:8px 0 6px">Compare com dados 100% públicos</h2>
-<p class="muted">Fontes oficiais: TSE · Portal da Transparência · Câmara/Senado · CNJ. Marque até 3 pra comparar lado a lado.</p>
+<p class="muted">Fontes oficiais: TSE · Portal da Transparência · Câmara/Senado · CNJ. Dica: marque a caixa no canto superior direito de até 3 políticos pra comparar lado a lado.</p>
 <div class="filtros">
-<select id="fOrdem" onchange="renderCand()"><option value="int">📊 Transparência (maior)</option><option value="intb">📊 Transparência (menor)</option><option value="rec">🗳️ Reclamações (maior)</option><option value="proc">⚖️ Processos (menor)</option></select>
+<input id="cbusca" placeholder="Buscar por nome, partido, estado ou área…" oninput="renderCand()"/>
+<select id="fUF2" onchange="renderCand()"></select>
+<select id="fPartido2" onchange="renderCand()"></select>
+<select id="fCargo2" onchange="renderCand()"></select>
 </div>
-<div class="card" style="margin:0 0 18px"><table style="width:100%;font-size:13px;border-collapse:collapse"><tr style="color:var(--muted)"><th style="text-align:left;padding:6px">Fonte</th><th style="text-align:left">Dados</th></tr>
+<div class="filtros" style="grid-template-columns:1fr 1fr;margin-top:0">
+<select id="fOrdem" onchange="renderCand()"><option value="int">📊 Transparência (maior)</option><option value="intb">📊 Transparência (menor)</option><option value="rec">🗳️ Reclamações (maior)</option><option value="proc">⚖️ Processos (menor)</option></select>
+<span id="cCount" class="muted" style="align-self:center"></span>
+</div>
+<div id="candList" class="grid g3"></div>
+<div class="card" style="margin-top:18px"><table style="width:100%;font-size:13px;border-collapse:collapse"><tr style="color:var(--muted)"><th style="text-align:left;padding:6px">Fonte</th><th style="text-align:left">Dados</th></tr>
 <tr><td style="padding:6px">TSE</td><td class="muted">Registro, histórico eleitoral, bens, votos</td></tr>
 <tr><td style="padding:6px">Portal da Transparência</td><td class="muted">Rendimentos, patrimônio, gastos</td></tr>
 <tr><td style="padding:6px">Câmara / Senado</td><td class="muted">Proposituras, votação nominal, presença</td></tr>
 <tr><td style="padding:6px">CNJ</td><td class="muted">Processos judiciais públicos</td></tr></table></div>
-<div id="candList" class="grid g3"></div>
 </div></section>
 <section class="sec" id="sec-congresso"><div class="wrap">
 <span class="kick">CONGRESSO</span><h2 style="margin:8px 0 6px">PLs Tramitando no Congresso</h2>
@@ -197,7 +204,7 @@ table.cmp th{color:var(--muted)}
 </div></section>
 <section class="sec" id="sec-revogados"><div class="wrap">
 <span class="kick" style="color:var(--red)">POLÍTICOS COM VOTOS REVOGADOS</span><h2 style="margin:8px 0 6px">O povo devolvendo o poder</h2>
-<p class="muted">Regra: <b>70%</b> dos votos que elegeram = cassação. Busque por nome, número, partido ou estado.</p>
+<p class="muted">Regra: <b>70%</b> dos votos que elegeram = cassação. Busque por nome, número, partido ou estado. Relação dos 10 que mais receberam revogação.</p>
 <div class="filtros" style="grid-template-columns:1fr"><input id="revBusca" placeholder="nome, numero, partido, estado…" oninput="renderRevogados()"/></div>
 <div id="revList" class="grid g2"></div>
 </div></section>
@@ -230,7 +237,7 @@ const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 function toast(m){const t=$('#toast');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',2600)}
 function fechar(id){document.getElementById(id).classList.remove('open')}
 function toggleMenu(){document.getElementById('mnav').classList.toggle('open')}
-function go(p){$$('.sec').forEach(s=>s.classList.remove('on'));$('#sec-'+p).classList.add('on');$$('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.p===p));window.scrollTo(0,0);if(p=='radar')renderRadar()}
+function go(p){$$('.sec').forEach(s=>s.classList.remove('on'));$('#sec-'+p).classList.add('on');$$('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.p===p));window.scrollTo(0,0);if(p=='radar')renderRadar();if(p=='candidatos')renderCand()}
 $$('#nav a').forEach(a=>a.onclick=()=>go(a.dataset.p));
 const LS={get:(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))};
 const CORES=['#2ECC71','#E0A82E','#3B82F6','#E74C3C','#A855F7'],NOMES=['Maria','Carlos','Ana','João','Outros'];
@@ -240,7 +247,6 @@ function pill(el){el.parentElement.querySelectorAll('.pill').forEach(p=>p.classL
 const CARGOS_F=['Presidente','Governador','Senador','Deputado Federal','Deputado Estadual','Prefeito','Vereador'];
 let POL=[],ready=false,SEL=[];
 const SEED_REC=['Não cumpriu a promessa da creche do bairro.','Faltou às sessões sem justificativa.','Não respondeu ao pedido de informação sobre emendas.','Prometeu a reforma da rodovia e não entregou.','Não destinou verba à saúde como prometido.'];
-const SEED_ELOG=['Destinou emenda pra reforma da escola municipal.','Atendeu o mutirão de saúde no bairro.'];
 const DEMO=[{nome:'Ana Fontes',partido:'PV',uf:'SP',cargo:'Presidente',num:51,real:0,rec:70,selo:true},{nome:'Rui Bacelar',partido:'PSD',uf:'RJ',cargo:'Presidente',num:55,real:0,rec:62,selo:true},{nome:'Cida Moraes',partido:'PT',uf:'BA',cargo:'Presidente',num:13,real:0,rec:48,selo:false},
 {nome:'Helena Cruz',partido:'PSB',uf:'MG',cargo:'Governador',num:40,real:0,rec:35,selo:true},{nome:'Marcos Vilela',partido:'MDB',uf:'SP',cargo:'Governador',num:15,real:0,rec:58,selo:false},{nome:'Tereza Kahn',partido:'NOVO',uf:'PR',cargo:'Governador',num:30,real:0,rec:22,selo:true},
 {nome:'Beto Sampaio',partido:'PP',uf:'SP',cargo:'Deputado Estadual',num:11,real:0,rec:66,selo:false},{nome:'Vera Lins',partido:'PCdoB',uf:'RJ',cargo:'Deputado Estadual',num:65,real:0,rec:41,selo:true},{nome:'Nina Torres',partido:'PSOL',uf:'MG',cargo:'Deputado Estadual',num:50,real:0,rec:29,selo:false},
@@ -252,9 +258,10 @@ try{const r=await fetch('https://legis.senado.leg.br/dadosabertos/senador/lista/
 POL.push(...DEMO);ready=true;
 const el=document.getElementById('bReais');if(el)el.textContent=POL.filter(p=>p.real).length+' políticos reais';
 popula();renderRadar();renderCand()}
-function popula(){$('#fOrdem')&&0;}
+function fill(id,arr,all){const el=document.getElementById(id);if(el)el.innerHTML=`<option value="">${all}</option>`+arr.map(x=>`<option>${x}</option>`).join('')}
+function popula(){const uf=[...new Set(POL.map(p=>p.uf))].filter(Boolean).sort();const pt=[...new Set(POL.map(p=>p.partido))].filter(Boolean).sort();
+fill('fUF2',uf,'Todos os estados');fill('fPartido2',pt,'Todos os partidos');fill('fCargo2',CARGOS_F,'Todos os cargos')}
 function av(p){return p.foto?`<img class="av" src="${p.foto}" alt="">`:`<div class="avf" style="background:${CORES[p.nome.length%5]}">${p.nome[0]}</div>`}
-/* ===== RECLAMAÇÕES (conteúdo completo + formulário) ===== */
 function txtSeed(p){const n=p.rec>=80?3:p.rec>=40?2:p.rec>=15?1:0;const o=[];for(let k=0;k<n;k++)o.push(SEED_REC[(p.num+k)%SEED_REC.length]);return o}
 function txtUser(i){const m=LS.get('mb_rec_txt',{});return m[i]||[]}
 function elogUser(i){const m=LS.get('mb_elog_txt',{});return m[i]||[]}
@@ -283,14 +290,17 @@ const l=[...POL].map((p,idx)=>({p,idx,c:countRec(p,idx)}));
 const mais=[...l].sort((a,b)=>b.c-a.c).slice(0,5),menos=[...l].sort((a,b)=>a.c-b.c).slice(0,5);
 $('#maisRec').innerHTML=mais.map(o=>`<div class="rank"><div class="pos">${o.c}</div><div style="flex:1"><b style="font-size:13px">${o.p.nome}</b> <span class="muted">${o.p.partido} · ${o.p.uf}</span>${todasTxt(o.p,o.idx).slice(0,2).map(t=>`<div class="quote">“${t}”</div>`).join('')}</div><button class="btn gold sm" onclick="abrePol(${o.idx})">Cobrar</button></div>`).join('');
 $('#menosRec').innerHTML=menos.map(o=>`<div class="rank"><div class="pos" style="color:var(--green)">${o.c}</div><div style="flex:1"><b style="font-size:13px">${o.p.nome}</b> <span class="muted">${o.p.partido} · ${o.p.uf}</span>${(todasTxt(o.p,o.idx)[0]?`<div class="quote">“${todasTxt(o.p,o.idx)[0]}”</div>`:'<div class="quote ok">Sem reclamações registradas.</div>')}</div><button class="btn green sm" onclick="abrePol(${o.idx})">Elogiar</button></div>`).join('')}
-function renderCand(){if(!ready)return;const ord=$('#fOrdem').value;let l=[...POL];
+function renderCand(){if(!ready)return;const q=($('#cbusca').value||'').toLowerCase();const uf=$('#fUF2').value;const pt=$('#fPartido2').value;const cg=$('#fCargo2').value;const ord=$('#fOrdem').value;
+let l=POL.filter(p=>(!q||p.nome.toLowerCase().includes(q)||p.partido.toLowerCase().includes(q)||p.uf.toLowerCase().includes(q))&&(!uf||p.uf===uf)&&(!pt||p.partido===pt)&&(!cg||p.cargo===cg));
 if(ord==='int')l.sort((a,b)=>(100-b.rec)-(100-a.rec));if(ord==='intb')l.sort((a,b)=>(100-a.rec)-(100-b.rec));
-if(ord==='rec')l.sort((a,b)=>b.rec-a.rec);if(ord==='proc')l.sort((a,b)=>a.rec-b.rec);
+if(ord==='rec')l.sort((a,b)=>countRec(b,POL.indexOf(b))-countRec(a,POL.indexOf(a)));if(ord==='proc')l.sort((a,b)=>a.rec-b.rec);
+$('#cCount').textContent=l.length+' candidato(s) encontrado(s)';
 $('#candList').innerHTML=l.slice(0,12).map(p=>{const i=POL.indexOf(p);const integ=Math.max(5,100-p.rec);return `<div class="card">
 <label style="position:absolute;top:12px;right:12px"><input type="checkbox" style="width:20px;height:20px;accent-color:var(--gold)" ${SEL.includes(i)?'checked':''} onchange="toggleCmp(${i},this)"></label>
-${av(p)}<div style="margin:10px 0"><b>${p.nome}</b><div class="muted">${p.partido} · ${p.uf} · ${p.cargo}</div></div>
+${av(p)}<div style="margin:10px 0"><b>${p.nome}</b><div class="muted">${p.partido} · ${p.uf} · ${p.cargo} · nº ${p.num}</div></div>
 <div class="muted">Índice de integridade</div><div class="bar70"><i style="width:${integ}%;background:${integ>=70?'var(--green)':integ>=40?'var(--gold)':'var(--red)'}"></i></div>
-<div class="muted" style="margin-top:6px">Transparência · processos · presença</div></div>`}).join('')}
+<div class="muted" style="margin-top:6px">Transparência · processos · presença</div>
+<button class="btn sm" style="margin-top:10px" onclick="dossie(${i})">VER DETALHES</button></div>`}).join('')||'<p class="muted">Nada encontrado.</p>'}
 function toggleCmp(i,el){if(el.checked){if(SEL.length>=3){el.checked=false;toast('Compare até 3 por vez.');return}SEL.push(i)}else SEL=SEL.filter(x=>x!==i);
 $('#cmpcount').textContent=SEL.length+' selecionado(s)';$('#cmpbar').classList.toggle('on',SEL.length>0)}
 function limparCmp(){SEL=[];$('#cmpbar').classList.remove('on');renderCand()}
@@ -324,8 +334,8 @@ function conferir(){const raw=($('#chk').value||'').replace(/\D/g,'');if(raw.len
 const st=LS.get('mb_codigo',null);const bal=(st&&st.code===raw)?st.ballot:DEMO_BAL;renderCedula(raw,bal)}
 function renderCedula(code,bal){$('#chkRes').innerHTML=`<div class="card" style="margin-top:14px"><b style="color:var(--green)"><i class="fa-solid fa-circle-check"></i> Voto localizado</b>
 <div style="margin-top:10px">${Object.keys(bal).map(c=>`<div class="rank"><div><b style="font-size:13px">${c}</b><div class="muted">${bal[c]}</div></div><span class="badge ok">ativo</span></div>`).join('')}</div></div>`}
-const REV=[{n:'João Lima',p:'PL',uf:'RJ',el:1510,rev:1180},{n:'Carlos Rocha',p:'PSD',uf:'MG',el:980,rev:610},{n:'Pedro Alves',p:'PP',uf:'BA',el:1200,rev:700},{n:'Ana Souza',p:'PT',uf:'SP',el:800,rev:430}];
-function renderRevogados(){const q=($('#revBusca').value||'').toLowerCase();const l=REV.filter(p=>(p.n+' '+p.p+' '+p.uf).toLowerCase().includes(q)).sort((a,b)=>(b.rev/b.el)-(a.rev/a.el));
+const REV=[{n:'João Lima',p:'PL',uf:'RJ',el:1510,rev:1180},{n:'Carlos Rocha',p:'PSD',uf:'MG',el:980,rev:610},{n:'Pedro Alves',p:'PP',uf:'BA',el:1200,rev:700},{n:'Ana Souza',p:'PT',uf:'SP',el:800,rev:430},{n:'Rui Costa',p:'MDB',uf:'RS',el:900,rev:470},{n:'Tereza Lemos',p:'UNIÃO',uf:'CE',el:1100,rev:540},{n:'Beto Farias',p:'PSB',uf:'PE',el:850,rev:400},{n:'Lúcia Prado',p:'PSDB',uf:'GO',el:950,rev:430},{n:'Nino Sales',p:'PTB',uf:'AM',el:700,rev:300},{n:'Dora Pires',p:'REDE',uf:'ES',el:760,rev:320}];
+function renderRevogados(){const q=($('#revBusca').value||'').toLowerCase();const l=REV.filter(p=>(p.n+' '+p.p+' '+p.uf).toLowerCase().includes(q)).sort((a,b)=>(b.rev/b.el)-(a.rev/a.el)).slice(0,10);
 $('#revList').innerHTML=l.map((p,i)=>{const pct=Math.round(p.rev/p.el*100);const falta=Math.max(0,Math.round(p.el*0.7)-p.rev);return `<div class="card"><div class="rank" style="border:none;padding:0;margin-bottom:8px"><div class="pos">${i+1}</div><div><b>${p.n}</b><div class="muted">${p.p} · ${p.uf}</div></div></div>
 <div class="muted">Elegeram: <b style="color:var(--ink)">${p.el}</b> · Revogados: <b style="color:var(--red)">${p.rev}</b></div>
 <div class="bar70"><i style="width:${Math.min(100,pct)}%;background:var(--red)"></i><span class="mk" style="left:70%"></span></div>
