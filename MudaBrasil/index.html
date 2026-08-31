@@ -2,119 +2,120 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="description" content="MudaBrasil — voto contínuo e revogável. Seu voto coloca, seu voto tira."/>
 <title>MudaBrasil · Voto Contínuo e Revogável</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <script src="config.js"></script>
 <style>
-:root{--bg:#0A1628;--card:#122036;--card2:#16263e;--line:#1e3350;--ink:#EAF0F7;--muted:#8fa3bc;--gold:#E0A82E;--green:#2ECC71;--blue:#3B82F6;--red:#E74C3C;--r:14px}
+:root{--bg:#061a3a;--card:#0d2242;--card2:#123059;--line:rgba(127,176,245,.22);--ink:#fff;--muted:#94A3B8;--gold:#FFD700;--blue:#115FCB;--blueL:#4a90f0;--green:#2ECC71;--red:#E74C3C;--r:14px}
 *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--ink);font:15px/1.55 Inter,sans-serif;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:48px 48px}
-h1,h2,h3,h4{font-weight:800;line-height:1.15}a{color:var(--gold);text-decoration:none}
+body{background:radial-gradient(ellipse at top right,rgba(17,95,203,.14),transparent 50%),radial-gradient(ellipse at bottom left,rgba(255,215,0,.05),transparent 40%),var(--bg);color:var(--ink);font:15px/1.55 Manrope,sans-serif}
+h1,h2,h3,h4{font-family:Montserrat,sans-serif;font-weight:800;line-height:1.15}
+a{color:var(--gold);text-decoration:none}
 .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--ink);font:600 14px Inter;padding:12px 20px;cursor:pointer}
-.btn.gold{background:var(--gold);border-color:var(--gold);color:#1a1400;font-weight:700}
-.btn.green{background:var(--green);border-color:var(--green);color:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;border:1px solid var(--line);background:var(--card2);color:var(--ink);font:700 14px Manrope;padding:12px 20px;cursor:pointer}
+.btn.gold{background:linear-gradient(135deg,#FFD700,#FFA500);border:none;color:#1a1400}
+.btn.green{background:var(--green);border:none;color:#fff}
 .btn.red{background:transparent;border-color:var(--red);color:var(--red)}
+.btn.blue{background:var(--blue);border:none;color:#fff}
 .btn.sm{padding:8px 14px;font-size:12.5px}
-header{position:sticky;top:0;z-index:100;background:rgba(10,22,40,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+header{position:sticky;top:0;z-index:100;background:rgba(6,26,58,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .hd{display:flex;align-items:center;gap:14px;padding:10px 20px;max-width:1280px;margin:0 auto;flex-wrap:wrap}
 .lg{display:flex;align-items:center;gap:10px}
-.lg .ic{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#2ECC71,#E0A82E);display:grid;place-items:center;color:#0A1628;font-size:18px}
-.lg b{font-size:18px}.lg small{display:block;color:var(--muted);font-size:11px}
+.lg .ic{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#2ECC71,#FFD700);display:grid;place-items:center;color:#061a3a;font-size:18px}
+.lg b{font-size:18px;font-family:Montserrat}.lg small{display:block;color:var(--muted);font-size:11px}
 nav{margin-left:auto;display:flex;gap:2px;flex-wrap:wrap;align-items:center}
-nav a{color:var(--muted);font:600 12.5px Inter;padding:7px 11px;border-radius:8px;cursor:pointer;text-align:center;line-height:1.2}
-nav a.on{background:var(--gold);color:#1a1400;font-weight:700}
+nav a{color:var(--muted);font:700 12.5px Manrope;padding:7px 11px;border-radius:8px;cursor:pointer;text-align:center;line-height:1.2}
+nav a.on{background:var(--gold);color:#1a1400}
 .hact{display:flex;gap:8px}
 .ham{display:none}
-.mnav{position:fixed;top:64px;left:0;right:0;background:#0d1b2e;border-bottom:1px solid var(--line);z-index:150;display:none;flex-direction:column;padding:10px}
+.mnav{position:fixed;top:64px;left:0;right:0;background:#0d2242;border-bottom:1px solid var(--line);z-index:150;display:none;flex-direction:column;padding:10px}
 .mnav.open{display:flex}
-.mnav a{padding:12px;color:var(--ink);font:600 14px Inter;border-bottom:1px solid var(--line);cursor:pointer}
+.mnav a{padding:12px;color:var(--ink);font:700 14px Manrope;border-bottom:1px solid var(--line);cursor:pointer}
 .sec{display:none;padding:40px 0 70px}.sec.on{display:block}
-.kick{color:var(--gold);font:700 11px Inter;letter-spacing:.2em;text-transform:uppercase}
-.hero{text-align:center;padding:46px 20px 16px;background:radial-gradient(700px 320px at 50% 0,rgba(224,168,46,.10),transparent 70%)}
+.kick{color:var(--gold);font:800 11px Manrope;letter-spacing:.2em;text-transform:uppercase}
+.hero{text-align:center;padding:46px 20px 16px;background:radial-gradient(700px 320px at 50% 0,rgba(255,215,0,.10),transparent 70%)}
 .hero h1{font-size:clamp(34px,6vw,56px);font-weight:900}
-.hero .l2{font-size:clamp(18px,3vw,24px);font-weight:700;margin-top:20px}
+.hero .l2{font-size:clamp(18px,3vw,24px);font-weight:800;margin-top:20px}
 .hero .l2 .g{color:var(--green)}.hero .l2 .y{color:var(--gold)}
 .hero .l3{font-size:clamp(16px,2.4vw,20px);font-weight:800;margin-top:12px}
 .hero .l3 .g{color:var(--green)}.hero .l3 .r{color:var(--red)}
 .hero p{color:var(--muted);max-width:640px;margin:20px auto}
 .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:22px}
-.tag{display:inline-block;background:var(--green);color:#fff;font:700 10px Inter;letter-spacing:.12em;padding:6px 14px;border-radius:999px;text-transform:uppercase}
+.tag{display:inline-block;background:var(--green);color:#fff;font:800 10px Manrope;letter-spacing:.12em;padding:6px 14px;border-radius:999px;text-transform:uppercase}
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
 .step{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px;text-align:center}
 .step .n{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;margin:0 auto 14px;font-weight:800;color:#fff}
 .explore{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:22px}
 .exp{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px}
 .exp .ic{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-size:17px;margin-bottom:14px}
-.exp h3{font-size:15px;margin-bottom:8px}.exp p{color:var(--muted);font-size:12.5px}.exp a{font-size:12.5px;font-weight:700;cursor:pointer}
-.donuts{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
-.don{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}
-.don h4{font-size:14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.don .pill{font-size:10px;border:1px solid var(--line);border-radius:999px;padding:3px 8px;color:var(--muted);cursor:pointer}
-.don .pill.on{border-color:var(--gold);color:var(--gold)}
-.dchart{height:140px;margin:12px 0 8px;display:grid;place-items:center}
-.donut{width:115px;height:115px;border-radius:50%;position:relative}
-.donut::after{content:"";position:absolute;inset:26%;background:var(--card);border-radius:50%}
-.leg{display:flex;flex-wrap:wrap;gap:8px;font-size:10.5px;color:var(--muted)}
-.leg i{width:8px;height:8px;border-radius:2px;display:inline-block;margin-right:4px}
+.exp h3{font-size:15px;margin-bottom:8px}.exp p{color:var(--muted);font-size:12.5px}.exp a{font-size:12.5px;font-weight:800;cursor:pointer}
 .filtros{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}
-input,select,textarea{background:var(--card2);border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:11px 14px;font:500 14px Inter;width:100%}
+input,select,textarea{background:var(--card2);border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:11px 14px;font:500 14px Manrope;width:100%}
 textarea{min-height:74px;resize:vertical}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;position:relative}
 .grid{display:grid;gap:14px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}
 .muted{color:var(--muted);font-size:13px}
 .av{width:46px;height:46px;border-radius:50%;object-fit:cover;object-position:top center;background:var(--card2)}
-.avf{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#0A1628;flex:none}
-.badge{font:700 10px Inter;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.avf{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#1a1400;flex:none}
+.badge{font:800 10px Manrope;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
 .badge.ok{color:var(--green);border-color:rgba(46,204,113,.4)}
-.badge.blue{color:var(--blue);border-color:rgba(59,130,246,.4)}
-.badge.amb{color:var(--gold);border-color:rgba(224,168,46,.4)}
+.badge.blue{color:var(--blueL);border-color:rgba(74,144,240,.4)}
+.badge.amb{color:var(--gold);border-color:rgba(255,215,0,.4)}
 .rank{display:flex;align-items:flex-start;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px}
-.rank .pos{font:900 16px Inter;color:var(--gold);width:26px;flex:none}
+.rank .pos{font:900 16px Montserrat;color:var(--gold);width:26px;flex:none}
 .quote{border-left:3px solid var(--red);background:rgba(231,76,60,.08);border-radius:6px;padding:6px 10px;margin-top:6px;font-size:12.5px;color:var(--muted)}
 .quote.ok{border-color:var(--green);background:rgba(46,204,113,.08)}
 .bar70{height:10px;border-radius:6px;background:var(--card2);position:relative;overflow:hidden;margin:8px 0 4px}
 .bar70 i{display:block;height:100%;border-radius:6px}
 .bar70 .mk{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--gold)}
+.pin{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--muted);display:grid;place-items:center;cursor:pointer;font-size:15px}
+.pin.on{background:var(--gold);color:#1a1400;border-color:var(--gold)}
+.cmpbar{position:fixed;bottom:0;left:0;right:0;background:rgba(6,26,58,.96);border-top:1px solid var(--gold);padding:12px 16px;display:none;align-items:center;justify-content:space-between;gap:10px;z-index:160}
+.cmpbar.on{display:flex}
+.cmpwrap{overflow-x:auto}
+table.cmp{width:100%;border-collapse:collapse;font-size:13px;min-width:560px}
+table.cmp th,table.cmp td{padding:10px;border-bottom:1px solid var(--line);text-align:left}
+table.cmp th{color:var(--muted)}
+.gauge{width:120px;height:120px;border-radius:50%;position:relative;display:grid;place-items:center;margin:6px auto}
+.gauge::after{content:"";position:absolute;inset:22%;background:var(--card);border-radius:50%}
+.gauge b{position:relative;z-index:2;font:900 22px Montserrat}
+[data-tip]{position:relative;cursor:help}
+[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:125%;left:50%;transform:translateX(-50%);background:#000;color:#fff;font:600 11px Manrope;padding:6px 10px;border-radius:8px;white-space:normal;width:max-content;max-width:220px;z-index:99}
 .news{max-width:420px}
 .ncard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
-.ncard .th{height:160px;background:linear-gradient(135deg,#123a2e,#122036);display:grid;place-items:center;color:#2ECC71;font-size:28px;position:relative}
-.ncard .cat{position:absolute;top:12px;left:12px;background:var(--green);color:#fff;font:700 9px Inter;letter-spacing:.1em;padding:5px 10px;border-radius:999px;text-transform:uppercase}
+.ncard .th{height:160px;background:linear-gradient(135deg,#0e3a2e,#0d2242);display:grid;place-items:center;color:#2ECC71;font-size:28px;position:relative}
+.ncard .cat{position:absolute;top:12px;left:12px;background:var(--green);color:#fff;font:800 9px Manrope;letter-spacing:.1em;padding:5px 10px;border-radius:999px;text-transform:uppercase}
 .ncard .bd{padding:18px}.ncard h4{font-size:15px}.ncard p{color:var(--muted);font-size:12.5px;margin:10px 0}
-.seal{background:rgba(46,204,113,.15);color:var(--green);border:1px solid rgba(46,204,113,.4);font:700 10px Inter;padding:5px 10px;border-radius:8px}
-.ctabox{background:linear-gradient(135deg,#122036,#16263e);border:1px solid var(--line);border-radius:20px;padding:44px 26px;text-align:center;margin-top:50px}
-footer{background:#0d1626;border-top:1px solid var(--line);padding:44px 0 20px;margin-top:60px}
+.seal{background:rgba(46,204,113,.15);color:var(--green);border:1px solid rgba(46,204,113,.4);font:800 10px Manrope;padding:5px 10px;border-radius:8px}
+.ctabox{background:linear-gradient(135deg,#0d2242,#123059);border:1px solid var(--line);border-radius:20px;padding:44px 26px;text-align:center;margin-top:50px}
+footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;margin-top:60px}
 .ft{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:26px}
 .ft h5{font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:14px}
 .ft a{display:block;color:var(--muted);font-size:13px;padding:4px 0;cursor:pointer}
 .fbot{border-top:1px solid var(--line);margin-top:30px;padding-top:16px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:11.5px}
 .doss{display:grid;gap:10px}.doss .blk{border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--card2)}.doss .src{font-size:11.5px;color:var(--muted)}
-.overlay{position:fixed;inset:0;background:rgba(4,8,20,.8);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center;padding:18px}
+.overlay{position:fixed;inset:0;background:rgba(4,8,20,.85);backdrop-filter:blur(5px);z-index:200;display:none;align-items:center;justify-content:center;padding:18px}
 .overlay.open{display:flex}
-.modal{background:var(--bg);border:1px solid var(--line);border-radius:20px;max-width:640px;width:100%;max-height:86vh;overflow:auto;padding:26px}
-table.cmp{width:100%;border-collapse:collapse;font-size:13px}
-table.cmp th,table.cmp td{padding:10px;border-bottom:1px solid var(--line);text-align:left}
-table.cmp th{color:var(--muted)}
-.cmpbar{position:fixed;bottom:0;left:0;right:0;background:rgba(10,22,40,.95);border-top:1px solid var(--gold);padding:12px 16px;display:none;align-items:center;justify-content:space-between;gap:10px;z-index:160}
-.cmpbar.on{display:flex}
-#toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#16263e;border:1px solid var(--line);color:var(--ink);padding:12px 18px;border-radius:12px;z-index:300;display:none;max-width:90%}
-@media(max-width:960px){.explore{grid-template-columns:repeat(2,1fr)}.donuts{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:1fr}.filtros{grid-template-columns:1fr 1fr}.ft{grid-template-columns:1fr 1fr}nav{display:none}.ham{display:inline-flex}}
+.modal{background:var(--bg);border:1px solid var(--line);border-radius:20px;max-width:680px;width:100%;max-height:88vh;overflow:auto;padding:26px}
+#toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--card2);border:1px solid var(--line);color:var(--ink);padding:12px 18px;border-radius:12px;z-index:300;display:none;max-width:90%}
+@media(max-width:960px){.explore{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:1fr}.filtros{grid-template-columns:1fr 1fr}.ft{grid-template-columns:1fr 1fr}nav{display:none}.ham{display:inline-flex}}
 </style>
 </head>
 <body>
 <header><div class="hd">
 <div class="lg"><div class="ic"><i class="fa-solid fa-layer-group"></i></div><div><b>MudaBrasil</b><small>Participação Cívica</small></div></div>
 <nav id="nav">
-<a data-p="inicio" class="on">Início</a><a data-p="radar">Radar<br>Político</a><a data-p="candidatos">Candidatos</a><a data-p="congresso">Congresso</a>
+<a data-p="inicio" class="on">Início</a><a data-p="radar">Radar<br>Político</a><a data-p="congresso">Congresso</a>
 <a data-p="conferir">Conferir<br>Voto</a><a data-p="revogar">Revogar<br>Voto</a><a data-p="revogados">Políticos com<br>votos revogados</a><a data-p="ajuda">Ajuda</a><a data-p="quem">Quem<br>Somos</a>
 </nav>
 <button class="btn sm ham" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button>
-<div class="hact"><button class="btn sm" onclick="toast('Login na fase final (Gov.br).')">Entrar</button><button class="btn gold sm" onclick="toast('Cadastro na fase final (Gov.br).')">Cadastrar</button></div>
+<div class="hact"><button class="btn sm" onclick="abrirLogin()">Entrar</button><button class="btn gold sm" onclick="abrirLogin()">Cadastrar</button></div>
 </div></header>
 <div class="mnav" id="mnav">
-<a onclick="go('inicio');toggleMenu()">Início</a><a onclick="go('radar');toggleMenu()">Radar Político</a><a onclick="go('candidatos');toggleMenu()">Candidatos</a><a onclick="go('congresso');toggleMenu()">Congresso</a>
+<a onclick="go('inicio');toggleMenu()">Início</a><a onclick="go('radar');toggleMenu()">Radar Político</a><a onclick="go('congresso');toggleMenu()">Congresso</a>
 <a onclick="go('conferir');toggleMenu()">Conferir Voto</a><a onclick="go('revogar');toggleMenu()">Revogar Voto</a><a onclick="go('revogados');toggleMenu()">Políticos com votos revogados</a><a onclick="go('ajuda');toggleMenu()">Ajuda</a><a onclick="go('quem');toggleMenu()">Quem Somos</a>
 </div>
 <main>
@@ -131,55 +132,37 @@ table.cmp th{color:var(--muted)}
 <div class="steps">
 <div class="step"><div class="n" style="background:var(--green)">1</div><h3>Escolha no app</h3><p class="muted">Escolha seus candidatos, vote com total segurança.</p></div>
 <div class="step"><div class="n" style="background:var(--blue)">2</div><h3>Guarde o código</h3><p class="muted">Cada voto gera um código de 20 dígitos. É o seu comprovante.</p></div>
-<div class="step"><div class="n" style="background:var(--gold)">3</div><h3>Confira aqui</h3><p class="muted">No site, você cola o código e confere em quem votou.</p></div>
+<div class="step"><div class="n" style="background:var(--gold);color:#1a1400">3</div><h3>Confira aqui</h3><p class="muted">No site, você cola o código e confere em quem votou.</p></div>
 </div>
 <div style="text-align:center;margin-top:50px"><h2>Explore o MudaBrasil</h2><p class="muted">Tudo o que você precisa para uma participação cívica informada e ativa.</p></div>
 <div class="explore">
-<div class="exp"><div class="ic" style="background:rgba(224,168,46,.15);color:var(--gold)"><i class="fa-regular fa-clock"></i></div><h3>Radar Político</h3><p>Cobre do seu político por promessas feitas e não realizadas.</p><a onclick="go('radar')">Acessar →</a></div>
-<div class="exp"><div class="ic" style="background:rgba(46,204,113,.15);color:var(--green)"><i class="fa-regular fa-user"></i></div><h3>Candidatos</h3><p>Veja quem é o candidato e seu histórico completo.</p><a onclick="go('candidatos')">Ver →</a></div>
-<div class="exp"><div class="ic" style="background:rgba(59,130,246,.15);color:var(--blue)"><i class="fa-regular fa-file-lines"></i></div><h3>PLs no Congresso</h3><p>Opine sobre leis em tramitação no congresso nacional.</p><a onclick="go('congresso')">Ir ao Congresso →</a></div>
-<div class="exp"><div class="ic" style="background:rgba(224,168,46,.15);color:var(--gold)"><i class="fa-solid fa-check"></i></div><h3>Conferir Voto</h3><p>Cole o código e confira os candidatos em quem votou.</p><a onclick="go('conferir')">Verificar →</a></div>
-<div class="exp"><div class="ic" style="background:rgba(231,76,60,.15);color:var(--red)"><i class="fa-regular fa-trash-can"></i></div><h3>Revogar Voto</h3><p>Não cumpriu? Revogue a confiança do seu voto.</p><a onclick="go('revogados')" style="color:var(--red)">Revogar →</a></div>
+<div class="exp"><div class="ic" style="background:rgba(255,215,0,.15);color:var(--gold)"><i class="fa-regular fa-clock"></i></div><h3>Radar Político</h3><p>Busque, compare até 5, cobre e acompanhe com o Termômetro de Confiança.</p><a onclick="go('radar')">Acessar →</a></div>
+<div class="exp"><div class="ic" style="background:rgba(59,130,246,.15);color:var(--blueL)"><i class="fa-regular fa-file-lines"></i></div><h3>PLs no Congresso</h3><p>Opine sobre leis em tramitação no congresso nacional.</p><a onclick="go('congresso')">Ir ao Congresso →</a></div>
+<div class="exp"><div class="ic" style="background:rgba(255,215,0,.15);color:var(--gold)"><i class="fa-solid fa-check"></i></div><h3>Conferir Voto</h3><p>Cole o código e confira os candidatos em quem votou.</p><a onclick="go('conferir')">Verificar →</a></div>
+<div class="exp"><div class="ic" style="background:rgba(231,76,60,.15);color:var(--red)"><i class="fa-regular fa-trash-can"></i></div><h3>Revogar Voto</h3><p>Não cumpriu? Revogue a confiança do seu voto após a posse.</p><a onclick="go('revogados')" style="color:var(--red)">Revogar →</a></div>
+<div class="exp"><div class="ic" style="background:rgba(46,204,113,.15);color:var(--green)"><i class="fa-solid fa-gauge-high"></i></div><h3>Termômetro</h3><p>Confiança em tempo real, dentro do perfil de cada político.</p><a onclick="go('radar')">Ver →</a></div>
 </div>
-<div style="margin-top:50px"><span class="kick">02 — ACOMPANHAMENTO</span><h2 style="margin-top:8px">Acompanhe quem está na frente</h2><p class="muted">Dados atualizados em tempo real sobre a preferência do eleitorado</p></div>
-<div class="donuts" id="donuts"></div>
-<div style="margin-top:50px"><span class="kick">03 — ATUALIZAÇÕES</span><h2 style="margin-top:8px">Notícias</h2><p class="muted">Fique por dentro do que acontece na política</p></div>
+<div style="margin-top:50px"><span class="kick">02 — ATUALIZAÇÕES</span><h2 style="margin-top:8px">Notícias</h2><p class="muted">Fique por dentro do que acontece na política</p></div>
 <div class="news" id="homeNews" style="margin-top:20px"></div>
-<div class="ctabox"><h2>Sua voz faz a <span style="color:var(--blue)">diferença</span></h2>
+<div class="ctabox"><h2>Sua voz faz a <span style="color:var(--blueL)">diferença</span></h2>
 <p class="muted">Participe ativamente da democracia brasileira. Acompanhe, opine, vote e fiscalize. O poder está em suas mãos.</p>
 <div class="cta" style="margin-top:8px;justify-content:center"><input id="eml" placeholder="seu@email.com" style="max-width:260px"/><button class="btn gold" onclick="toast('E-mail cadastrado! (fase final)')">OK</button></div>
-<div class="cta" style="margin-top:8px"><button class="btn gold" onclick="go('candidatos')">Começar Agora</button><button class="btn" onclick="go('quem')">Conhecer Mais</button></div></div>
+<div class="cta" style="margin-top:8px"><button class="btn gold" onclick="go('radar')">Começar Agora</button><button class="btn" onclick="go('quem')">Conhecer Mais</button></div></div>
 </div></section>
 <section class="sec" id="sec-radar"><div class="wrap">
-<span class="kick">RADAR POLÍTICO</span><h2 style="margin:8px 0 6px">Cobre, acompanhe, elogie</h2>
-<p class="muted">Pesquise o político, veja o <b>selo</b>, a <b>quantidade de reclamações</b> e registre a sua. Só político com <b>selo de verificado</b> pode responder. Medir, não linchar.</p>
-<div class="filtros" style="grid-template-columns:1fr"><input id="rbusca" placeholder="Procurar político…" oninput="buscaRad()"/></div>
-<div id="radarRes"></div>
-<div id="painelPol"></div>
-<div class="g2" style="margin-top:16px">
-<div class="card"><h3 style="color:var(--red);font-size:15px"><i class="fa-solid fa-arrow-trend-down"></i> Políticos Com Mais Reclamações</h3><div id="maisRec" style="margin-top:10px"></div></div>
-<div class="card"><h3 style="color:var(--green);font-size:15px"><i class="fa-solid fa-arrow-trend-up"></i> Políticos Com Menos Reclamações</h3><div id="menosRec" style="margin-top:10px"></div></div>
-</div>
-</div></section>
-<section class="sec" id="sec-candidatos"><div class="wrap">
-<span class="kick">CANDIDATOS</span><h2 style="margin:8px 0 6px">Compare com dados 100% públicos</h2>
-<p class="muted">Fontes oficiais: TSE · Portal da Transparência · Câmara/Senado · CNJ. Dica: marque a caixa no canto superior direito de até 3 políticos pra comparar lado a lado.</p>
+<span class="kick">RADAR POLÍTICO</span><h2 style="margin:8px 0 6px">Busque, compare, cobre</h2>
+<p class="muted">Todos os cargos reais · <span data-tip="Fixe até 5 políticos para comparar lado a lado.">📌 fixe até 5 pra comparar</span> · clique no card pra abrir o <b>Perfil</b> com Termômetro, reclamação/apoio e ficha. Só político <b>verificado</b> responde.</p>
 <div class="filtros">
-<input id="cbusca" placeholder="Buscar por nome, partido, estado ou área…" oninput="renderCand()"/>
-<select id="fUF2" onchange="renderCand()"></select>
-<select id="fPartido2" onchange="renderCand()"></select>
-<select id="fCargo2" onchange="renderCand()"></select>
+<input id="cbusca" placeholder="Nome, número, partido, estado…" oninput="renderRad()"/>
+<select id="fUF" onchange="renderRad()"></select>
+<select id="fPartido" onchange="renderRad()"></select>
+<select id="fCargo" onchange="renderRad()"></select>
 </div>
 <div class="filtros" style="grid-template-columns:1fr 1fr;margin-top:0">
-<select id="fOrdem" onchange="renderCand()"><option value="int">📊 Transparência (maior)</option><option value="intb">📊 Transparência (menor)</option><option value="rec">🗳️ Reclamações (maior)</option><option value="proc">⚖️ Processos (menor)</option></select>
+<select id="fOrdem" onchange="renderRad()"><option value="int">📊 Transparência (maior)</option><option value="intb">📊 Transparência (menor)</option><option value="rec">🗳️ Reclamações (maior)</option><option value="proc">⚖️ Processos (menor)</option></select>
 <span id="cCount" class="muted" style="align-self:center"></span>
 </div>
-<div id="candList" class="grid g3"></div>
-<div class="card" style="margin-top:18px"><table style="width:100%;font-size:13px;border-collapse:collapse"><tr style="color:var(--muted)"><th style="text-align:left;padding:6px">Fonte</th><th style="text-align:left">Dados</th></tr>
-<tr><td style="padding:6px">TSE</td><td class="muted">Registro, histórico eleitoral, bens, votos</td></tr>
-<tr><td style="padding:6px">Portal da Transparência</td><td class="muted">Rendimentos, patrimônio, gastos</td></tr>
-<tr><td style="padding:6px">Câmara / Senado</td><td class="muted">Proposituras, votação nominal, presença</td></tr>
-<tr><td style="padding:6px">CNJ</td><td class="muted">Processos judiciais públicos</td></tr></table></div>
+<div id="radList" class="grid g3"></div>
 </div></section>
 <section class="sec" id="sec-congresso"><div class="wrap">
 <span class="kick">CONGRESSO</span><h2 style="margin:8px 0 6px">PLs Tramitando no Congresso</h2>
@@ -215,20 +198,32 @@ table.cmp th{color:var(--muted)}
 <section class="sec" id="sec-quem"><div class="wrap" style="max-width:700px">
 <span class="kick">QUEM SOMOS</span><h2 style="margin:8px 0 14px">MudaBrasil</h2>
 <div class="card"><p>Plataforma cívica de <b>voto contínuo e revogável</b> (protótipo demonstrativo, sem valor jurídico). O poder emana do povo — e não acaba no dia da eleição.</p>
-<p style="color:var(--gold);font-weight:700">"Seu voto coloca, seu voto tira."</p></div>
+<p style="color:var(--gold);font-weight:800">"Seu voto coloca, seu voto tira."</p></div>
 </div></section>
 </main>
 <footer><div class="wrap"><div class="ft">
 <div><div class="lg"><div class="ic"><i class="fa-solid fa-layer-group"></i></div><b>MudaBrasil</b></div>
 <p class="muted" style="margin:12px 0">Plataforma de opinião e participação para um Brasil com mais transparência, voz e poder de voto real.</p>
-<p style="color:var(--gold);font-weight:700;font-size:13px">"Seu voto coloca, seu voto tira."</p></div>
-<div><h5>Navegar</h5><a onclick="go('candidatos')">Pesquisa</a><a onclick="go('radar')">Radar Político</a><a onclick="go('candidatos')">Candidatos</a><a onclick="go('inicio')">Resultados</a><a onclick="go('inicio')">Notícias</a></div>
-<div><h5>Participar</h5><a onclick="go('conferir')">Meus Votos</a><a onclick="go('radar')">Reclame Aqui</a><a onclick="go('inicio')">Meu Estado</a><a onclick="toast('Chat cívico na fase final.')">Chat Cívico</a><a>Baixar App</a></div>
-<div><h5>Institucional</h5><a onclick="go('quem')">Sobre Nós</a><a>Termos de Uso</a><a>Privacidade</a><a>Contato</a><a>Imprensa</a></div>
+<p style="color:var(--gold);font-weight:800;font-size:13px">"Seu voto coloca, seu voto tira."</p></div>
+<div><h5>Navegar</h5><a onclick="go('radar')">Radar Político</a><a onclick="go('congresso')">Congresso</a><a onclick="go('conferir')">Conferir Voto</a><a onclick="go('revogados')">Revogados</a></div>
+<div><h5>Participar</h5><a onclick="go('conferir')">Meus Votos</a><a onclick="go('radar')">Reclame Aqui</a><a onclick="abrirLogin()">Sou Político/Candidato</a><a>Baixar App</a></div>
+<div><h5>Institucional</h5><a onclick="go('quem')">Sobre Nós</a><a>Termos de Uso</a><a>Privacidade</a><a>Contato</a></div>
 </div><div class="fbot"><span>© 2026 MudaBrasil. Protótipo demonstrativo. Dados simulados.</span><span>mudabrasil.app</span></div></div></footer>
-<div class="cmpbar" id="cmpbar"><span id="cmpcount" class="muted">0 selecionado(s)</span><div style="display:flex;gap:8px"><button class="btn sm" onclick="limparCmp()">Limpar</button><button class="btn gold sm" onclick="abrirCmp()">Comparar agora</button></div></div>
-<div class="overlay" id="mDoss"><div class="modal"><div id="dossBody"></div><button class="btn" style="width:100%;margin-top:12px" onclick="fechar('mDoss')">Fechar</button></div></div>
-<div class="overlay" id="mCmp"><div class="modal"><h3>🆚 Comparação de Candidatos</h3><div id="cmpBody"></div><button class="btn" style="width:100%;margin-top:12px" onclick="fechar('mCmp')">Fechar</button></div></div>
+<div class="cmpbar" id="cmpbar"><span id="cmpcount" class="muted">0/5 fixados</span><div style="display:flex;gap:8px"><button class="btn sm" onclick="limparPin()">Limpar</button><button class="btn gold sm" onclick="abrirCmp()">Comparar agora</button></div></div>
+<div class="overlay" id="mPerfil"><div class="modal"><div id="perfilBody"></div><button class="btn" style="width:100%;margin-top:12px" onclick="fechar('mPerfil')">Fechar</button></div></div>
+<div class="overlay" id="mCmp"><div class="modal"><h3 style="margin-bottom:10px">🆚 Comparação (até 5)</h3><div class="cmpwrap"><div id="cmpBody"></div></div><button class="btn" style="width:100%;margin-top:12px" onclick="fechar('mCmp')">Fechar</button></div></div>
+<div class="overlay" id="mLogin"><div class="modal"><h3 style="margin-bottom:10px">Entrar</h3>
+<button class="btn blue block" style="width:100%;margin-bottom:10px" onclick="entrarCidadao()"><i class="fa-solid fa-user"></i> Sou cidadão (simulado)</button>
+<button class="btn gold" style="width:100%" onclick="souPolitico()"><i class="fa-solid fa-landmark"></i> Sou político ou candidato</button>
+<p class="muted" style="margin-top:10px">Cidadão = simulação agora. Político/Candidato = verificação REAL (ativa na versão online completa).</p>
+<button class="btn" style="width:100%;margin-top:12px" onclick="fechar('mLogin')">Fechar</button></div></div>
+<div class="overlay" id="mVerif"><div class="modal"><h3 style="margin-bottom:10px">🔐 Verificação de identidade</h3>
+<div class="doss">
+<div class="blk"><b>🏛️ Mandatário (com cadeira)</b><div class="muted">E-mail institucional <b>@camara.leg.br</b> ou <b>@senado.leg.br</b> + biometria.</div></div>
+<div class="blk"><b>🗳️ Candidato (sem cadeira)</b><div class="muted">Prova de <b>registro de candidatura no TSE</b> (DivulgaCandContas) + documento.</div></div>
+<div class="blk" style="border-left:4px solid var(--gold)"><b>Disponível na versão online completa</b><div class="muted">A verificação real roda no backend (Railway). Aqui é protótipo — nenhum selo é concedido em modo demo.</div></div>
+</div>
+<button class="btn" style="width:100%;margin-top:12px" onclick="fechar('mVerif')">Entendi</button></div></div>
 <div id="toast"></div>
 <script>
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister()));}
@@ -237,91 +232,75 @@ const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 function toast(m){const t=$('#toast');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',2600)}
 function fechar(id){document.getElementById(id).classList.remove('open')}
 function toggleMenu(){document.getElementById('mnav').classList.toggle('open')}
-function go(p){$$('.sec').forEach(s=>s.classList.remove('on'));$('#sec-'+p).classList.add('on');$$('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.p===p));window.scrollTo(0,0);if(p=='radar')renderRadar();if(p=='candidatos')renderCand()}
+function go(p){$$('.sec').forEach(s=>s.classList.remove('on'));$('#sec-'+p).classList.add('on');$$('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.p===p));window.scrollTo(0,0);if(p=='radar')renderRad()}
 $$('#nav a').forEach(a=>a.onclick=()=>go(a.dataset.p));
 const LS={get:(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))};
-const CORES=['#2ECC71','#E0A82E','#3B82F6','#E74C3C','#A855F7'],NOMES=['Maria','Carlos','Ana','João','Outros'];
-function donut(el,d){const t=d.reduce((a,b)=>a+b,0);let a=0;const g=d.map((v,i)=>{const p=v/t*360;const s=`${CORES[i]} ${a}deg ${a+p}deg`;a+=p;return s}).join(',');el.innerHTML=`<div class="donut" style="background:conic-gradient(${g})"></div><div class="leg">${NOMES.map((n,i)=>`<span><i style="background:${CORES[i]}"></i>${n}</span>`).join('')}</div>`}
-function initDonuts(){$('#donuts').innerHTML=['Presidente','Governador','Senador','Deputado Federal','Deputado Estadual','Prefeito','Vereador'].map(c=>`<div class="don"><h4>${c} <span class="pill on" onclick="pill(this)">UF</span><span class="pill" onclick="pill(this)">Cidade</span></h4><div class="dchart"></div></div>`).join('');$$('.dchart').forEach(d=>donut(d,[28,25,20,16,11]))}
-function pill(el){el.parentElement.querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));el.classList.add('on');if(el.textContent==='Cidade')toast('Recorte por cidade: em breve (dados TSE).')}
+const CORES=['#2ECC71','#FFD700','#4a90f0','#E74C3C','#A855F7'];
+let POL=[],ready=false,PINS=[],SESS=LS.get('mb_sess',null);
 const CARGOS_F=['Presidente','Governador','Senador','Deputado Federal','Deputado Estadual','Prefeito','Vereador'];
-let POL=[],ready=false,SEL=[];
 const SEED_REC=['Não cumpriu a promessa da creche do bairro.','Faltou às sessões sem justificativa.','Não respondeu ao pedido de informação sobre emendas.','Prometeu a reforma da rodovia e não entregou.','Não destinou verba à saúde como prometido.'];
-const DEMO=[{nome:'Ana Fontes',partido:'PV',uf:'SP',cargo:'Presidente',num:51,real:0,rec:70,selo:true},{nome:'Rui Bacelar',partido:'PSD',uf:'RJ',cargo:'Presidente',num:55,real:0,rec:62,selo:true},{nome:'Cida Moraes',partido:'PT',uf:'BA',cargo:'Presidente',num:13,real:0,rec:48,selo:false},
-{nome:'Helena Cruz',partido:'PSB',uf:'MG',cargo:'Governador',num:40,real:0,rec:35,selo:true},{nome:'Marcos Vilela',partido:'MDB',uf:'SP',cargo:'Governador',num:15,real:0,rec:58,selo:false},{nome:'Tereza Kahn',partido:'NOVO',uf:'PR',cargo:'Governador',num:30,real:0,rec:22,selo:true},
-{nome:'Beto Sampaio',partido:'PP',uf:'SP',cargo:'Deputado Estadual',num:11,real:0,rec:66,selo:false},{nome:'Vera Lins',partido:'PCdoB',uf:'RJ',cargo:'Deputado Estadual',num:65,real:0,rec:41,selo:true},{nome:'Nina Torres',partido:'PSOL',uf:'MG',cargo:'Deputado Estadual',num:50,real:0,rec:29,selo:false},
-{nome:'Paulo Anchieta',partido:'PSDB',uf:'SP',cargo:'Prefeito',num:45,real:0,rec:53,selo:true},{nome:'Lúcia Ferraz',partido:'REDE',uf:'RJ',cargo:'Prefeito',num:18,real:0,rec:37,selo:false},{nome:'Caio Bittar',partido:'Cidadania',uf:'MG',cargo:'Prefeito',num:23,real:0,rec:19,selo:true},
-{nome:'Ivan Duarte',partido:'Republicanos',uf:'SP',cargo:'Vereador',num:10,real:0,rec:61,selo:false},{nome:'Otto Prado',partido:'PL',uf:'RJ',cargo:'Vereador',num:22,real:0,rec:44,selo:true},{nome:'Maria Dias',partido:'PT',uf:'BA',cargo:'Vereador',num:13,real:0,rec:26,selo:false}];
 async function carregaPol(){POL=[];
-try{const r=await fetch('https://dadosabertos.camara.leg.br/api/v2/deputados?itens=513&ordem=ASC&ordenarPor=nome');const j=await r.json();(j.dados||[]).forEach(d=>POL.push({nome:d.nome,partido:d.siglaPartido||'',uf:d.siglaUf||'',cargo:'Deputado Federal',foto:d.urlFoto||'',num:d.id,real:1,rec:(d.id%90)+5,selo:(d.id%2===0)}));}catch(e){}
-try{const r=await fetch('https://legis.senado.leg.br/dadosabertos/senador/lista/legislatura/57?formato=json');const j=await r.json();const L=(j.lista&&j.lista.senador)||[];L.forEach(s=>{const p=s.IdentificacaoParlamentar||{};const id=Number(p.CodigoParlamentar||50);POL.push({nome:p.NomeParlamentar||'',partido:p.SiglaPartido||'',uf:p.Uf||'',cargo:'Senador',foto:p.UrlFotoParlamentar||'',num:p.CodigoParlamentar||'',real:1,rec:(id%90)+5,selo:(id%2===0)});});}catch(e){}
-POL.push(...DEMO);ready=true;
-const el=document.getElementById('bReais');if(el)el.textContent=POL.filter(p=>p.real).length+' políticos reais';
-popula();renderRadar();renderCand()}
+try{const r=await fetch('https://dadosabertos.camara.leg.br/api/v2/deputados?itens=513&ordem=ASC&ordenarPor=nome');const j=await r.json();(j.dados||[]).forEach(d=>POL.push({nome:d.nome,partido:d.siglaPartido||'',uf:d.siglaUf||'',cargo:'Deputado Federal',foto:d.urlFoto||'',num:d.id,real:1,rec:(d.id%90)+5,selo:false}));}catch(e){}
+try{const r=await fetch('https://legis.senado.leg.br/dadosabertos/senador/lista/legislatura/57?formato=json');const j=await r.json();const L=(j.lista&&j.lista.senador)||[];L.forEach(s=>{const p=s.IdentificacaoParlamentar||{};const id=Number(p.CodigoParlamentar||50);POL.push({nome:p.NomeParlamentar||'',partido:p.SiglaPartido||'',uf:p.Uf||'',cargo:'Senador',foto:p.UrlFotoParlamentar||'',num:p.CodigoParlamentar||'',real:1,rec:(id%90)+5,selo:false});});}catch(e){}
+ready=true;const el=document.getElementById('bReais');if(el)el.textContent=POL.length+' políticos reais';
+popula();renderRad()}
 function fill(id,arr,all){const el=document.getElementById(id);if(el)el.innerHTML=`<option value="">${all}</option>`+arr.map(x=>`<option>${x}</option>`).join('')}
 function popula(){const uf=[...new Set(POL.map(p=>p.uf))].filter(Boolean).sort();const pt=[...new Set(POL.map(p=>p.partido))].filter(Boolean).sort();
-fill('fUF2',uf,'Todos os estados');fill('fPartido2',pt,'Todos os partidos');fill('fCargo2',CARGOS_F,'Todos os cargos')}
+fill('fUF',uf,'Todos os estados');fill('fPartido',pt,'Todos os partidos');fill('fCargo',CARGOS_F,'Todos os cargos')}
 function av(p){return p.foto?`<img class="av" src="${p.foto}" alt="">`:`<div class="avf" style="background:${CORES[p.nome.length%5]}">${p.nome[0]}</div>`}
-function txtSeed(p){const n=p.rec>=80?3:p.rec>=40?2:p.rec>=15?1:0;const o=[];for(let k=0;k<n;k++)o.push(SEED_REC[(p.num+k)%SEED_REC.length]);return o}
 function txtUser(i){const m=LS.get('mb_rec_txt',{});return m[i]||[]}
 function elogUser(i){const m=LS.get('mb_elog_txt',{});return m[i]||[]}
 function countRec(p,i){return p.rec+txtUser(i).length}
-function todasTxt(p,i){return txtUser(i).concat(txtSeed(p))}
-function buscaRad(){if(!ready)return;const q=($('#rbusca').value||'').toLowerCase();if(!q){$('#radarRes').innerHTML='';return}
-const l=POL.filter(p=>p.nome.toLowerCase().includes(q)).slice(0,5);
-$('#radarRes').innerHTML=l.map(p=>{const i=POL.indexOf(p);return `<div class="rank" style="align-items:center;cursor:pointer" onclick="abrePol(${i})">${av(p)}<div style="flex:1"><b>${p.nome}</b><div class="muted">${p.partido} · ${p.uf} · ${p.cargo}</div></div><span class="badge ${p.selo?'ok':''}">${p.selo?'Verificado':'Sem selo'}</span><span class="badge amb">${countRec(p,i)} reclamações</span></div>`}).join('')||'<p class="muted">Nada encontrado.</p>'}
-function abrePol(i){const p=POL[i];
-$('#painelPol').innerHTML=`<div class="card" style="margin-top:14px;border-left:4px solid var(--gold)">
-<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">${av(p)}<div style="flex:1"><b style="font-size:16px">${p.nome}</b><div class="muted">${p.partido} · ${p.uf} · ${p.cargo} · nº ${p.num}</div></div>
-<span class="badge ${p.selo?'ok':''}">${p.selo?'<i class=fa-solid fa-circle-check></i> Verificado':'Sem selo'}</span><span class="badge amb">${countRec(p,i)} reclamações</span><button class="btn sm" onclick="dossie(${i})">Ficha completa</button></div>
-<p class="muted" style="margin:10px 0 6px">${p.selo?'Este político pode responder às reclamações (identidade confirmada).':'Sem selo: não pode responder até verificar a identidade.'}</p>
-<label class="muted">Sua reclamação (com lastro):</label>
-<textarea id="recTxt" placeholder="Descreva a promessa não cumprida com fonte/data…"></textarea>
-<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn gold sm" onclick="enviaRec(${i})"><i class="fa-solid fa-bullhorn"></i> Enviar reclamação</button>
-<button class="btn green sm" onclick="enviaElog(${i})"><i class="fa-solid fa-thumbs-up"></i> Elogiar</button></div>
-<div id="histRec" style="margin-top:12px">${todasTxt(p,i).map(t=>`<div class="quote">“${t}”</div>`).join('')||'<p class="muted">Sem reclamações registradas.</p>'}${elogUser(i).map(t=>`<div class="quote ok">“${t}”</div>`).join('')}</div>
-</div>`;$('#painelPol').scrollIntoView({behavior:'smooth'})}
-function enviaRec(i){const t=($('#recTxt').value||'').trim();if(t.length<10)return toast('Descreva com pelo menos 10 caracteres.');
-const m=LS.get('mb_rec_txt',{});(m[i]=m[i]||[]).unshift(t);LS.set('mb_rec_txt',m);toast('Reclamação registrada. 📣');abrePol(i);renderRadar()}
-function enviaElog(i){const t=($('#recTxt').value||'').trim();if(t.length<10)return toast('Descreva o elogio com pelo menos 10 caracteres.');
-const m=LS.get('mb_elog_txt',{});(m[i]=m[i]||[]).unshift(t);LS.set('mb_elog_txt',m);toast('Elogio registrado. 👍');abrePol(i)}
-function renderRadar(){if(!ready)return;
-const l=[...POL].map((p,idx)=>({p,idx,c:countRec(p,idx)}));
-const mais=[...l].sort((a,b)=>b.c-a.c).slice(0,5),menos=[...l].sort((a,b)=>a.c-b.c).slice(0,5);
-$('#maisRec').innerHTML=mais.map(o=>`<div class="rank"><div class="pos">${o.c}</div><div style="flex:1"><b style="font-size:13px">${o.p.nome}</b> <span class="muted">${o.p.partido} · ${o.p.uf}</span>${todasTxt(o.p,o.idx).slice(0,2).map(t=>`<div class="quote">“${t}”</div>`).join('')}</div><button class="btn gold sm" onclick="abrePol(${o.idx})">Cobrar</button></div>`).join('');
-$('#menosRec').innerHTML=menos.map(o=>`<div class="rank"><div class="pos" style="color:var(--green)">${o.c}</div><div style="flex:1"><b style="font-size:13px">${o.p.nome}</b> <span class="muted">${o.p.partido} · ${o.p.uf}</span>${(todasTxt(o.p,o.idx)[0]?`<div class="quote">“${todasTxt(o.p,o.idx)[0]}”</div>`:'<div class="quote ok">Sem reclamações registradas.</div>')}</div><button class="btn green sm" onclick="abrePol(${o.idx})">Elogiar</button></div>`).join('')}
-function renderCand(){if(!ready)return;const q=($('#cbusca').value||'').toLowerCase();const uf=$('#fUF2').value;const pt=$('#fPartido2').value;const cg=$('#fCargo2').value;const ord=$('#fOrdem').value;
-let l=POL.filter(p=>(!q||p.nome.toLowerCase().includes(q)||p.partido.toLowerCase().includes(q)||p.uf.toLowerCase().includes(q))&&(!uf||p.uf===uf)&&(!pt||p.partido===pt)&&(!cg||p.cargo===cg));
-if(ord==='int')l.sort((a,b)=>(100-b.rec)-(100-a.rec));if(ord==='intb')l.sort((a,b)=>(100-a.rec)-(100-b.rec));
+function term(p,i){let t=Math.max(5,100-p.rec)+elogUser(i).length*2-txtUser(i).length*2;return Math.max(0,Math.min(100,t))}
+function corTerm(t){return t>=70?'var(--green)':t>=40?'var(--gold)':'var(--red)'}
+function renderRad(){if(!ready)return;const q=($('#cbusca').value||'').toLowerCase();const uf=$('#fUF').value;const pt=$('#fPartido').value;const cg=$('#fCargo').value;const ord=$('#fOrdem').value;
+let l=POL.filter(p=>(!q||p.nome.toLowerCase().includes(q)||p.partido.toLowerCase().includes(q)||p.uf.toLowerCase().includes(q)||String(p.num).includes(q))&&(!uf||p.uf===uf)&&(!pt||p.partido===pt)&&(!cg||p.cargo===cg));
+if(ord==='int')l.sort((a,b)=>term(b,POL.indexOf(b))-term(a,POL.indexOf(a)));if(ord==='intb')l.sort((a,b)=>term(a,POL.indexOf(a))-term(b,POL.indexOf(b)));
 if(ord==='rec')l.sort((a,b)=>countRec(b,POL.indexOf(b))-countRec(a,POL.indexOf(a)));if(ord==='proc')l.sort((a,b)=>a.rec-b.rec);
-$('#cCount').textContent=l.length+' candidato(s) encontrado(s)';
-$('#candList').innerHTML=l.slice(0,12).map(p=>{const i=POL.indexOf(p);const integ=Math.max(5,100-p.rec);return `<div class="card">
-<label style="position:absolute;top:12px;right:12px"><input type="checkbox" style="width:20px;height:20px;accent-color:var(--gold)" ${SEL.includes(i)?'checked':''} onchange="toggleCmp(${i},this)"></label>
-${av(p)}<div style="margin:10px 0"><b>${p.nome}</b><div class="muted">${p.partido} · ${p.uf} · ${p.cargo} · nº ${p.num}</div></div>
-<div class="muted">Índice de integridade</div><div class="bar70"><i style="width:${integ}%;background:${integ>=70?'var(--green)':integ>=40?'var(--gold)':'var(--red)'}"></i></div>
-<div class="muted" style="margin-top:6px">Transparência · processos · presença</div>
-<button class="btn sm" style="margin-top:10px" onclick="dossie(${i})">VER DETALHES</button></div>`}).join('')||'<p class="muted">Nada encontrado.</p>'}
-function toggleCmp(i,el){if(el.checked){if(SEL.length>=3){el.checked=false;toast('Compare até 3 por vez.');return}SEL.push(i)}else SEL=SEL.filter(x=>x!==i);
-$('#cmpcount').textContent=SEL.length+' selecionado(s)';$('#cmpbar').classList.toggle('on',SEL.length>0)}
-function limparCmp(){SEL=[];$('#cmpbar').classList.remove('on');renderCand()}
-function abrirCmp(){if(SEL.length<2){toast('Marque pelo menos 2.');return}
-const rows=SEL.map(i=>POL[i]);
+$('#cCount').textContent=l.length+' político(s) encontrado(s)';
+$('#radList').innerHTML=l.slice(0,12).map(p=>{const i=POL.indexOf(p);const t=term(p,i);return `<div class="card">
+<button class="pin ${PINS.includes(i)?'on':''}" data-tip="Fixar para comparar (até 5)" onclick="togglePin(${i})">📌</button>
+<div style="cursor:pointer" onclick="abrePerfil(${i})">${av(p)}<div style="margin:10px 0"><b>${p.nome}</b><div class="muted">${p.partido} · ${p.uf} · ${p.cargo} · nº ${p.num}</div></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+<span class="badge ${p.selo?'ok':''}" data-tip="${p.selo?'Identidade confirmada. Só este político responde.':'Ainda não verificado. Não pode responder.'}">${p.selo?'Verificado':'Sem selo'}</span>
+<span class="badge" data-tip="Termômetro de Confiança: reclamações/apoios/respostas." style="color:${corTerm(t)}">${t}%</span>
+<span class="badge amb">${countRec(p,i)} recl.</span></div></div></div>`}).join('')||'<p class="muted">Nada encontrado.</p>'}
+function togglePin(i){if(PINS.includes(i))PINS=PINS.filter(x=>x!==i);else{if(PINS.length>=5)return toast('Máximo de 5 — solte um pin pra trocar.');PINS.push(i)}
+$('#cmpcount').textContent=PINS.length+'/5 fixados';$('#cmpbar').classList.toggle('on',PINS.length>0);renderRad()}
+function limparPin(){PINS=[];$('#cmpbar').classList.remove('on');renderRad()}
+function abrirCmp(){if(PINS.length<2)return toast('Fixe pelo menos 2.');const rows=PINS.map(i=>POL[i]);
 $('#cmpBody').innerHTML=`<table class="cmp"><tr><th></th>${rows.map(p=>`<th>${av(p)}<br>${p.nome}</th>`).join('')}</tr>
 <tr><td>Cargo</td>${rows.map(p=>`<td>${p.cargo}</td>`).join('')}</tr>
 <tr><td>Partido/UF</td>${rows.map(p=>`<td>${p.partido} · ${p.uf}</td>`).join('')}</tr>
-<tr><td>Integridade</td>${rows.map(p=>`<td style="color:var(--gold);font-weight:800">${Math.max(5,100-p.rec)}</td>`).join('')}</tr>
-<tr><td>Reclamações</td>${rows.map(p=>`<td>${p.rec}</td>`).join('')}</tr>
-<tr><td>Selo</td>${rows.map(p=>`<td>${p.selo?'Verificado':'—'}</td>`).join('')}</tr>
-<tr><td>Dados</td>${rows.map(p=>`<td>${p.real?'Real':'Demo'}</td>`).join('')}</tr></table>`;
+<tr><td>Termômetro</td>${rows.map(p=>{const t=term(p,POL.indexOf(p));return `<td style="color:${corTerm(t)};font-weight:800">${t}%</td>`}).join('')}</tr>
+<tr><td>Reclamações</td>${rows.map(p=>`<td>${countRec(p,POL.indexOf(p))}</td>`).join('')}</tr>
+<tr><td>Selo</td>${rows.map(p=>`<td>${p.selo?'Verificado':'—'}</td>`).join('')}</tr></table>`;
 document.getElementById('mCmp').classList.add('open')}
-function dossie(i){const p=POL[i];const hoje=new Date().toLocaleDateString('pt-BR');
-$('#dossBody').innerHTML=`<h3>${p.nome} — Ficha completa</h3><p class="muted">Dados públicos com fonte e data (${hoje}). Presunção de inocência. Medir, não linchar.</p>
-<div class="doss">
-<div class="blk" style="border-left:4px solid var(--gold)"><b>🗳️ TSE — registro, bens e histórico</b><div class="src">Fonte: TSE · ${hoje}</div><a class="btn sm" style="margin-top:8px" href="https://divulgacandcontas.tse.jus.br/divulga/app/" target="_blank">Abrir no TSE</a></div>
-<div class="blk"><b>🏛️ Mandato / atividade</b><div class="muted">${p.cargo} · ${p.partido} · ${p.uf}.</div><div class="src">Fonte: ${p.real?(p.cargo==='Senador'?'Senado':'Câmara'):'demo'} · ${hoje}</div></div>
-<div class="blk"><b>💰 Gastos / transparência</b><div class="src">Fonte: Portal da Transparência / TCU</div></div>
-<div class="blk"><b>⚖️ Situação jurídica pública</b><div class="src">Fonte: CNJ / Justiça Eleitoral</div></div>
-</div>`;$('#mDoss').classList.add('open')}
+function abrePerfil(i){const p=POL[i];const t=term(p,i);const dono=SESS&&SESS.politico===i;
+$('#perfilBody').innerHTML=`<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">${av(p)}<div style="flex:1"><b style="font-size:18px">${p.nome}</b><div class="muted">${p.partido} · ${p.uf} · ${p.cargo} · nº ${p.num}</div></div>
+<span class="badge ${p.selo?'ok':''}" data-tip="${p.selo?'Identidade confirmada.':'Ainda não verificado.'}">${p.selo?'Verificado':'Sem selo'}</span></div>
+<div class="gauge" style="background:conic-gradient(${corTerm(t)} ${t}%, var(--card2) ${t}% 100%)"><b style="color:${corTerm(t)}">${t}%</b></div>
+<p class="muted" style="text-align:center" data-tip="Baseado em reclamações, apoios e respostas. Atualiza em tempo real na versão online.">Termômetro de Confiança</p>
+${dono?`<div class="card" style="margin-top:12px;border-left:4px solid var(--gold)"><b>🏛️ Painel do Político</b><div class="muted">Responder reclamações · manter selo · meu termômetro.</div></div>`
+:`<button class="btn sm" style="margin-top:12px" onclick="souPolitico()"><i class="fa-solid fa-fingerprint"></i> É você? Verificar identidade</button>`}
+<label class="muted" style="display:block;margin-top:14px">Sua reclamação (com lastro):</label>
+<textarea id="recTxt" placeholder="Descreva a promessa não cumprida com fonte/data…"></textarea>
+<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn gold sm" onclick="enviaRec(${i})"><i class="fa-solid fa-bullhorn"></i> Reclamar</button>
+<button class="btn green sm" onclick="enviaElog(${i})"><i class="fa-solid fa-thumbs-up"></i> Apoiar</button></div>
+<div style="margin-top:12px">${txtUser(i).map(x=>`<div class="quote">“${x}”</div>`).join('')}${elogUser(i).map(x=>`<div class="quote ok">“${x}”</div>`).join('')||''}</div>
+<div class="doss" style="margin-top:14px">
+<div class="blk"><b>🗳️ TSE — registro, bens, histórico</b><a class="btn sm" style="margin-top:8px" href="https://divulgacandcontas.tse.jus.br/divulga/app/" target="_blank">Abrir no TSE</a></div>
+<div class="blk"><b>💰 Portal da Transparência</b><a class="btn sm" style="margin-top:8px" href="https://www.portaltransparencia.gov.br/" target="_blank">Abrir</a></div>
+<div class="blk"><b>🏛️ Câmara/Senado — votações, presença, proposituras</b><a class="btn sm" style="margin-top:8px" href="${p.cargo==='Senador'?'https://www25.senado.leg.br/web/conselhos':'https://www.camara.leg.br/deputados/'}" target="_blank">Abrir</a></div>
+<div class="blk"><b>⚖️ CNJ — situação jurídica pública</b><div class="src">Presunção de inocência. Medir, não linchar.</div></div>
+</div>`;document.getElementById('mPerfil').classList.add('open')}
+function enviaRec(i){const t=($('#recTxt').value||'').trim();if(t.length<10)return toast('Descreva com pelo menos 10 caracteres.');
+const m=LS.get('mb_rec_txt',{});(m[i]=m[i]||[]).unshift(t);LS.set('mb_rec_txt',m);toast('Reclamação registrada. 📣');abrePerfil(i);renderRad()}
+function enviaElog(i){const t=($('#recTxt').value||'').trim();if(t.length<10)return toast('Descreva o apoio com pelo menos 10 caracteres.');
+const m=LS.get('mb_elog_txt',{});(m[i]=m[i]||[]).unshift(t);LS.set('mb_elog_txt',m);toast('Apoio registrado. 👍');abrePerfil(i);renderRad()}
+function abrirLogin(){document.getElementById('mLogin').classList.add('open')}
+function entrarCidadao(){SESS={nome:'Cidadão BR'};LS.set('mb_sess',SESS);fechar('mLogin');toast('Bem-vindo, cidadão! (simulado)')}
+function souPolitico(){fechar('mLogin');document.getElementById('mVerif').classList.add('open')}
 let PLS=[];
 async function carregaPLS(){try{const r=await fetch('https://dadosabertos.camara.leg.br/api/v2/proposicoes?siglaTipo=PL&itens=8&ordem=DESC&ordenarPor=id');const j=await r.json();PLS=(j.dados||[]).map(d=>({num:(d.siglaTipo||'PL')+' '+(d.numero||'')+'/'+(d.ano||''),txt:(d.ementa||d.titulo||'').slice(0,180),id:d.id,autor:d.autor||''}))}catch(e){PLS=[]}
 if(!PLS.length)PLS=[{num:'PL 5183/2026',txt:'Altera a Lei Rouanet para assegurar critérios específicos de avaliação e cota mínima de recursos.',id:1},{num:'PL 5182/2026',txt:'Institui o Programa Nacional de Recuperação de Rodovias Municipais com materiais recicláveis.',id:2}];renderPLS()}
@@ -340,11 +319,11 @@ $('#revList').innerHTML=l.map((p,i)=>{const pct=Math.round(p.rev/p.el*100);const
 <div class="muted">Elegeram: <b style="color:var(--ink)">${p.el}</b> · Revogados: <b style="color:var(--red)">${p.rev}</b></div>
 <div class="bar70"><i style="width:${Math.min(100,pct)}%;background:var(--red)"></i><span class="mk" style="left:70%"></span></div>
 <div class="muted">${pct}% dos 70% · ${falta>0?`faltam <b style="color:var(--gold)">${falta}</b>`:'<b style="color:var(--red)">atingiu 70% — cassação</b>'}</div></div>`}).join('')||'<p class="muted">Nada encontrado.</p>'}
-const FAQ=[['O que é simulação?','A votação/revogação não tem valor jurídico hoje. Notícias, políticos e PLs são reais.'],['Como revogo?','No site, com código + login, só após a posse.'],['Meu voto fica público?','Não. A cédula fica no seu navegador.'],['Branco vs nulo?','Branco = indiferença · Nulo = protesto.'],['O que é a regra dos 70%?','Proposta: 70% dos votos que elegeram = cassação.']];
+const FAQ=[['O que é simulação?','A votação/revogação não tem valor jurídico hoje. Notícias, políticos e PLs são reais.'],['Como revogo?','No site, com código + login, só após a posse.'],['Meu voto fica público?','Não. A cédula fica no seu navegador.'],['Quem pode responder reclamações?','Só o político/candidato com identidade verificada (selo).'],['O que é a regra dos 70%?','Proposta: 70% dos votos que elegeram = cassação.']];
 $('#faqList').innerHTML=FAQ.map(f=>`<div class="card"><b>${f[0]}</b><p class="muted" style="margin:6px 0 0">${f[1]}</p></div>`).join('');
 async function news(){try{const r=await fetch('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent('https://agenciabrasil.ebc.com.br/rss/ultimasnoticias/feed.xml'));const j=await r.json();const it=(j.items||[]).slice(0,2);
 $('#homeNews').innerHTML=it.map(n=>`<div class="ncard"><div class="th"><span class="cat">${(n.category||'Política').toString().slice(0,14)}</span><i class="fa-solid fa-layer-group"></i></div><div class="bd"><h4>${n.title}</h4><p>${(n.description||'').replace(/<[^>]+>/g,'').slice(0,140)}</p><div style="display:flex;gap:10px;align-items:center;font-size:11px;color:var(--muted)"><span class="seal">Fonte verificada</span><span>Agência Brasil</span><a href="${n.link}" target="_blank">Ler →</a></div></div></div>`).join('')}catch(e){$('#homeNews').innerHTML='<div class="ncard"><div class="th"><span class="cat">Política</span><i class="fa-solid fa-layer-group"></i></div><div class="bd"><h4>Brasil promete restaurar 163 mil km² de terras degradadas até 2030</h4><p>O Brasil apresentou as primeiras metas de Neutralidade da Degradação da Terra em evento internacional.</p><div style="display:flex;gap:10px;align-items:center;font-size:11px;color:var(--muted)"><span class="seal">Fonte verificada</span><span>Agência Brasil</span><a>Ler →</a></div></div></div>'}}
-initDonuts();carregaPol();carregaPLS();news();
+carregaPol();carregaPLS();news();
 </script>
 </body>
 </html>
