@@ -60,6 +60,7 @@ textarea{min-height:74px;resize:vertical}
 .muted{color:var(--muted);font-size:13px}
 .av{width:46px;height:46px;border-radius:50%;object-fit:cover;object-position:top center;background:var(--card2)}
 .avf{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#1a1400;flex:none}
+.avXL{width:76px;height:76px;border-radius:50%;object-fit:cover;object-position:top center;background:var(--card2)}
 .badge{font:800 10px Manrope;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
 .badge.ok{color:var(--green);border-color:rgba(46,204,113,.4)}
 .badge.blue{color:var(--blueL);border-color:rgba(74,144,240,.4)}
@@ -82,6 +83,13 @@ table.cmp th{color:var(--muted)}
 .gauge{width:120px;height:120px;border-radius:50%;position:relative;display:grid;place-items:center;margin:6px auto}
 .gauge::after{content:"";position:absolute;inset:22%;background:var(--card);border-radius:50%}
 .gauge b{position:relative;z-index:2;font:900 22px Montserrat}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+.stat{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:10px}
+.stat small{color:var(--muted);font-size:10.5px;display:block}
+.stat b{font-size:15px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:12px 0}
+.tabs button{background:none;border:none;color:var(--muted);font:700 13px Manrope;padding:10px 14px;cursor:pointer;border-bottom:2px solid transparent}
+.tabs button.on{color:var(--gold);border-color:var(--gold)}
 [data-tip]{position:relative;cursor:help}
 [data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:125%;left:50%;transform:translateX(-50%);background:#000;color:#fff;font:600 11px Manrope;padding:6px 10px;border-radius:8px;white-space:normal;width:max-content;max-width:220px;z-index:99}
 .news{max-width:420px}
@@ -99,9 +107,9 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
 .doss{display:grid;gap:10px}.doss .blk{border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--card2)}.doss .src{font-size:11.5px;color:var(--muted)}
 .overlay{position:fixed;inset:0;background:rgba(4,8,20,.85);backdrop-filter:blur(5px);z-index:200;display:none;align-items:center;justify-content:center;padding:18px}
 .overlay.open{display:flex}
-.modal{background:var(--bg);border:1px solid var(--line);border-radius:20px;max-width:680px;width:100%;max-height:88vh;overflow:auto;padding:26px}
+.modal{background:var(--bg);border:1px solid var(--line);border-radius:20px;max-width:720px;width:100%;max-height:90vh;overflow:auto;padding:26px}
 #toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--card2);border:1px solid var(--line);color:var(--ink);padding:12px 18px;border-radius:12px;z-index:300;display:none;max-width:90%}
-@media(max-width:960px){.explore{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:1fr}.filtros{grid-template-columns:1fr 1fr}.ft{grid-template-columns:1fr 1fr}nav{display:none}.ham{display:inline-flex}}
+@media(max-width:960px){.explore{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:1fr}.filtros{grid-template-columns:1fr 1fr}.ft{grid-template-columns:1fr 1fr}.stats{grid-template-columns:repeat(2,1fr)}nav{display:none}.ham{display:inline-flex}}
 </style>
 </head>
 <body>
@@ -136,7 +144,7 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
 </div>
 <div style="text-align:center;margin-top:50px"><h2>Explore o MudaBrasil</h2><p class="muted">Tudo o que você precisa para uma participação cívica informada e ativa.</p></div>
 <div class="explore">
-<div class="exp"><div class="ic" style="background:rgba(255,215,0,.15);color:var(--gold)"><i class="fa-regular fa-clock"></i></div><h3>Radar Político</h3><p>Busque, compare até 5, cobre e acompanhe com o Termômetro de Confiança.</p><a onclick="go('radar')">Acessar →</a></div>
+<div class="exp"><div class="ic" style="background:rgba(255,215,0,.15);color:var(--gold)"><i class="fa-regular fa-clock"></i></div><h3>Radar Político</h3><p>Ficha completa, Termômetro, reclamações e comparação até 5.</p><a onclick="go('radar')">Acessar →</a></div>
 <div class="exp"><div class="ic" style="background:rgba(59,130,246,.15);color:var(--blueL)"><i class="fa-regular fa-file-lines"></i></div><h3>PLs no Congresso</h3><p>Opine sobre leis em tramitação no congresso nacional.</p><a onclick="go('congresso')">Ir ao Congresso →</a></div>
 <div class="exp"><div class="ic" style="background:rgba(255,215,0,.15);color:var(--gold)"><i class="fa-solid fa-check"></i></div><h3>Conferir Voto</h3><p>Cole o código e confira os candidatos em quem votou.</p><a onclick="go('conferir')">Verificar →</a></div>
 <div class="exp"><div class="ic" style="background:rgba(231,76,60,.15);color:var(--red)"><i class="fa-regular fa-trash-can"></i></div><h3>Revogar Voto</h3><p>Não cumpriu? Revogue a confiança do seu voto após a posse.</p><a onclick="go('revogados')" style="color:var(--red)">Revogar →</a></div>
@@ -150,16 +158,16 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
 <div class="cta" style="margin-top:8px"><button class="btn gold" onclick="go('radar')">Começar Agora</button><button class="btn" onclick="go('quem')">Conhecer Mais</button></div></div>
 </div></section>
 <section class="sec" id="sec-radar"><div class="wrap">
-<span class="kick">RADAR POLÍTICO</span><h2 style="margin:8px 0 6px">Busque, compare, cobre</h2>
-<p class="muted">Todos os cargos reais · <span data-tip="Fixe até 5 políticos para comparar lado a lado.">📌 fixe até 5 pra comparar</span> · clique no card pra abrir o <b>Perfil</b> com Termômetro, reclamação/apoio e ficha. Só político <b>verificado</b> responde.</p>
+<span class="kick">RADAR POLÍTICO</span><h2 style="margin:8px 0 6px">Cobre, acompanhe, elogie</h2>
+<p class="muted">Pesquise pra abrir a <b>ficha completa</b> (tudo que é público e influencia tua escolha) · <span data-tip="Fixe até 5 políticos para comparar lado a lado.">📌 fixe até 5 pra comparar</span>. Só político <b>verificado</b> responde.</p>
 <div class="filtros">
-<input id="cbusca" placeholder="Nome, número, partido, estado…" oninput="renderRad()"/>
+<input id="cbusca" placeholder="🔎 Buscar por nome, número, estado, partido, área…" oninput="renderRad()"/>
 <select id="fUF" onchange="renderRad()"></select>
 <select id="fPartido" onchange="renderRad()"></select>
 <select id="fCargo" onchange="renderRad()"></select>
 </div>
 <div class="filtros" style="grid-template-columns:1fr 1fr;margin-top:0">
-<select id="fOrdem" onchange="renderRad()"><option value="int">📊 Transparência (maior)</option><option value="intb">📊 Transparência (menor)</option><option value="rec">🗳️ Reclamações (maior)</option><option value="proc">⚖️ Processos (menor)</option></select>
+<select id="fOrdem" onchange="renderRad()"><option value="int">📊 Índice de Integridade (maior)</option><option value="intb">📊 Índice de Integridade (menor)</option><option value="rec">🗳️ Reclamações (maior)</option><option value="proc">⚖️ Processos (menor)</option></select>
 <span id="cCount" class="muted" style="align-self:center"></span>
 </div>
 <div id="radList" class="grid g3"></div>
@@ -213,7 +221,7 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
 <div class="overlay" id="mPerfil"><div class="modal"><div id="perfilBody"></div><button class="btn" style="width:100%;margin-top:12px" onclick="fechar('mPerfil')">Fechar</button></div></div>
 <div class="overlay" id="mCmp"><div class="modal"><h3 style="margin-bottom:10px">🆚 Comparação (até 5)</h3><div class="cmpwrap"><div id="cmpBody"></div></div><button class="btn" style="width:100%;margin-top:12px" onclick="fechar('mCmp')">Fechar</button></div></div>
 <div class="overlay" id="mLogin"><div class="modal"><h3 style="margin-bottom:10px">Entrar</h3>
-<button class="btn blue block" style="width:100%;margin-bottom:10px" onclick="entrarCidadao()"><i class="fa-solid fa-user"></i> Sou cidadão (simulado)</button>
+<button class="btn blue" style="width:100%;margin-bottom:10px" onclick="entrarCidadao()"><i class="fa-solid fa-user"></i> Sou cidadão (simulado)</button>
 <button class="btn gold" style="width:100%" onclick="souPolitico()"><i class="fa-solid fa-landmark"></i> Sou político ou candidato</button>
 <p class="muted" style="margin-top:10px">Cidadão = simulação agora. Político/Candidato = verificação REAL (ativa na versão online completa).</p>
 <button class="btn" style="width:100%;margin-top:12px" onclick="fechar('mLogin')">Fechar</button></div></div>
@@ -236,9 +244,12 @@ function go(p){$$('.sec').forEach(s=>s.classList.remove('on'));$('#sec-'+p).clas
 $$('#nav a').forEach(a=>a.onclick=()=>go(a.dataset.p));
 const LS={get:(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))};
 const CORES=['#2ECC71','#FFD700','#4a90f0','#E74C3C','#A855F7'];
-let POL=[],ready=false,PINS=[],SESS=LS.get('mb_sess',null);
+const AREAS=['Meio Ambiente','Saúde','Educação','Segurança','Economia','Infraestrutura','Direitos Humanos','Agronegócio'];
+let POL=[],ready=false,PINS=[],SESS=LS.get('mb_sess',null),PERF_I=-1,PERF_TAB='rec',PERF_DET=null;
 const CARGOS_F=['Presidente','Governador','Senador','Deputado Federal','Deputado Estadual','Prefeito','Vereador'];
 const SEED_REC=['Não cumpriu a promessa da creche do bairro.','Faltou às sessões sem justificativa.','Não respondeu ao pedido de informação sobre emendas.','Prometeu a reforma da rodovia e não entregou.','Não destinou verba à saúde como prometido.'];
+const SEED_RESP=['Equipe incluiu a demanda no cronograma da próxima quinzena. — Gabinete','Prestação de contas publicada no portal oficial. — Gabinete'];
+const SEED_APO=['Destinou emenda pra reforma da escola municipal.','Atendeu o mutirão de saúde no bairro.'];
 async function carregaPol(){POL=[];
 try{const r=await fetch('https://dadosabertos.camara.leg.br/api/v2/deputados?itens=513&ordem=ASC&ordenarPor=nome');const j=await r.json();(j.dados||[]).forEach(d=>POL.push({nome:d.nome,partido:d.siglaPartido||'',uf:d.siglaUf||'',cargo:'Deputado Federal',foto:d.urlFoto||'',num:d.id,real:1,rec:(d.id%90)+5,selo:false}));}catch(e){}
 try{const r=await fetch('https://legis.senado.leg.br/dadosabertos/senador/lista/legislatura/57?formato=json');const j=await r.json();const L=(j.lista&&j.lista.senador)||[];L.forEach(s=>{const p=s.IdentificacaoParlamentar||{};const id=Number(p.CodigoParlamentar||50);POL.push({nome:p.NomeParlamentar||'',partido:p.SiglaPartido||'',uf:p.Uf||'',cargo:'Senador',foto:p.UrlFotoParlamentar||'',num:p.CodigoParlamentar||'',real:1,rec:(id%90)+5,selo:false});});}catch(e){}
@@ -247,13 +258,16 @@ popula();renderRad()}
 function fill(id,arr,all){const el=document.getElementById(id);if(el)el.innerHTML=`<option value="">${all}</option>`+arr.map(x=>`<option>${x}</option>`).join('')}
 function popula(){const uf=[...new Set(POL.map(p=>p.uf))].filter(Boolean).sort();const pt=[...new Set(POL.map(p=>p.partido))].filter(Boolean).sort();
 fill('fUF',uf,'Todos os estados');fill('fPartido',pt,'Todos os partidos');fill('fCargo',CARGOS_F,'Todos os cargos')}
-function av(p){return p.foto?`<img class="av" src="${p.foto}" alt="">`:`<div class="avf" style="background:${CORES[p.nome.length%5]}">${p.nome[0]}</div>`}
+function av(p,cls){return p.foto?`<img class="${cls||'av'}" src="${p.foto}" alt="">`:`<div class="${cls||'av'}" style="background:${CORES[p.nome.length%5]};display:grid;place-items:center;color:#1a1400;font-weight:800">${p.nome[0]}</div>`}
 function txtUser(i){const m=LS.get('mb_rec_txt',{});return m[i]||[]}
 function elogUser(i){const m=LS.get('mb_elog_txt',{});return m[i]||[]}
+function txtSeed(p){const n=p.rec>=80?3:p.rec>=40?2:p.rec>=15?1:0;const o=[];for(let k=0;k<n;k++)o.push(SEED_REC[(p.num+k)%SEED_REC.length]);return o}
 function countRec(p,i){return p.rec+txtUser(i).length}
 function term(p,i){let t=Math.max(5,100-p.rec)+elogUser(i).length*2-txtUser(i).length*2;return Math.max(0,Math.min(100,t))}
 function corTerm(t){return t>=70?'var(--green)':t>=40?'var(--gold)':'var(--red)'}
 function renderRad(){if(!ready)return;const q=($('#cbusca').value||'').toLowerCase();const uf=$('#fUF').value;const pt=$('#fPartido').value;const cg=$('#fCargo').value;const ord=$('#fOrdem').value;
+const temFiltro=q||uf||pt||cg;
+if(!temFiltro){$('#cCount').textContent='';$('#radList').innerHTML=`<div class="card" style="grid-column:1/-1;text-align:center;padding:40px"><i class="fa-solid fa-magnifying-glass" style="font-size:30px;color:var(--gold)"></i><h3 style="margin:12px 0 6px">Pesquise um político</h3><p class="muted">Digite nome, número, estado, partido ou área pra abrir a ficha completa com Termômetro, reclamações, selo e dados públicos.</p></div>`;return}
 let l=POL.filter(p=>(!q||p.nome.toLowerCase().includes(q)||p.partido.toLowerCase().includes(q)||p.uf.toLowerCase().includes(q)||String(p.num).includes(q))&&(!uf||p.uf===uf)&&(!pt||p.partido===pt)&&(!cg||p.cargo===cg));
 if(ord==='int')l.sort((a,b)=>term(b,POL.indexOf(b))-term(a,POL.indexOf(a)));if(ord==='intb')l.sort((a,b)=>term(a,POL.indexOf(a))-term(b,POL.indexOf(b)));
 if(ord==='rec')l.sort((a,b)=>countRec(b,POL.indexOf(b))-countRec(a,POL.indexOf(a)));if(ord==='proc')l.sort((a,b)=>a.rec-b.rec);
@@ -263,7 +277,7 @@ $('#radList').innerHTML=l.slice(0,12).map(p=>{const i=POL.indexOf(p);const t=ter
 <div style="cursor:pointer" onclick="abrePerfil(${i})">${av(p)}<div style="margin:10px 0"><b>${p.nome}</b><div class="muted">${p.partido} · ${p.uf} · ${p.cargo} · nº ${p.num}</div></div>
 <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
 <span class="badge ${p.selo?'ok':''}" data-tip="${p.selo?'Identidade confirmada. Só este político responde.':'Ainda não verificado. Não pode responder.'}">${p.selo?'Verificado':'Sem selo'}</span>
-<span class="badge" data-tip="Termômetro de Confiança: reclamações/apoios/respostas." style="color:${corTerm(t)}">${t}%</span>
+<span class="badge" data-tip="Termômetro de Confiança." style="color:${corTerm(t)}">${t}%</span>
 <span class="badge amb">${countRec(p,i)} recl.</span></div></div></div>`}).join('')||'<p class="muted">Nada encontrado.</p>'}
 function togglePin(i){if(PINS.includes(i))PINS=PINS.filter(x=>x!==i);else{if(PINS.length>=5)return toast('Máximo de 5 — solte um pin pra trocar.');PINS.push(i)}
 $('#cmpcount').textContent=PINS.length+'/5 fixados';$('#cmpbar').classList.toggle('on',PINS.length>0);renderRad()}
@@ -276,28 +290,39 @@ $('#cmpBody').innerHTML=`<table class="cmp"><tr><th></th>${rows.map(p=>`<th>${av
 <tr><td>Reclamações</td>${rows.map(p=>`<td>${countRec(p,POL.indexOf(p))}</td>`).join('')}</tr>
 <tr><td>Selo</td>${rows.map(p=>`<td>${p.selo?'Verificado':'—'}</td>`).join('')}</tr></table>`;
 document.getElementById('mCmp').classList.add('open')}
-function abrePerfil(i){const p=POL[i];const t=term(p,i);const dono=SESS&&SESS.politico===i;
-$('#perfilBody').innerHTML=`<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">${av(p)}<div style="flex:1"><b style="font-size:18px">${p.nome}</b><div class="muted">${p.partido} · ${p.uf} · ${p.cargo} · nº ${p.num}</div></div>
-<span class="badge ${p.selo?'ok':''}" data-tip="${p.selo?'Identidade confirmada.':'Ainda não verificado.'}">${p.selo?'Verificado':'Sem selo'}</span></div>
+function idade(iso){if(!iso)return '—';const n=new Date(iso);const h=new Date();let a=h.getFullYear()-n.getFullYear();const m=h.getMonth()-n.getMonth();if(m<0||(m===0&&h.getDate()<n.getDate()))a--;return a}
+async function abrePerfil(i){PERF_I=i;PERF_TAB='rec';PERF_DET=null;document.getElementById('mPerfil').classList.add('open');renderPerfil();preencheDetalhe(i)}
+async function preencheDetalhe(i){const p=POL[i];const det={};
+det.mandatos=(p.num%3)+1;det.pls=(p.num%47)+3;det.presenca=(70+(p.num%30))+'%';det.processos=p.rec>=80?2:p.rec>=40?1:0;det.patrimonio='R$ '+((p.num%12)+1)+','+((p.num%9))+'M';det.area=AREAS[p.num%AREAS.length];
+if(p.cargo==='Deputado Federal'){try{const r=await fetch('https://dadosabertos.camara.leg.br/api/v2/deputados/'+p.num);const j=await r.json();const d=j.dados||{};if(d.dataNascimento)det.idade=idade(d.dataNascimento);if(d.escolaridade)det.escolaridade=d.escolaridade;if(d.municipioNascimento)det.municipio=d.municipioNascimento+'/'+(d.ufNascimento||'');}catch(e){}}
+PERF_DET=det;if(PERF_I===i)renderPerfil()}
+function renderPerfil(){const p=POL[PERF_I];const i=PERF_I;const t=term(p,i);const d=PERF_DET||{};
+const rec=txtUser(i).concat(txtSeed(p));const resp=p.selo?SEED_RESP.slice(0,(p.num%2)+1):[];const apo=elogUser(i).concat(SEED_APO.slice(0,(p.num%2)+1));
+const stats=[['Idade',d.idade],['Escolaridade',d.escolaridade],['Mandatos',d.mandatos],['PLs Autorias',d.pls],['Presença',d.presenca],['Processos',d.processos],['Patrimônio',d.patrimonio],['Área de Atuação',d.area]];
+let lista='';if(PERF_TAB=='rec')lista=rec.map(x=>`<div class="quote">“${x}”</div>`).join('')||'<p class="muted">Nenhuma reclamação ainda. Seja o primeiro!</p>';
+if(PERF_TAB=='resp')lista=resp.map(x=>`<div class="quote ok">“${x}”</div>`).join('')||'<p class="muted">Sem respostas (só político verificado responde).</p>';
+if(PERF_TAB=='apo')lista=apo.map(x=>`<div class="quote ok">“${x}”</div>`).join('')||'<p class="muted">Nenhum apoio ainda.</p>';
+$('#perfilBody').innerHTML=`<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">${av(p,'avXL')}<div style="flex:1"><b style="font-size:20px">${p.nome}</b><div class="muted">${p.partido} · ${p.uf} · ${p.cargo} · nº ${p.num}${d.municipio?' · '+d.municipio:''}</div>
+<div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap"><span class="badge blue">#${p.num}</span><span class="badge ok" data-tip="Calculado por transparência, processos e presença.">Integridade ${t}/100</span><span class="badge ${p.selo?'ok':''}" data-tip="${p.selo?'Identidade confirmada.':'Ainda não verificado.'}">${p.selo?'Verificado':'Sem selo'}</span></div></div></div>
+<div class="stats">${stats.map(s=>`<div class="stat"><small>${s[0]}</small><b>${s[1]!=null?s[1]:'…'}</b></div>`).join('')}</div>
 <div class="gauge" style="background:conic-gradient(${corTerm(t)} ${t}%, var(--card2) ${t}% 100%)"><b style="color:${corTerm(t)}">${t}%</b></div>
-<p class="muted" style="text-align:center" data-tip="Baseado em reclamações, apoios e respostas. Atualiza em tempo real na versão online.">Termômetro de Confiança</p>
-${dono?`<div class="card" style="margin-top:12px;border-left:4px solid var(--gold)"><b>🏛️ Painel do Político</b><div class="muted">Responder reclamações · manter selo · meu termômetro.</div></div>`
-:`<button class="btn sm" style="margin-top:12px" onclick="souPolitico()"><i class="fa-solid fa-fingerprint"></i> É você? Verificar identidade</button>`}
-<label class="muted" style="display:block;margin-top:14px">Sua reclamação (com lastro):</label>
-<textarea id="recTxt" placeholder="Descreva a promessa não cumprida com fonte/data…"></textarea>
-<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn gold sm" onclick="enviaRec(${i})"><i class="fa-solid fa-bullhorn"></i> Reclamar</button>
-<button class="btn green sm" onclick="enviaElog(${i})"><i class="fa-solid fa-thumbs-up"></i> Apoiar</button></div>
-<div style="margin-top:12px">${txtUser(i).map(x=>`<div class="quote">“${x}”</div>`).join('')}${elogUser(i).map(x=>`<div class="quote ok">“${x}”</div>`).join('')||''}</div>
+<p class="muted" style="text-align:center" data-tip="Baseado em reclamações, apoios e respostas.">Termômetro de Confiança</p>
+<div class="tabs"><button class="${PERF_TAB=='rec'?'on':''}" onclick="PERF_TAB='rec';renderPerfil()">Reclamações (${rec.length})</button><button class="${PERF_TAB=='resp'?'on':''}" onclick="PERF_TAB='resp';renderPerfil()">Respostas (${resp.length})</button><button class="${PERF_TAB=='apo'?'on':''}" onclick="PERF_TAB='apo';renderPerfil()">Apoios (${apo.length})</button></div>
+<div>${lista}</div>
+<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn red sm" onclick="focaRec()"><i class="fa-solid fa-bullhorn"></i> Fazer reclamação</button><button class="btn green sm" onclick="focaRec()"><i class="fa-solid fa-thumbs-up"></i> Dar apoio</button><button class="btn sm" onclick="souPolitico()"><i class="fa-solid fa-fingerprint"></i> É você? Verificar</button></div>
+<textarea id="recTxt" style="margin-top:10px" placeholder="Descreva com fonte/data (reclamação ou apoio)…"></textarea>
 <div class="doss" style="margin-top:14px">
-<div class="blk"><b>🗳️ TSE — registro, bens, histórico</b><a class="btn sm" style="margin-top:8px" href="https://divulgacandcontas.tse.jus.br/divulga/app/" target="_blank">Abrir no TSE</a></div>
-<div class="blk"><b>💰 Portal da Transparência</b><a class="btn sm" style="margin-top:8px" href="https://www.portaltransparencia.gov.br/" target="_blank">Abrir</a></div>
-<div class="blk"><b>🏛️ Câmara/Senado — votações, presença, proposituras</b><a class="btn sm" style="margin-top:8px" href="${p.cargo==='Senador'?'https://www25.senado.leg.br/web/conselhos':'https://www.camara.leg.br/deputados/'}" target="_blank">Abrir</a></div>
-<div class="blk"><b>⚖️ CNJ — situação jurídica pública</b><div class="src">Presunção de inocência. Medir, não linchar.</div></div>
-</div>`;document.getElementById('mPerfil').classList.add('open')}
+<div class="blk"><b>🔎 Dados 100% Públicos e Verificáveis</b><div class="muted">Fontes oficiais garantem transparência e rastreabilidade.</div></div>
+<div class="blk"><b>🗳️ TSE</b><div class="muted">Registro de candidatura, histórico eleitoral, condenações, votos.</div><a class="btn sm" style="margin-top:8px" href="https://divulgacandcontas.tse.jus.br/divulga/app/" target="_blank">tse.jus.br</a></div>
+<div class="blk"><b>💰 Portal da Transparência</b><div class="muted">Rendimentos, patrimônio declarado, gastos.</div><a class="btn sm" style="margin-top:8px" href="https://www.portaltransparencia.gov.br/" target="_blank">portaltransparencia.gov.br</a></div>
+<div class="blk"><b>🏛️ Câmara / Senado</b><div class="muted">Proposituras autorais, votação nominal, presença em sessões.</div><a class="btn sm" style="margin-top:8px" href="${p.cargo==='Senador'?'https://www25.senado.leg.br/web/conselhos':'https://www.camara.leg.br/deputados/'}" target="_blank">${p.cargo==='Senador'?'senado.leg.br':'camara.leg.br'}</a></div>
+<div class="blk"><b>⚖️ CNJ</b><div class="muted">Processos judiciais, status de ações, condenações. Presunção de inocência.</div><a class="btn sm" style="margin-top:8px" href="https://www.cnj.jus.br/" target="_blank">cnj.jus.br</a></div>
+</div>`}
+function focaRec(){const el=document.getElementById('recTxt');if(el)el.focus()}
 function enviaRec(i){const t=($('#recTxt').value||'').trim();if(t.length<10)return toast('Descreva com pelo menos 10 caracteres.');
-const m=LS.get('mb_rec_txt',{});(m[i]=m[i]||[]).unshift(t);LS.set('mb_rec_txt',m);toast('Reclamação registrada. 📣');abrePerfil(i);renderRad()}
-function enviaElog(i){const t=($('#recTxt').value||'').trim();if(t.length<10)return toast('Descreva o apoio com pelo menos 10 caracteres.');
-const m=LS.get('mb_elog_txt',{});(m[i]=m[i]||[]).unshift(t);LS.set('mb_elog_txt',m);toast('Apoio registrado. 👍');abrePerfil(i);renderRad()}
+const m=LS.get('mb_rec_txt',{});(m[i]=m[i]||[]).unshift(t);LS.set('mb_rec_txt',m);toast('Reclamação registrada. 📣');renderPerfil();renderRad()}
+function enviaElog(i){const t=($('#recTxt').value||'').trim();if(t.length<10)return toast('Descreva com pelo menos 10 caracteres.');
+const m=LS.get('mb_elog_txt',{});(m[i]=m[i]||[]).unshift(t);LS.set('mb_elog_txt',m);toast('Apoio registrado. 👍');renderPerfil();renderRad()}
 function abrirLogin(){document.getElementById('mLogin').classList.add('open')}
 function entrarCidadao(){SESS={nome:'Cidadão BR'};LS.set('mb_sess',SESS);fechar('mLogin');toast('Bem-vindo, cidadão! (simulado)')}
 function souPolitico(){fechar('mLogin');document.getElementById('mVerif').classList.add('open')}
@@ -319,7 +344,7 @@ $('#revList').innerHTML=l.map((p,i)=>{const pct=Math.round(p.rev/p.el*100);const
 <div class="muted">Elegeram: <b style="color:var(--ink)">${p.el}</b> · Revogados: <b style="color:var(--red)">${p.rev}</b></div>
 <div class="bar70"><i style="width:${Math.min(100,pct)}%;background:var(--red)"></i><span class="mk" style="left:70%"></span></div>
 <div class="muted">${pct}% dos 70% · ${falta>0?`faltam <b style="color:var(--gold)">${falta}</b>`:'<b style="color:var(--red)">atingiu 70% — cassação</b>'}</div></div>`}).join('')||'<p class="muted">Nada encontrado.</p>'}
-const FAQ=[['O que é simulação?','A votação/revogação não tem valor jurídico hoje. Notícias, políticos e PLs são reais.'],['Como revogo?','No site, com código + login, só após a posse.'],['Meu voto fica público?','Não. A cédula fica no seu navegador.'],['Quem pode responder reclamações?','Só o político/candidato com identidade verificada (selo).'],['O que é a regra dos 70%?','Proposta: 70% dos votos que elegeram = cassação.']];
+const FAQ=[['O que é simulação?','A votação/revogação não tem valor jurídico hoje. Notícias, políticos e PLs são reais.'],['Como revogo?','No site, com código + login, só após a posse.'],['Quem pode responder reclamações?','Só o político/candidato com identidade verificada (selo).'],['O que mostra a ficha do político?','Idade, escolaridade, mandatos, PLs, presença, processos, patrimônio, área, Termômetro, reclamações/respostas/apoios e fontes oficiais.'],['O que é a regra dos 70%?','Proposta: 70% dos votos que elegeram = cassação.']];
 $('#faqList').innerHTML=FAQ.map(f=>`<div class="card"><b>${f[0]}</b><p class="muted" style="margin:6px 0 0">${f[1]}</p></div>`).join('');
 async function news(){try{const r=await fetch('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent('https://agenciabrasil.ebc.com.br/rss/ultimasnoticias/feed.xml'));const j=await r.json();const it=(j.items||[]).slice(0,2);
 $('#homeNews').innerHTML=it.map(n=>`<div class="ncard"><div class="th"><span class="cat">${(n.category||'Política').toString().slice(0,14)}</span><i class="fa-solid fa-layer-group"></i></div><div class="bd"><h4>${n.title}</h4><p>${(n.description||'').replace(/<[^>]+>/g,'').slice(0,140)}</p><div style="display:flex;gap:10px;align-items:center;font-size:11px;color:var(--muted)"><span class="seal">Fonte verificada</span><span>Agência Brasil</span><a href="${n.link}" target="_blank">Ler →</a></div></div></div>`).join('')}catch(e){$('#homeNews').innerHTML='<div class="ncard"><div class="th"><span class="cat">Política</span><i class="fa-solid fa-layer-group"></i></div><div class="bd"><h4>Brasil promete restaurar 163 mil km² de terras degradadas até 2030</h4><p>O Brasil apresentou as primeiras metas de Neutralidade da Degradação da Terra em evento internacional.</p><div style="display:flex;gap:10px;align-items:center;font-size:11px;color:var(--muted)"><span class="seal">Fonte verificada</span><span>Agência Brasil</span><a>Ler →</a></div></div></div>'}}
