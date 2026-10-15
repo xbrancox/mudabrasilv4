@@ -379,17 +379,9 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
 <a class="btn" href="app/" style="text-decoration:none"><i class="fa-solid fa-mobile-screen-button"></i> Abrir o App</a>
 <button class="btn" onclick="go('conferir')"><i class="fa-solid fa-magnifying-glass"></i> Conferir Voto</button>
 </div>
-<div class="trust"><span class="badge" id="bVotos">6 votos simulados</span><span class="badge blue" id="bReais">carregando…</span><span class="badge" id="bPls">6 PLs em análise</span></div>
+<div class="trust"><span class="badge" id="bVotos">0 votos registrados</span><span class="badge blue" id="bReais">carregando…</span><span class="badge" id="bPls">0 PLs em análise</span></div>
 
-<!-- Provas de Impacto & Credibilidade -->
-<div class="provas">
-  <div class="prova"><b>+14.200</b><span>Assinaturas Validadas</span></div>
-
-
-<div class="prova"><b>38 PLs</b><span>Propostas Cívicas Ativas</span></div>
-  <div class="prova"><b>45 Deputados</b><span>Parlamentares Apoiadores</span></div>
-  <div class="prova"><b>100% Cívico</b><span>Independente e Transparente</span></div>
-</div>
+<!-- Provas de Impacto removidas — dados reais carregados via API -->
 </div>
 
 <!-- ===== SPOTLIGHT 2º TURNO — PRESIDENCIÁVEIS (dados reais TSE) ===== -->
@@ -496,25 +488,13 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
 </div>
 <div class="sec-head" style="margin-top:56px"><h2>Explore o MeuVoto</h2><p>Tudo o que você precisa para uma participação cívica informada e ativa.</p></div>
 <div class="explore">
-<div class="exp"><div class="ic" style="background:rgba(255,215,0,.15);color:var(--gold)"><i class="fa-solid fa-vote-yea"></i></div><h3>Radar Político</h3><p>Promessas, votações e histórico dos candidatos.</p><a onclick="go('radar')">Acessar</a></div>
-<div class="exp"><div class="ic" style="background:rgba(59,130,246,.15);color:var(--blueL)"><i class="fa-solid fa-file-lines"></i></div><h3>Congresso</h3><p>PLs em tramitação e votações nominais.</p><a href="pages/congresso.html">Ir</a></div>
-<div class="exp"><div class="ic" style="background:rgba(255,215,0,.15);color:var(--gold)"><i class="fa-solid fa-check"></i></div><h3>Conferir Voto</h3><p>Seu voto, seu comprovante.</p><a onclick="go('conferir')">Verificar</a></div>
-<div class="exp"><div class="ic" style="background:rgba(231,76,60,.15);color:var(--red)"><i class="fa-solid fa-eraser"></i></div><h3>Revogar Voto</h3><p>Revogue políticos que não cumpriram.</p><a onclick="go('revogados')" style="color:var(--red)">Revogar</a></div>
-<div class="exp"><div class="ic" style="background:rgba(46,204,113,.15);color:var(--green)"><i class="fa-solid fa-balance-scale"></i></div><h3>Comparar</h3><p>Compare políticos lado a lado.</p><a onclick="go('radar')">Comparar</a></div>
-<div class="exp"><div class="ic" style="background:rgba(46,204,113,.15);color:var(--green)"><i class="fa-solid fa-sack-dollar"></i></div><h3>Fundo Eleitoral</h3><p>Quanto cada partido recebeu do TSE.</p><a href="pages/fundo-eleitoral.html">Ver</a></div>
-</div><div class="explore">
-<div class="exp"><div class="ic" style="background:rgba(255,215,0,.15);color:var(--gold)"><i class="fa-regular fa-clock"></i></div><h3>Radar Político</h3><p>Ficha completa com dados reais, reclamações e comparação lado a lado.</p><a onclick="go('radar')">Acessar →</a></div>
-<div class="exp"><div class="ic" style="background:rgba(59,130,246,.15);color:var(--blueL)"><i class="fa-regular fa-file-lines"></i></div><h3>PLs no Congresso</h3><p>Opine sobre leis em tramitação no congresso nacional.</p><a href="pages/congresso.html">Ir ao Congresso →</a></div>
-<div class="exp"><div class="ic" style="background:rgba(255,215,0,.15);color:var(--gold)"><i class="fa-solid fa-check"></i></div><h3>Conferir Voto</h3><p>Cole o código e confira os candidatos em quem votou.</p><a onclick="go('conferir')">Verificar →</a></div>
-<div class="exp"><div class="ic" style="background:rgba(231,76,60,.15);color:var(--red)"><i class="fa-regular fa-trash-can"></i></div><h3>Revogar Voto</h3><p>Não cumpriu? Revogue a confiança do seu voto após a posse.</p><a onclick="go('revogados')" style="color:var(--red)">Revogar →</a></div>
+<div class="exp"><div class="ic" style="background:rgba(255,215,0,.15);color:var(--gold)"><i class="fa-regular fa-clock"></i></div><h3>Radar Político</h3><p>Ficha completa com dados reais, reclamações e comparação lado a lado.</p><span class="badge" id="expPoliticos" style="font-size:11px">Carregando…</span> <a onclick="go('radar')">Acessar →</a></div>
+<div class="exp"><div class="ic" style="background:rgba(59,130,246,.15);color:var(--blueL)"><i class="fa-regular fa-file-lines"></i></div><h3>PLs no Congresso</h3><p>Opine sobre leis em tramitação no congresso nacional.</p><span class="badge" id="expPls" style="font-size:11px">Carregando…</span> <a href="pages/congresso.html">Ir ao Congresso →</a></div>
+<div class="exp"><div class="ic" style="background:rgba(255,215,0,.15);color:var(--gold)"><i class="fa-solid fa-check"></i></div><h3>Conferir Voto</h3><p>Cole o código e confira os candidatos em quem votou.</p><span class="badge" id="expVotos" style="font-size:11px">Carregando…</span> <a onclick="go('conferir')">Verificar →</a></div>
+<div class="exp"><div class="ic" style="background:rgba(231,76,60,.15);color:var(--red)"><i class="fa-regular fa-trash-can"></i></div><h3>Revogar Voto</h3><p>Não cumpriu? Revogue a confiança do seu voto após a posse.</p><span class="badge" id="expRevogados" style="font-size:11px">Carregando…</span> <a onclick="go('revogados')" style="color:var(--red)">Revogar →</a></div>
 <div class="exp"><div class="ic" style="background:rgba(46,204,113,.15);color:var(--green)"><i class="fa-solid fa-scale-balanced"></i></div><h3>Comparar</h3><p>Fixe políticos e veja dois (ou mais) lado a lado.</p><a onclick="go('radar')">Comparar →</a></div>
 <div class="exp"><div class="ic" style="background:rgba(46,204,113,.15);color:var(--green)"><i class="fa-solid fa-sack-dollar"></i></div><h3>Fundo Eleitoral</h3><p>Dados públicos do TSE: quanto cada partido recebeu de dinheiro público de campanha.</p><a href="pages/fundo-eleitoral.html">Ver dados →</a></div>
 </div>
-<!-- ===== 02 · ACOMPANHAMENTO — DONUTS POR CARGO (recriada 06/09; distribuição demo rotulada) ===== -->
-<div class="dk-sec" id="acompanhamento">
-  <div class="dk-head">
-    <div>
-      <h2 style="margin:6px 0 4px">
 <div class="dk-sec" id="acompanhamento">
   <div class="dk-head">
     <h2 style="margin:6px 0 4px">Resultado Real das Eleições 2026</h2>
@@ -757,21 +737,95 @@ const SPOT_CORES=['#2ECC71','#FFD700','#4a90f0','#E74C3C','#A855F7','#f39c12','#
 function spotIniciais(nome){return (nome||'?').trim().split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase()}
 function spotCard(c,i){
   const cor=SPOT_CORES[i%SPOT_CORES.length];
-  const av=c.foto?`<img class="pav" src="${c.foto}" alt="${c.nome}" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'pav',textContent:'${spotIniciais(c.nome)}',style:'background:${cor}'}))">`:`<div class="pav" style="background:${cor}">${spotIniciais(c.nome)}</div>`;
+  const fotoSrc=c.foto||'';
+  const av=fotoSrc?
+    `<img class="pav" src="${fotoSrc}" alt="${c.nome}" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'pav',textContent:'${spotIniciais(c.nome)}',style:'background:${cor}'}))">`
+    :`<div class="pav" style="background:${cor}">${spotIniciais(c.nome)}</div>`;
   const sit=(c.situacao||'').toUpperCase();
   const sitCls=/DEFERID/.test(sit)?'ok':/INDEFERID|CASSAD/.test(sit)?'red':'amb';
   const sitTxt=sit?sit.charAt(0)+sit.slice(1).toLowerCase():'Registrado';
+  const candId=c.id||c.sq_tse||`${c.numero}-${c.partido||''}`;
   return `<article class="pcard">
     ${av}
     <h3>${c.nome}</h3>
     <div class="pmeta">${c.partido||'—'}${c.uf&&c.uf!=='BR'?' · '+c.uf:''}</div>
-    <div class="pnum">${c.numero||'—'}</div>
+    <div class="pnum">#${c.numero||'—'}</div>
     <div style="margin-top:10px"><span class="badge ${sitCls}">${sitTxt}</span></div>
     <div class="pcta">
-      <a class="btn sm gold" href="pages/eleicoes-2026.html" style="text-decoration:none">Ver ficha</a>
+      <button class="btn sm gold" onclick="apoiarTurno('${candId}','${(c.nome||'').replace(/'/g,"\\'")}')"><i class="fa-solid fa-hand"></i> Apoiar</button>
+      <a class="btn sm" href="pages/eleicoes-2026.html" style="text-decoration:none">Ver ficha</a>
       <button class="btn sm" onclick="go('radar')">Radar</button>
     </div>
   </article>`;
+}
+async function apoiarTurno(candidateId, candidateName){
+  if(!BACKEND_OK){alert('Conecte-se ao servidor para apoiar.');return;}
+  // Check if voter has session
+  const token=sessionStorage.getItem('mv_session_token')||'';
+  if(!token){alert('Faça login para apoiar um candidato.');go('login');return;}
+  try{
+    const r=await fetch(API_BASE+'/api/turno',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({candidateId,candidateName,sessionToken:token})
+    });
+    const j=await r.json();
+    if(j.ok){
+      alert('✅ Apoio registrado para '+candidateName+'!');
+      carregaTurnoStats();
+      carregaExploreStats();
+    }else{
+      alert('Erro: '+(j.error||'Não foi possível registrar apoio.'));
+    }
+  }catch(e){
+    alert('Erro de conexão: '+e.message);
+  }
+}
+
+async function carregaExploreStats(){
+  if(!BACKEND_OK) return;
+  try{
+    const r=await fetch(API_BASE+'/api/termometro');
+    const j=await r.json();
+    if(j&&j.ok){
+      const elV=document.getElementById('expVotos');
+      if(elV) elV.textContent=(j.totalVotosAtivos||0)+' votos ativos';
+      const elR=document.getElementById('expRevogados');
+      if(elR) elR.textContent=(j.totalRevogados||0)+' revogados';
+    }
+  }catch(e){}
+  try{
+    const r2=await fetch(API_BASE+'/api/pls');
+    const j2=await r2.json();
+    if(j2&&j2.ok&&Array.isArray(j2.pls)){
+      const elP=document.getElementById('expPls');
+      if(elP) elP.textContent=j2.pls.length+' PLs ativos';
+    }
+  }catch(e){}
+  try{
+    const r3=await fetch(API_BASE+'/api/candidatos');
+    const j3=await r3.json();
+    if(j3&&j3.ok&&Array.isArray(j3.list)){
+      const elPol=document.getElementById('expPoliticos');
+      if(elPol) elPol.textContent=j3.list.length+' políticos';
+    }
+  }catch(e){}
+}
+async function carregaTurnoStats(){
+  if(!BACKEND_OK) return;
+  try{
+    const r=await fetch(API_BASE+'/api/turno');
+    const j=await r.json();
+    if(j&&j.ok){
+      const totalEl=document.getElementById('turnoTotalApoios');
+      if(totalEl) totalEl.textContent=j.total||0;
+      // Update per-candidate counts on cards
+      (j.porCandidato||[]).forEach(c=>{
+        const el=document.querySelector('[data-turno-id="'+c.candidateId+'"] .turno-count');
+        if(el) el.textContent=c.total+' apoios';
+      });
+    }
+  }catch(e){}
 }
 async function carregaSpotlight(){
   const grid=document.getElementById('spotGrid');if(!grid)return;
@@ -812,6 +866,7 @@ async function carregaSpotlight(){
   }
   pres.sort((a,b)=>(a.nome||'').localeCompare(b.nome||''));
   grid.innerHTML=pres.map(spotCard).join('');
+    carregaTurnoStats();
 }
 async function carregaStats(){
   try{const r=await fetch(API_BASE+'/api/termometro');const j=await r.json();

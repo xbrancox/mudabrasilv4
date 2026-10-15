@@ -1314,7 +1314,46 @@ async function handleApi(req, res, url) {
     }
   }
 
-  if (p === '/api/stream' && req.method === 'GET') {
+  /* ===== 2º TURNO — Apoios a candidatos ===== */
+  if (p === '/api/turno' && req.method === 'GET') {
+    try {
+      return sendJson(res, 200, db.getTurnoResumo());
+    } catch (e) {
+      return sendJson(res, 500, { ok: false, error: 'Falha ao consultar apoios: ' + e.message });
+    }
+  }
+
+  if (p === '/api/turno' && req.method === 'POST') {
+    let body;
+    try { body = await readBody(req); } catch (e) { return sendJson(res, 400, { ok: false, error: e.message }); }
+    const candidateId = String(body.candidateId || '').trim();
+    const candidateName = String(body.candidateName || '').trim();
+    if (!candidateId || !candidateName) {
+      return sendJson(res, 400, { ok: false, error: 'candidateId e candidateName são obrigatórios' });
+    }
+    try {
+      const voter = auth.getVoterFromToken(body.sessionToken || '');
+      if (!voter) {
+        return sendJson(res, 401, { ok: false, error: 'Sessão expirada. Faça login para apoiar.' });
+      }
+      const result = db.addTurnoApoio({
+        candidateId,
+        candidateName,
+        voterHash: voter.voterHash,
+        voterIp: ip
+      });
+      // Broadcast via SSE
+      try {
+        const resumo = db.getTurnoResumo();
+        streamClients.forEach(c => { try { c.write('event: turno\ndata: ' + JSON.stringify(resumo) + '\n\n'); } catch (_) {} });
+      } catch (_) {}
+      return sendJson(res, 201, { ok: true, apoiado: candidateName });
+    } catch (e) {
+      return sendJson(res, 500, { ok: false, error: 'Erro ao registrar apoio: ' + e.message });
+    }
+  }
+
+    if (p === '/api/stream' && req.method === 'GET') {
     res.writeHead(200, {
       'Content-Type': 'text/event-stream; charset=utf-8',
       'Cache-Control': 'no-store',

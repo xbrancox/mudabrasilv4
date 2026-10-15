@@ -92,7 +92,8 @@ const JSON_FILES = {
   society_pls: path.join(DATA_DIR, 'society_pls.json'),
   society_pl_signatures: path.join(DATA_DIR, 'society_pl_signatures.json'),
   society_pl_invites: path.join(DATA_DIR, 'society_pl_invites.json'),
-  denuncias: path.join(DATA_DIR, 'denuncias.json')
+  denuncias: path.join(DATA_DIR, 'denuncias.json'),
+  turno_apoios: path.join(DATA_DIR, 'turno_apoios.json')
 };
 
 function jsonReadFile(key) {
@@ -333,6 +334,19 @@ function openSqlite() {
     );
     CREATE INDEX IF NOT EXISTS idx_auth_otp_target ON auth_otp(target, type);
     CREATE INDEX IF NOT EXISTS idx_auth_otp_expires ON auth_otp(expires_at);
+
+    /* ===== 2º TURNO: Apoios a candidatos ===== */
+    CREATE TABLE IF NOT EXISTS turno_apoios (
+      id              TEXT PRIMARY KEY,
+      candidate_id    TEXT NOT NULL,
+      candidate_name  TEXT NOT NULL,
+      voter_hash      TEXT NOT NULL,
+      voter_ip        TEXT,
+      created_at      INTEGER NOT NULL,
+      UNIQUE(candidate_id, voter_hash)
+    );
+    CREATE INDEX IF NOT EXISTS idx_turno_apoios_cand ON turno_apoios(candidate_id);
+    CREATE INDEX IF NOT EXISTS idx_turno_apoios_voter ON turno_apoios(voter_hash);
   `);
 
   try { db.prepare('ALTER TABLE society_pls ADD COLUMN attachment_url TEXT').run(); } catch (_) {}
@@ -1451,6 +1465,68 @@ function prepare(sql) {
   throw new Error('prepare() só disponível no backend SQLite');
 }
 
+
+
+/* ============================================================
+   2º TURNO — APOIOS A CANDIDATOS
+   ============================================================ */
+function addTurnoApoio(apoio) {
+  if (BACKEND === 'sqlite') {
+    openSqlite();
+    db.prepare(`
+      INSERT INTO turno_apoios (id, candidate_id, candidate_name, voter_hash, voter_ip, created_at)
+      VALUES (?, ?, ?, ?, ?, ?)
+      ON CONFLICT(candidate_id, voter_hash) DO UPDATE SET
+        candidate_name = excluded.candidate_name,
+        voter_ip = COALESCE(excluded.voter_ip, turno_apoios.voter_ip)
+    `).run(
+      apoio.id || require('crypto').randomUUID(),
+      apoio.candidateId,
+      apoio.candidateName,
+      apoio.voterHash,
+      apoio.voterIp || null,
+      Date.now()
+    );
+    return { ok: true };
+  }
+  const all = jsonReadFile('turno_apoios');
+  const key = apoio.candidateId + ':' + apoio.voterHash;
+  all[key] = {
+    id: apoio.id || require('crypto').randomUUID(),
+    candidateId: apoio.candidateId,
+    candidateName: apoio.candidateName,
+    voterHash: apoio.voterHash,
+    voterIp: apoio.voterIp || null,
+    createdAt: Date.now()
+  };
+  jsonWriteFile('turno_apoios', all);
+  return { ok: true };
+}
+
+function getTurnoApoios() {
+  if (BACKEND === 'sqlite') {
+    openSqlite();
+    return db.prepare('SELECT * FROM turno_apoios ORDER BY created_at DESC').all();
+  }
+  return Object.values(jsonReadFile('turno_apoios'));
+}
+
+function getTurnoResumo() {
+  const apoios = getTurnoApoios();
+  const counts = {};
+  apoios.forEach(a => {
+    const id = a.candidate_id || a.candidateId;
+    const name = a.candidate_name || a.candidateName;
+    if (!counts[id]) counts[id] = { candidateId: id, candidateName: name, total: 0 };
+    counts[id].total++;
+  });
+  return {
+    ok: true,
+    total: apoios.length,
+    porCandidato: Object.values(counts)
+  };
+}
+
 module.exports = {
   init, close, backend, file, clear, importAll,
   getBallot, upsertBallot, readAllBallots, countBallots, clearBallots, importAllBallots,
@@ -1467,6 +1543,7 @@ module.exports = {
   createSocietyPlInvite, getSocietyPlInviteByToken, acceptSocietyPlInvite, getSocietyPlInvites, getSocietyPlSupportersRanking,
   createDenuncia, getDenunciaByProtocolo, countDenuncias, listDenuncias,
   getRevokedStats, dumpAll,
+  addTurnoApoio, getTurnoApoios, getTurnoResumo,
   exec, prepare,
   VOTOS_DB, VOTOS_FILE
 };
