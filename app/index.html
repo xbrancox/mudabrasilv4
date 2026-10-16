@@ -7,6 +7,30 @@
 <title>MeuVoto · Cobre, Revogue, Vote</title>
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" href="icon.svg">
+<!-- Forçar limpeza de Service Workers antigos e cache -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<script>
+// Unregister todos os Service Workers antigos para forçar atualização
+(function(){
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.getRegistrations().then(function(regs){
+      regs.forEach(function(reg){
+        reg.unregister().then(function(){}).catch(function(){});
+      });
+    });
+  }
+  // Limpar caches do navegador
+  if('caches' in window){
+    caches.keys().then(function(names){
+      names.forEach(function(name){
+        caches.delete(name);
+      });
+    });
+  }
+})();
+</script>
 <!-- Config inline fallback (evita erro se config.local.js falhar) --><script>(function(){if(window.MeuVoto&&typeof window.MeuVoto.API_BASE==="string")return;console.warn("[MeuVoto] config.local.js nao carregou, usando fallback inline");var API_BASE=(window.location.hostname==="localhost"||window.location.hostname==="127.0.0.1")?"http://localhost:8080":"https://api.meu-voto.app";window.MeuVoto=window.MeuVoto||{};window.MeuVoto.API_BASE=API_BASE;window.MeuVoto.MODO="producao";})();</script>
 <script src="../config.local.js?v=3"></script>
 <style>
