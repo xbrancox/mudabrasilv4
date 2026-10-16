@@ -1,5 +1,5 @@
 /* MeuVoto SW - shell offline + runtime cache + Web Push */
-var SHELL = 'meuvoto-shell-v7';
+var SHELL = 'meuvoto-shell-v8-2turno-fix';
 var PRE = [
   './', './index.html', './config.local.js', 
   './js/cache.js', './js/offline.js', './js/push-notifications.js',
@@ -9,6 +9,9 @@ var PRE = [
   './pages/digest.html', './pages/digest-confirm.html', './pages/iniciativa-cidada.html',
   './css/main.css', './css/design-system.css'
 ];
+
+// Arquivos que NUNCA devem ser cacheados (sempre buscar do servidor primeiro)
+var NO_CACHE = ['/index.html', '/app/index.html'];
 
 self.addEventListener('install', function(e) {
   e.waitUntil(
@@ -40,26 +43,65 @@ self.addEventListener('fetch', function(e) {
   if (e.request.method !== 'GET') return;
   var u = new URL(e.request.url);
   
-  // Estratégia Cache-First para a shell e páginas estáticas
+  // NÃO CACHEAR: index.html e app/index.html (sempre buscar versão nova)
+  if (NO_CACHE.some(function(nc) { return u.pathname === nc || u.pathname.startsWith(nc + '?'); })) {
+    e.respondWith(
+      fetch(e.request).then(function(r) {
+        // Atualiza o cache com a versão nova se estiver online
+        if (r && r.ok && u.origin === location.origin) {
+          var c = r.clone();
+          caches.open(SHELL).then(function(cc) {
+            cc.put(e.request, c);
+          });
+        }
+        return r;
+      }).catch(function() {
+        // Se falhar, tenta o cache (fallback offline)
+        return caches.match(e.request);
+      })
+    );
+    return;
+  }
+  
+  // NÃO CACHEAR: APIs
+  if (u.pathname.startsWith('/api/')) {
+    e.respondWith(
+      fetch(e.request).then(function(r) {
+        if (r && r.ok) {
+          var c = r.clone();
+          caches.open(SHELL).then(function(cc) {
+            cc.put(e.request, c);
+          });
+        }
+        return r;
+      }).catch(function() {
+        return caches.match(e.request);
+      })
+    );
+    return;
+  }
+  
+  // Estratégia Network-First com fallback para cache para outros assets
   if (u.origin === location.origin) {
     e.respondWith(
-      caches.match(e.request).then(function(hit) {
-        var net = fetch(e.request).then(function(r) {
-          if (r && r.ok) {
-            var c = r.clone();
-            caches.open(SHELL).then(function(cc) {
-              cc.put(e.request, c);
-            });
-          }
-          return r;
-        }).catch(function() {
-          // Se for navegação e falhar, retorna página offline
+      fetch(e.request).then(function(r) {
+        if (r && r.ok) {
+          var c = r.clone();
+          caches.open(SHELL).then(function(cc) {
+            cc.put(e.request, c);
+          });
+        }
+        return r;
+      }).catch(function() {
+        // Fallback para o cache
+        return caches.match(e.request).then(function(hit) {
+          if (hit) return hit;
+          // Se for navegação e não tiver no cache, retorna página offline
           if (e.request.mode === 'navigate') {
             return caches.match('./offline.html');
           }
-          return hit || Response.error();
+          return Response.error();
         });
-        return hit || net;
       })
     );
     return;
