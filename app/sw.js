@@ -1,4 +1,4 @@
-const CACHE = 'meuvoto-app-v5-2turno-fix';
+const CACHE = 'meuvoto-app-v6-conferir-api';
 const STATIC_ASSETS = [
   '/manifest.json',
   '/icon.png',
