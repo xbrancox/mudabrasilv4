@@ -42,6 +42,8 @@ const fundoEleitoral = require('./fundo-eleitoral');
 const seedPls = require('./seed_pls');
 const tse = require('./tse');
 const contato = require('./contato');
+const logger = require('./logger');
+const metrics = require('./metrics');
 /* ===== 2º Turno 2026 (Presidente + Governadores) ===== */
 let _segundoTurnoCache = null;
 function getSegundoTurno() {
@@ -277,7 +279,7 @@ function mergeSnapshotEnrichment(list) {
   });
 }
 
-/* ===== Cédula de 5 cargos: validação contra o snapshot real do TSE ===== */
+/* ===== Cédula por turno: validação contra o snapshot real do TSE ===== */
 /* No DF não há Deputado Estadual (cargo 7): o registro TSE é Deputado Distrital (cargo 8). */
 const CARGO_TSE_NUM = { 'Presidente': 1, 'Governador': 3, 'Senador': 5, 'Deputado Federal': 6, 'Deputado Estadual': 7, 'Deputado Distrital': 8 };
 const CARGOS_LAB = Object.keys(CARGO_TSE_NUM);
@@ -714,6 +716,17 @@ async function handleApi(req, res, url) {
     });
   }
 
+  /* ===== Métricas Prometheus (sem dependências externas) ===== */
+  if (p === '/api/metrics' && req.method === 'GET') {
+    metrics.collectSystem();
+    const body = metrics.prometheus();
+    res.writeHead(200, {
+      'Content-Type': 'text/plain; charset=utf-8',
+      'Cache-Control': 'no-store'
+    });
+    return res.end(body);
+  }
+
   if (p === '/api/health') {
     let registros = 0;
     try { registros = db.countBallots(); } catch (_) { }
@@ -730,6 +743,15 @@ async function handleApi(req, res, url) {
       digestLastSent = stats.lastSent || null;
       digestSentTotal = stats.totalSent || (Array.isArray(stats.archive) ? stats.archive.length : 0);
     } catch (_) {}
+    // Estatísticas do arquivo de log (quando habilitado)
+    let logStats = null;
+    try {
+      if (logger.enabled()) {
+        const s = logger.stats();
+        if (s) logStats = { size: s.size, mtime: new Date(s.mtime).toISOString() };
+      }
+    } catch (_) {}
+
     return sendJson(res, 200, {
       ok: true,
       uptimeSec: Math.round(process.uptime()),
@@ -742,7 +764,15 @@ async function handleApi(req, res, url) {
       digestConfirmed: digestConfirmed,
       digestPending: digestPending,
       digestLastSent: digestLastSent,
-      digestSentTotal: digestSentTotal
+      digestSentTotal: digestSentTotal,
+      log: {
+        enabled: logger.enabled(),
+        path: logger.enabled() ? logger.path() : null,
+        maxSize: logger.maxSize(),
+        maxFiles: logger.maxFiles(),
+        stats: logStats
+      },
+      metrics: '/api/metrics'
     });
   }
 
@@ -1952,7 +1982,7 @@ async function handleApi(req, res, url) {
     if (!rec) return sendJson(res, 404, { ok: false, error: 'Código não encontrado' });
     let vinculados = [];
     try { vinculados = (db.getBallotsByVoter(rec.voterHash) || []).filter(b => !b.revoked); } catch (_) { }
-    /* cédula de 5 cargos (simulação): UM código resolve TODOS os votos por cargo */
+    /* cédula do turno (1º: 5 cargos · 2º: 2 cargos): UM código resolve TODOS os votos por cargo */
     let cedula = [];
     try { cedula = db.getCargoVotesByCodigo(code); } catch (_) { }
     return sendJson(res, 200, {
@@ -1975,7 +2005,7 @@ async function handleApi(req, res, url) {
     } catch (e) { return sendJson(res, 500, { ok: false, error: e.message }); }
   }
 
-  /* ===== CÉDULA DE 5 CARGOS — lote com UM código unificado (simulação) ===== */
+  /* ===== CÉDULA POR TURNO (1º: 5 cargos · 2º: 2 cargos) — lote com UM código unificado (simulação) ===== */
   if (p === '/api/voto/cargo-lote' && req.method === 'POST') {
     let body;
     try { body = await readBody(req); } catch (e) { return sendJson(res, 400, { ok: false, error: e.message }); }
@@ -1987,7 +2017,8 @@ async function handleApi(req, res, url) {
     if (!cargosIn) return sendJson(res, 400, { ok: false, error: 'Envie { cargos: { Presidente: <sq>, ... } }' });
     const entradas = Object.entries(cargosIn).filter(([, sq]) => sq != null && String(sq).trim() !== '');
     if (!entradas.length) return sendJson(res, 400, { ok: false, error: 'Nenhum cargo escolhido' });
-    if (entradas.length > 5) return sendJson(res, 400, { ok: false, error: 'No máximo 5 cargos' });
+    if (entradas.length > 5) return sendJson(res, 400, { ok: false, error: 'No máximo 5 cargos' }); // 1º turno
+    /* No 2º turno: apenas Presidente + Governador (2 cargos) */
     /* valida cada escolha contra o snapshot real do TSE ou metadados de fallback */
     const votosValidos = [];
     for (const [cargo, sq] of entradas) {
@@ -2155,6 +2186,26 @@ function serveStatic(res, url) {
 
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, 'http://localhost:' + PORT);
+  const start = Date.now();
+  let logged = false;
+
+  function finishLog(statusCode, error) {
+    if (logged) return;
+    logged = true;
+    const ms = Date.now() - start;
+    if (statusCode >= 400) {
+      logger.requestError(req, res, statusCode, error, { ms });
+    } else {
+      logger.request(req, res, statusCode, { ms });
+    }
+    // Métricas Prometheus
+    metrics.inc('http_requests_total', { method: req.method, path: url.pathname, status: String(statusCode) });
+    metrics.observe('http_request_duration_ms', ms, { path: url.pathname, method: req.method });
+  }
+
+  res.on('finish', () => finishLog(res.statusCode));
+  res.on('error', (e) => finishLog(500, e.message));
+
   try {
     // Aplica rate limiting em todas as requisições
     rateLimit(req, res, async () => {
@@ -2174,11 +2225,13 @@ const server = http.createServer(async (req, res) => {
       return serveStatic(res, url);
     });
   } catch (e) {
+    finishLog(500, e.message);
     return sendJson(res, 500, { error: 'Erro interno: ' + e.message });
   }
 });
 
 server.listen(PORT, async () => {
+  logger.info('servidor subiu', { port: PORT, storage: db.backend(), logFile: logger.enabled() ? logger.path() : null });
   console.log('\n  🇧🇷  MeuVoto rodando em  http://localhost:' + PORT + '\n');
   console.log('    Frontend:       http://localhost:' + PORT + '/');
   console.log('    API (lista):    http://localhost:' + PORT + '/api/candidatos');
@@ -2217,6 +2270,7 @@ function shutdown(signal) {
   shuttingDown = true;
   console.log('\n[server] ' + signal + ' recebido — encerrando com segurança…');
   try { db.close(); } catch (_) { }
+  try { logger.close(); } catch (_) { }
   server.close(() => process.exit(0));
   setTimeout(() => process.exit(0), 2000).unref();
 }

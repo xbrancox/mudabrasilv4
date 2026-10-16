@@ -92,7 +92,19 @@ Name: VotaBrasil Health Check
 URL: https://meu-voto.app/api/health
 Interval: 60 seconds
 Method: GET
+Expected: 200, body.ok === true, body.storage definido
 ```
+
+> **Importante:** O `/api/health` é servido pelo mesmo domínio principal (`meu-voto.app`)
+> via Railway. NÃO redirecione `/api/*` para um subdomínio separado no `_redirects` —
+> isso quebraria o healthcheck e forçaria dependência de domínio externo.
+> O `_redirects` foi configurado para servir `/api/*` diretamente pelo Railway.
+
+### 5.1b Monitoramento Externo (opcional)
+Além do Cloudflare, use ferramentas como:
+- **UptimeRobot / Pingdom**: aponte para `https://meu-voto.app/api/health`
+- **Grafana + Prometheus**: colete métricas do endpoint `/api/health` (uptimeSec, totalRegistros)
+- **Railway**: healthcheckPath = `/api/health` (já configurado em `railway.toml`)
 
 ### 5.2 Análise de Tráfego
 1. Acesse "Analytics" → "Dashboard"

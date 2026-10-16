@@ -1,4 +1,4 @@
-const CACHE = 'meuvoto-app-v3';
+const CACHE = 'meuvoto-app-v4-2turno';
 const ASSETS = [
   './',
   './index.html',

@@ -26,3 +26,6 @@ MB_STORAGE = "sqlite"
 # Caminho interno do contêiner para o banco de dados SQLite.
 # O Railway monta um volume persistente em /data no container.
 DB_PATH = "/data/votos.db"
+# Habilita log persistente em arquivo (server/data/logs/app.log)
+LOG_FILE = "1"
+LOG_LEVEL = "info"

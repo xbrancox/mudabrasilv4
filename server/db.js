@@ -250,7 +250,7 @@ function openSqlite() {
       created_at      INTEGER NOT NULL
     );
 
-    /* Votos por cargo (cédula de 5 cargos). codigo = comprovante unificado
+    /* Votos por cargo (cédula por turno: 5 no 1º turno, 2 no 2º turno). codigo = comprovante unificado
        do eleitor (mesmo código para todos os cargos da votação). */
     CREATE TABLE IF NOT EXISTS cargo_votes (
       id              TEXT PRIMARY KEY,
@@ -1072,7 +1072,7 @@ function markCodeUsed(code) {
   }
 }
 
-/* ===== VOTOS POR CARGO (cédula de 5 cargos com código unificado) ===== */
+/* ===== VOTOS POR CARGO (cédula por turno com código unificado) ===== */
 const rowToCargoVote = r => ({
   id: r.id, voterHash: r.voter_hash, codigo: r.codigo, cargo: r.cargo,
   politicianId: r.politician_id, nomeUrna: r.nome_urna, partido: r.partido,

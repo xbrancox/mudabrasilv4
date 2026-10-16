@@ -1,21 +1,29 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-     width="1360" height="1360" viewBox="0 0 1360 1360">
-  <defs>
-    <path id="arcoTopo" d="M 352.47,260.78 A 532.0 532.0 0 0 1 1007.53,260.78"/>
-    <path id="arcoBase" d="M 352.47,1099.22 A 532.0 532.0 0 0 0 1007.53,1099.22"/>
-  </defs>
-  <circle cx="680" cy="680" r="666" fill="none" stroke="#0A2F6B" stroke-width="5"/>
-  <circle cx="680" cy="680" r="630" fill="#C9962E"/>
-  <circle cx="680" cy="680" r="600" fill="#0A2F6B"/>
-  <circle cx="680" cy="680" r="470" fill="#FAF6EE"/>
-  <circle cx="680" cy="680" r="470" fill="none" stroke="#C9962E" stroke-width="6"/>
-  <circle cx="680" cy="680" r="600" fill="none" stroke="#071F49" stroke-width="3" opacity="0.55"/>
-  <text font-family="Arial, 'Liberation Sans', sans-serif" font-weight="bold" font-size="62" fill="#FFFFFF" letter-spacing="5"><textPath href="#arcoTopo" startOffset="50%" text-anchor="middle">MEU VOTO COLOCA</textPath></text>
-  <text font-family="Arial, 'Liberation Sans', sans-serif" font-weight="bold" font-size="62" fill="#FFFFFF" letter-spacing="5"><textPath href="#arcoBase" startOffset="50%" text-anchor="middle">MEU VOTO TIRA</textPath></text>
-  <path d="M 148.00,663.00 L 152.11,674.34 L 164.17,674.75 L 154.66,682.16 L 157.99,693.75 L 148.00,687.00 L 138.01,693.75 L 141.34,682.16 L 131.83,674.75 L 143.89,674.34 Z" fill="#FFFFFF"/>
-  <path d="M 1212.00,663.00 L 1216.11,674.34 L 1228.17,674.75 L 1218.66,682.16 L 1221.99,693.75 L 1212.00,687.00 L 1202.01,693.75 L 1205.34,682.16 L 1195.83,674.75 L 1207.89,674.34 Z" fill="#FFFFFF"/>
-  <text x="680" y="742" font-family="Arial, 'Liberation Sans', sans-serif" font-weight="800" font-size="176"
-        fill="#0A2F6B" letter-spacing="-2" text-anchor="middle">MeuVoto</text>
-  <g id="ramoSE"><path d="M 139.68,876.66 A 575.0 575.0 0 0 1 590.05,112.08" fill="none" stroke="#C9962E" stroke-width="9" stroke-linecap="round"/><path d="M 140.62,876.32 A 574.0 574.0 0 0 1 560.66,118.54" fill="none" stroke="#E8C05C" stroke-width="3" stroke-linecap="round"/><g transform="translate(464.60 146.87) rotate(-74)"><path d="M 0 0 Q 29.0 -14.0 58.0 0 Q 29.0 14.0 0 0 Z" fill="#C9962E"/></g><g transform="translate(383.85 187.13) rotate(-159)"><path d="M 0 0 Q 29.0 -14.0 58.0 0 Q 29.0 14.0 0 0 Z" fill="#A87A20"/></g><g transform="translate(310.40 239.52) rotate(-92)"><path d="M 0 0 Q 29.0 -14.0 58.0 0 Q 29.0 14.0 0 0 Z" fill="#C9962E"/></g><g transform="translate(246.04 302.77) rotate(-177)"><path d="M 0 0 Q 29.0 -14.0 58.0 0 Q 29.0 14.0 0 0 Z" fill="#A87A20"/></g><g transform="translate(192.37 375.30) rotate(-110)"><path d="M 0 0 Q 29.0 -14.0 58.0 0 Q 29.0 14.0 0 0 Z" fill="#C9962E"/></g><g transform="translate(150.71 455.33) rotate(-195)"><path d="M 0 0 Q 29.0 -14.0 58.0 0 Q 29.0 14.0 0 0 Z" fill="#A87A20"/></g><g transform="translate(122.08 540.89) rotate(-128)"><path d="M 0 0 Q 29.0 -14.0 58.0 0 Q 29.0 14.0 0 0 Z" fill="#C9962E"/></g><g transform="translate(107.19 629.89) rotate(-213)"><path d="M 0 0 Q 29.0 -14.0 58.0 0 Q 29.0 14.0 0 0 Z" fill="#A87A20"/></g><g transform="translate(106.40 720.11) rotate(-146)"><path d="M 0 0 Q 29.0 -14.0 58.0 0 Q 29.0 14.0 0 0 Z" fill="#C9962E"/></g><g transform="translate(560.45 117.57) rotate(-118)"><path d="M 0 0 Q 29.0 -14.0 58.0 0 Q 29.0 14.0 0 0 Z" fill="#C9962E"/></g><g transform="translate(560.45 117.57) rotate(-86)"><path d="M 0 0 Q 29.0 -14.0 58.0 0 Q 29.0 14.0 0 0 Z" fill="#A87A20"/></g></g><g id="ramoSD"><use href="#ramoSE" transform="matrix(-1,0,0,1,1360,0)"/></g><g id="meiaCoroa"><use href="#ramoSE"/><use href="#ramoSD"/></g><g id="coroa"><use href="#meiaCoroa"/><use href="#meiaCoroa" transform="rotate(180 680 680)"/></g>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" role="img" aria-labelledby="t d">
+<title id="t">MeuVoto</title>
+<desc id="d">Smartphone MeuVoto com check verde.</desc>
+<defs>
+<linearGradient id="gPhone" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#1e6fb6"/>
+<stop offset="1" stop-color="#0b3f6e"/>
+</linearGradient>
+<linearGradient id="gCheck" x1="0" y1="1" x2="1" y2="0">
+<stop offset="0" stop-color="#2ecc71"/>
+<stop offset="1" stop-color="#16a34a"/>
+</linearGradient>
+<linearGradient id="gScreen" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#eaf3fb"/>
+<stop offset="1" stop-color="#cfe2f3"/>
+</linearGradient>
+</defs>
+<!-- Smartphone body -->
+<rect x="15" y="5" width="70" height="90" rx="14" fill="url(#gPhone)"/>
+<!-- Screen -->
+<rect x="22" y="14" width="56" height="72" rx="6" fill="url(#gScreen)"/>
+<!-- Camera top -->
+<circle cx="50" cy="10" r="2.5" fill="#9bd0e8"/>
+<!-- Home indicator -->
+<rect x="42" y="92" width="16" height="2" rx="1" fill="url(#gScreen)" opacity="0.6"/>
+<!-- Check/V mark -->
+<path d="M32 52 L44 64 L68 40" fill="none" stroke="url(#gCheck)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

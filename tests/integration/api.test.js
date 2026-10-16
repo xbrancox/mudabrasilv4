@@ -41,20 +41,67 @@ const { spawn } = require('child_process');
 const path = require('path');
 
 let serverProc;
+let serverLogs = [];
+
+function startServer() {
+  return new Promise((resolve, reject) => {
+    const serverPath = path.join(__dirname, '..', '..', 'server', 'index.js');
+    serverProc = spawn(process.execPath, [serverPath], {
+      detached: true,
+      stdio: ['ignore', 'pipe', 'pipe']
+    });
+    serverProc.unref();
+
+    const timeout = setTimeout(() => {
+      reject(new Error('Servidor não subiu em 15s. Logs:\n' + serverLogs.join('\n')));
+    }, 15000);
+
+    serverProc.stdout.on('data', (d) => {
+      const msg = d.toString();
+      serverLogs.push(msg);
+      if (msg.includes('MeuVoto rodando em')) {
+        clearTimeout(timeout);
+        resolve();
+      }
+    });
+    serverProc.stderr.on('data', (d) => {
+      serverLogs.push('[stderr] ' + d.toString());
+    });
+    serverProc.on('error', (e) => {
+      clearTimeout(timeout);
+      reject(new Error('Falha ao iniciar servidor: ' + e.message));
+    });
+    serverProc.on('exit', (code) => {
+      clearTimeout(timeout);
+      if (code !== 0 && code !== null) {
+        reject(new Error('Servidor saiu com código ' + code + '. Logs:\n' + serverLogs.join('\n')));
+      }
+    });
+  });
+}
 
 before(async () => {
-  serverProc = spawn(process.execPath, [path.join(__dirname, '..', 'server', 'index.js')], {
-    detached: true,
-    stdio: 'ignore'
-  });
-  serverProc.unref();
-  // Esperar o servidor subir — aumentado para 4s para evitar race conditions
-  await new Promise(r => setTimeout(r, 4000));
+  // Garante que nenhuma instância antiga esteja rodando na porta
+  try { await request('GET', '/api/health'); } catch (_) { /* ok, não está rodando */ }
+  await startServer();
+  // Polling de healthcheck com timeout de 10s (robusto a variações de CPU)
+  const deadline = Date.now() + 10000;
+  let lastErr = null;
+  while (Date.now() < deadline) {
+    try {
+      const res = await request('GET', '/api/health');
+      if (res.status === 200 && res.body && res.body.ok) return;
+    } catch (e) { lastErr = e; }
+    await new Promise(r => setTimeout(r, 200));
+  }
+  throw new Error('Health check não respondeu em 10s. Último erro: ' + (lastErr && lastErr.message) + '\nLogs:\n' + serverLogs.join('\n'));
 });
 
 after(async () => {
   if (serverProc) {
-    serverProc.kill();
+    serverProc.kill('SIGTERM');
+    // Dá tempo para o shutdown graceful fechar o banco
+    await new Promise(r => setTimeout(r, 500));
   }
 });
 

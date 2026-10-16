@@ -538,7 +538,8 @@ npm test
 npm run test:unit
 
 # Testes de integração (11 testes — health, candidatos TSE, denúncias, backup)
-# Requer o servidor rodando: node server/index.js
+# Setup automático: o teste inicia o servidor (spawn), aguarda healthcheck via polling
+# e o encerra com SIGTERM ao final. Não é necessário rodar o server manualmente.
 npm run test:integration
 
 # Health check (verifica server, DB, cache, backup)
@@ -552,6 +553,42 @@ npm run health:check
 | Unitários | 13 | ✅ Passando |
 | Integração | 11 | ✅ Passando |
 
+### Logs persistentes (server/logger.js)
+O backend usa um logger own-built (`server/logger.js`) que escreve em stdout (sempre) e, quando habilitado, em arquivo JSONL em `server/data/logs/app.log`. Isso permite rastrear falhas de requisição sem depender de testes manuais.
+
+**Variáveis de ambiente:**
+| Variável | Valor | Descrição |
+|----------|-------|-----------|
+| `LOG_FILE` | `1` ou `true` | Habilita escrita em arquivo (desligado em desenvolvimento) |
+| `LOG_LEVEL` | `debug` / `info` / `warn` / `error` | Filtro de níveis (padrão: `info`) |
+| `LOG_DIR` | caminho | Diretorio dos logs (padrão: `server/data/logs`) |
+| `LOG_MAX_SIZE` | bytes | Tamanho máximo do arquivo antes de rotacionar (padrão: 10 MB) |
+| `LOG_MAX_FILES` | inteiro | Número máximo de arquivos retidos na rotação (padrão: 5) |
+
+**Rotação:** quando o arquivo atingir `LOG_MAX_SIZE`, o logger rotaciona automaticamente (app.log → app.log.1 → app.log.2 …), mantendo os `LOG_MAX_FILES` mais recentes e deletando os mais antigos. Não há perda de dados não escritos.
+
+**Exemplo de uso em produção (Railway):**
+```toml
+[env]
+LOG_FILE = "1"
+LOG_LEVEL = "info"
+LOG_MAX_SIZE = "10485760"
+LOG_MAX_FILES = "5"
+```
+
+**Exemplo de entrada de log (JSONL):**
+```jsonl
+{"ts":"2026-10-16T20:48:00.123Z","level":"error","msg":"requisição falha","meta":{"method":"POST","path":"/api/voto","status":500,"error":"SQLite indisponível","ip":"127.0.0.1","ms":42}}
+```
+
+**Endpoints de observabilidade:**
+- `GET /api/health` — saúde do serviço (uptime, storage, totais, stats do log, endpoint de métricas). Configurado como healthcheck no Railway (`railway.toml`) e no Cloudflare.
+- `GET /api/metrics` — métricas no formato **Prometheus text/plain** (sem dependências externas). Inclui:
+  - `http_requests_total` (counter por método, path, status)
+  - `http_request_duration_ms` (histogram por path e método)
+  - `node_memory_heap_used`, `node_memory_rss`, `node_uptime_seconds`, etc.
+- `GET /api/admin/backup` — dump JSON de todas as tabelas (protegido por `BACKUP_TOKEN`).
+
 ### Testes de segurança
 ```bash
 # Verificar headers de segurança
@@ -559,6 +596,28 @@ curl -sS -D - -o /dev/null http://localhost:8080/api/health | grep -iE "(x-conte
 
 # OWASP ZAP (auto‑container)
 docker run --rm -t owasp/zap2docker-stable zap-baseline.py -t http://localhost:8080
+```
+
+### Monitoramento com Prometheus + Grafana (opcional)
+
+O endpoint `/api/metrics` fornece dados no formato nativo do Prometheus. Para visualizar:
+
+```bash
+# 1. Instale e inicie o Prometheus
+docker run -d -p 9090:9090 \
+  -v $(pwd)/prometheus.yml:/etc/prometheus/prometheus.yml \
+  prom/prometheus
+
+# 2. Adicione ao prometheus.yml (exemplo):
+# scrape_configs:
+#   - job_name: 'meuvoto'
+#     static_configs:
+#       - targets: ['meu-voto.app:8080']
+#     metrics_path: /api/metrics
+#     scrape_interval: 15s
+
+# 3. Acesse o dashboard: http://localhost:9090
+# 4. (Opcional) Grafana: docker run -d -p 3000:3000 grafana/grafana
 ```
 
 ### CI/CD (GitHub Actions)
