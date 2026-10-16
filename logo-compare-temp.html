@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Diagnostico Logo</title>
+<style>
+  body { margin:0; background:#eef1f5; font-family:Consolas,monospace; }
+  .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding:10px; }
+  .cell { background:#fff; border:2px solid #999; padding:8px; border-radius:6px; }
+  .lbl { font-size:12px; font-weight:bold; color:#111; margin-bottom:6px; word-break:break-all; }
+  .box { height:150px; display:flex; align-items:center; justify-content:center; background:
+     linear-gradient(45deg,#ddd 25%,transparent 25%,transparent 75%,#ddd 75%),
+     linear-gradient(45deg,#ddd 25%,transparent 25%,transparent 75%,#ddd 75%);
+     background-size:16px 16px; background-position:0 0,8px 8px; }
+  .box img { max-width:100%; max-height:145px; object-fit:contain; }
+  h1 { font-size:14px; padding:8px; margin:0; background:#111; color:#fff; }
+</style>
+</head>
+<body>
+<h1>DIAGNOSTICO LOGO — MeuVoto / VotaBrasil (render real dos SVGs)</h1>
+<div class="grid">
+  <div class="cell"><div class="lbl">1. icon.svg [RAIZ / favicon]<br>1800395e | 3760B</div><div class="box"><img src="icon.svg"></div></div>
+  <div class="cell"><div class="lbl">2. logo.svg [RAIZ]<br>1800395e | 3760B</div><div class="box"><img src="logo.svg"></div></div>
+  <div class="cell"><div class="lbl">3. app/logo.svg<br>1800395e | 3760B</div><div class="box"><img src="app/logo.svg"></div></div>
+
+  <div class="cell"><div class="lbl">4. public/assets/logo.svg<br>76aa29b0 | 3256B (ANTIGA?)</div><div class="box"><img src="public/assets/logo.svg"></div></div>
+  <div class="cell"><div class="lbl">5. public/assets/logo-meuvoto.svg<br>76aa29b0 | 3256B</div><div class="box"><img src="public/assets/logo-meuvoto.svg"></div></div>
+  <div class="cell"><div class="lbl">6. app/icon.svg<br>76aa29b0 | 3256B</div><div class="box"><img src="app/icon.svg"></div></div>
+
+  <div class="cell"><div class="lbl">7. public/assets/icon.svg<br>dcd09339 | 2177B</div><div class="box"><img src="public/assets/icon.svg"></div></div>
+  <div class="cell"><div class="lbl">8. assets/logo-meuvoto.svg<br>d095da14 | 1940B</div><div class="box"><img src="assets/logo-meuvoto.svg"></div></div>
+  <div class="cell"><div class="lbl">9. assets/logo/logo-meuvoto.png [NOVA - confirmada pelo usuario]<br>2f1d6d14</div><div class="box"><img src="assets/logo/logo-meuvoto.png"></div></div>
+
+  <div class="cell"><div class="lbl">10. public/assets/logo-master.svg [839KB]<br>aa919fb8</div><div class="box"><img src="public/assets/logo-master.svg"></div></div>
+  <div class="cell"><div class="lbl">11. public/assets/logo-icon.svg<br>wraps master</div><div class="box"><img src="public/assets/logo-icon.svg"></div></div>
+  <div class="cell"><div class="lbl">12. public/assets/logo-white.svg<br>bbffe6d9 | 606B</div><div class="box" style="background:#222"><img src="public/assets/logo-white.svg"></div></div>
+</div>
+</body>
+</html>

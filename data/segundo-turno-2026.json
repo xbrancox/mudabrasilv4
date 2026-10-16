@@ -1,0 +1,217 @@
+{
+  "turno": 2,
+  "dataVotacao": "2026-10-25",
+  "fonte": "TSE · Resultado 1º turno das Eleições 2026",
+  "extraidoEm": "2026-10-17T12:00:00.000Z",
+  "total": 14,
+  "estados": [
+    "AC",
+    "AM",
+    "DF",
+    "ES",
+    "RN",
+    "TO"
+  ],
+  "presidente": [
+    {
+      "nomeUrna": "LULA",
+      "nomeCivil": "LUIZ INÁCIO LULA DA SILVA",
+      "numero": "13",
+      "partido": "PT",
+      "coligacao": "BRASIL PRONTO PRA MAIS",
+      "cargo": 1,
+      "uf": "BR",
+      "situacao": "2º TURNO",
+      "segundoTurno": true,
+      "votos1T": 53879538,
+      "percVotos1T": 45.16,
+      "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Foto_oficial_de_Luiz_In%C3%A1cio_Lula_da_Silva_%28cropped%29.jpg/220px-Foto_oficial_de_Luiz_In%C3%A1cio_Lula_da_Silva_%28cropped%29.jpg",
+      "sq": "2T-PRE-1"
+    },
+    {
+      "nomeUrna": "FLÁVIO BOLSONARO",
+      "nomeCivil": "FLÁVIO NANTES BOLSONARO",
+      "numero": "22",
+      "partido": "PL",
+      "coligacao": "O BRASIL VAI VENCER",
+      "cargo": 1,
+      "uf": "BR",
+      "situacao": "2º TURNO",
+      "segundoTurno": true,
+      "votos1T": 56104268,
+      "percVotos1T": 47.03,
+      "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/2026_FLAVIO_BOLSONARO_CANDIDATO_PRESIDENTE_TSE_%28280002551544%29_%28cropped%29.jpg/220px-2026_FLAVIO_BOLSONARO_CANDIDATO_PRESIDENTE_TSE_%28280002551544%29_%28cropped%29.jpg",
+      "sq": "2T-PRE-2"
+    }
+  ],
+  "governadores": {
+    "AC": [
+      {
+        "nomeUrna": "MAILZA ASSIS",
+        "nomeCivil": "MAILZA ASSIS CAMELI",
+        "numero": "11",
+        "partido": "PP",
+        "coligacao": "AVANÇA ACRE",
+        "cargo": 3,
+        "uf": "AC",
+        "situacao": "2º TURNO",
+        "segundoTurno": true,
+        "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Foto_oficial_da_senadora_Mailza_Gomes_%28v._AgSen%29.jpg/220px-Foto_oficial_da_senadora_Mailza_Gomes_%28v._AgSen%29.jpg",
+        "sq": "2T-AC-1"
+      },
+      {
+        "nomeUrna": "ALAN RICK",
+        "nomeCivil": "ALAN RICK MIRANDA",
+        "numero": "10",
+        "partido": "REPUBLICANOS",
+        "coligacao": "TRABALHO DA ESPERANÇA",
+        "cargo": 3,
+        "uf": "AC",
+        "situacao": "2º TURNO",
+        "segundoTurno": true,
+        "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Alan_Rick_Miranda_-_Senador_%28cropped%29.jpg/220px-Alan_Rick_Miranda_-_Senador_%28cropped%29.jpg",
+        "sq": "2T-AC-2"
+      }
+    ],
+    "AM": [
+      {
+        "nomeUrna": "OMAR AZIZ",
+        "nomeCivil": "OMAR JOSÉ ABDEL AZIZ",
+        "numero": "55",
+        "partido": "PSD",
+        "coligacao": "AMAZONAS LEVANTA A CABEÇA",
+        "cargo": 3,
+        "uf": "AM",
+        "situacao": "2º TURNO",
+        "segundoTurno": true,
+        "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Foto_oficial_de_Omar_Aziz.jpg/220px-Foto_oficial_de_Omar_Aziz.jpg",
+        "sq": "2T-AM-1"
+      },
+      {
+        "nomeUrna": "PROFESSORA MARIA DO CARMO",
+        "nomeCivil": "MARIA DO CARMO SEFFAIR LINS DE ALBUQUERQUE",
+        "numero": "22",
+        "partido": "PL",
+        "coligacao": "AMAZONAS COM CORAGEM",
+        "cargo": 3,
+        "uf": "AM",
+        "situacao": "2º TURNO",
+        "segundoTurno": true,
+        "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Professora_Maria_do_Carmo_%28PL%29_-_Candidata_ao_Governo_do_AM_2026.jpg/220px-Professora_Maria_do_Carmo_%28PL%29_-_Candidata_ao_Governo_do_AM_2026.jpg",
+        "sq": "2T-AM-2"
+      }
+    ],
+    "DF": [
+      {
+        "nomeUrna": "CELINA LEÃO",
+        "nomeCivil": "CELINA LEÃO HIZIM FERREIRA",
+        "numero": "11",
+        "partido": "PP",
+        "coligacao": "GARRA PRA CUIDAR",
+        "cargo": 3,
+        "uf": "DF",
+        "situacao": "2º TURNO",
+        "segundoTurno": true,
+        "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Celina_Le%C3%A3o_%28cropped%29.jpg/220px-Celina_Le%C3%A3o_%28cropped%29.jpg",
+        "sq": "2T-DF-1"
+      },
+      {
+        "nomeUrna": "LEANDRO GRASS",
+        "nomeCivil": "LEANDRO ANTÔNIO GRASS PEIXOTO",
+        "numero": "13",
+        "partido": "PT",
+        "coligacao": "AGORA É MUDANÇA",
+        "cargo": 3,
+        "uf": "DF",
+        "situacao": "2º TURNO",
+        "segundoTurno": true,
+        "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Leandro_Grass_em_dezembro_de_2018.png/220px-Leandro_Grass_em_dezembro_de_2018.png",
+        "sq": "2T-DF-2"
+      }
+    ],
+    "ES": [
+      {
+        "nomeUrna": "LORENZO PAZOLINI",
+        "nomeCivil": "LORENZO SILVA DE PAZOLINI",
+        "numero": "10",
+        "partido": "REPUBLICANOS",
+        "coligacao": "É TEMPO DE PAZ",
+        "cargo": 3,
+        "uf": "ES",
+        "situacao": "2º TURNO",
+        "segundoTurno": true,
+        "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Lorenzo_Pazolini_%28cropped%29.jpg/220px-Lorenzo_Pazolini_%28cropped%29.jpg",
+        "sq": "2T-ES-1"
+      },
+      {
+        "nomeUrna": "RICARDO FERRAÇO",
+        "nomeCivil": "RICARDO DE REZENDE FERRAÇO",
+        "numero": "15",
+        "partido": "MDB",
+        "coligacao": "ES ESPÍRITO SANTO EM PRIMEIRO LUGAR",
+        "cargo": 3,
+        "uf": "ES",
+        "situacao": "2º TURNO",
+        "segundoTurno": true,
+        "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Ricardo_Ferra%C3%A7o.jpg/220px-Ricardo_Ferra%C3%A7o.jpg",
+        "sq": "2T-ES-2"
+      }
+    ],
+    "RN": [
+      {
+        "nomeUrna": "ALLYSON BEZERRA",
+        "nomeCivil": "ALLYSON LEANDRO BEZERRA SILVA",
+        "numero": "44",
+        "partido": "UNIÃO",
+        "coligacao": "167 RAZÕES PRA MUDAR",
+        "cargo": 3,
+        "uf": "RN",
+        "situacao": "2º TURNO",
+        "segundoTurno": true,
+        "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Allyson_Bezerra_-_Prefeito_de_Mossor%C3%B3_%28cropped%29.jpg/220px-Allyson_Bezerra_-_Prefeito_de_Mossor%C3%B3_%28cropped%29.jpg",
+        "sq": "2T-RN-1"
+      },
+      {
+        "nomeUrna": "CADU DE LULA",
+        "nomeCivil": "CARLOS EDUARDO XAVIER DE LULA",
+        "numero": "13",
+        "partido": "PT",
+        "coligacao": "RN QUE O POVO QUER",
+        "cargo": 3,
+        "uf": "RN",
+        "situacao": "2º TURNO",
+        "segundoTurno": true,
+        "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Cadu_de_Lula_%28PT%29_-_Candidato_ao_Governo_do_RN_2026.jpg/220px-Cadu_de_Lula_%28PT%29_-_Candidato_ao_Governo_do_RN_2026.jpg",
+        "sq": "2T-RN-2"
+      }
+    ],
+    "TO": [
+      {
+        "nomeUrna": "PROFESSORA DORINHA",
+        "nomeCivil": "MARIA AUXILIADORA SEABRA REZENDE",
+        "numero": "44",
+        "partido": "UNIÃO",
+        "coligacao": "É MELHOR PRO TOCANTINS",
+        "cargo": 3,
+        "uf": "TO",
+        "situacao": "2º TURNO",
+        "segundoTurno": true,
+        "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Dorinha_Rezende.jpg/220px-Dorinha_Rezende.jpg",
+        "sq": "2T-TO-1"
+      },
+      {
+        "nomeUrna": "VICENTINHO JÚNIOR",
+        "nomeCivil": "VICENTE ALVES DE OLIVEIRA JUNIOR",
+        "numero": "45",
+        "partido": "PSDB",
+        "coligacao": "TOCANTINS EM BOAS MÃOS",
+        "cargo": 3,
+        "uf": "TO",
+        "situacao": "2º TURNO",
+        "segundoTurno": true,
+        "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Vicentinho_J%C3%BAnior_-_Deputado_Federal_%28cropped%29.jpg/220px-Vicentinho_J%C3%BAnior_-_Deputado_Federal_%28cropped%29.jpg",
+        "sq": "2T-TO-2"
+      }
+    ]
+  }
+}

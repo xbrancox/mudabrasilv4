@@ -1,4 +1,4 @@
-﻿/* ============================================================
+/* ============================================================
    MEUVOTO — SERVIDOR (frontend + API de dados públicos + VOTO)
    ------------------------------------------------------------
    Um único comando sobe o site inteiro e a API:
@@ -42,6 +42,19 @@ const fundoEleitoral = require('./fundo-eleitoral');
 const seedPls = require('./seed_pls');
 const tse = require('./tse');
 const contato = require('./contato');
+/* ===== 2º Turno 2026 (Presidente + Governadores) ===== */
+let _segundoTurnoCache = null;
+function getSegundoTurno() {
+  if (_segundoTurnoCache) return _segundoTurnoCache;
+  try {
+    const raw = fs.readFileSync(path.join(ROOT, 'data', 'segundo-turno-2026.json'), 'utf8');
+    _segundoTurnoCache = JSON.parse(raw);
+  } catch (e) {
+    _segundoTurnoCache = { turno: 2, total: 0, presidente: [], governadores: {} };
+  }
+  return _segundoTurnoCache;
+}
+
 
 const ROOT = path.join(__dirname, '..');
 const PORT = process.env.PORT || 8080;
@@ -492,7 +505,21 @@ async function handleApi(req, res, url) {
           return true;
         });
       }
-      const busca = (q.busca || q.q || '').toLowerCase().trim();
+      /* Filtro 2º Turno: segundoTurno=true → apenas candidatos marcados */
+      if (q.segundoTurno === 'true' || q.segundoTurno === '1') {
+        // Tentar match por nome+partido+uf+numero com o arquivo de 2º turno
+        const st = getSegundoTurno();
+        const stMap = new Set();
+        (st.presidente || []).forEach(x => stMap.add(x.nomeUrna + '|' + x.partido + '|' + x.numero));
+        for (const [uf, cands] of Object.entries(st.governadores || {})) {
+          cands.forEach(x => stMap.add(x.nomeUrna + '|' + x.partido + '|' + x.numero));
+        }
+        lista = lista.filter(c => {
+          const k = (c.nomeUrna || '') + '|' + (c.partido || '') + '|' + (c.numero || '');
+          return stMap.has(k);
+        });
+      }
+            const busca = (q.busca || q.q || '').toLowerCase().trim();
       if (busca) {
         lista = lista.filter(c =>
           (c.nomeUrna || c.nome || '').toLowerCase().includes(busca) ||
@@ -576,6 +603,39 @@ async function handleApi(req, res, url) {
         retornados: candidatosComFotos.length,
         candidatos: candidatosComFotos
       });
+    } catch (e) {
+      return sendJson(res, 500, { ok: false, error: e.message });
+    }
+  }
+
+  
+
+  /* ===== 2º Turno 2026 — Presidente + Governadores (6 estados + DF) ===== */
+  if (p === '/api/segundo-turno' && req.method === 'GET') {
+    try {
+      const st = getSegundoTurno();
+      // Se pedir UF específica de governador
+      if (q.uf && st.governadores && st.governadores[q.uf]) {
+        return sendJson(res, 200, { ok: true, turno: st.turno, dataVotacao: st.dataVotacao, fonte: st.fonte, uf: q.uf, candidatos: st.governadores[q.uf] });
+      }
+      // Se pedir só presidente
+      if (q.cargo === '1' || q.cargo === 'presidente') {
+        return sendJson(res, 200, { ok: true, turno: st.turno, dataVotacao: st.dataVotacao, fonte: st.fonte, cargo: 'Presidente', candidatos: st.presidente });
+      }
+      // Se pedir só governadores
+      if (q.cargo === '3' || q.cargo === 'governador') {
+        const gov = [];
+        for (const [uf, cands] of Object.entries(st.governadores || {})) {
+          cands.forEach(c => gov.push(c));
+        }
+        return sendJson(res, 200, { ok: true, turno: st.turno, dataVotacao: st.dataVotacao, fonte: st.fonte, cargo: 'Governador', estados: st.estados, total: gov.length, candidatos: gov });
+      }
+      // Tudo (presidente + governadores)
+      const todos = [...(st.presidente || [])];
+      for (const [uf, cands] of Object.entries(st.governadores || {})) {
+        cands.forEach(c => todos.push(c));
+      }
+      return sendJson(res, 200, { ok: true, ...st, todos, total: todos.length });
     } catch (e) {
       return sendJson(res, 500, { ok: false, error: e.message });
     }

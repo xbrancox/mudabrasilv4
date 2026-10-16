@@ -37,9 +37,25 @@ function request(method, pathname, body, headers = {}) {
   });
 }
 
+const { spawn } = require('child_process');
+const path = require('path');
+
+let serverProc;
+
 before(async () => {
-  // Verifica se o servidor está rodando
-  await request('GET', '/api/health');
+  serverProc = spawn(process.execPath, [path.join(__dirname, '..', 'server', 'index.js')], {
+    detached: true,
+    stdio: 'ignore'
+  });
+  serverProc.unref();
+  // Esperar o servidor subir — aumentado para 4s para evitar race conditions
+  await new Promise(r => setTimeout(r, 4000));
+});
+
+after(async () => {
+  if (serverProc) {
+    serverProc.kill();
+  }
 });
 
 afterEach(async () => {
