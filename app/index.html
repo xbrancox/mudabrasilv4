@@ -810,13 +810,34 @@ async function conf(){
       ?cv.map(v=>'<div class="conf-row"><b>'+esc(v.cargo)+'</b><span>'+esc(v.nomeUrna)+' · '+esc(v.partido)+' · '+esc(v.uf)+(v.numero?' · nº '+esc(v.numero):'')+'</span></div>').join('')
       :(j.votos&&j.votos.length
         ?'<div class="conf-row"><b>Votos de confiança</b><span>'+j.votos.length+' registro(s) neste código</span></div>'
-        :'<div class="conf-row"><span>Código válido, mas nenhuma cédula gravada nele ainda.</span></div>');
+        :'<div class="conf-row"><span style="color:var(--gold)">⚠️ Código válido, mas nenhuma cédula registrada.</span></div><div style="text-align:center;margin-top:10px"><p style="font-size:.72rem;color:var(--g);line-height:1.5">Se o código foi gerado offline, ele não foi salvo. Use <strong>📋 Exemplo</strong> para testar ou <strong>Votar</strong> para nova cédula.</p></div>');
     box.innerHTML='<div class="ri" style="border-bottom:1px solid rgba(255,215,0,.25);padding-bottom:8px;margin-bottom:6px"><span style="color:var(--ok);font-weight:800">✅ CÓDIGO VÁLIDO</span><span>'+fmtCod(c)+'</span></div>'+linhas+'<div style="margin-top:12px;text-align:center"><button class="b bp" style="font-size:.76rem;padding:9px" onclick="abrirConferirNoSite()">🌐 Auditar Trilha Hash e Revogar no Site Oficial</button></div>';
   }catch(e){
-    box.innerHTML='<div class="conf-row"><b style="color:var(--bad)">❌ '+esc(e.message||'Código não encontrado')+'</b><span></span></div>';
+    if(e.status===404){box.innerHTML='<div class="conf-row"><b style="color:var(--bad)">❌ Código não encontrado</b></div><div style="margin-top:10px;padding:12px;background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.2);border-radius:10px"><p style="font-size:.78rem;color:var(--g);line-height:1.5"><strong style="color:var(--gold)">Possíveis causas:</strong></p><ul style="font-size:.74rem;color:var(--g);line-height:1.6;margin:8px 0 0 16px"><li>O código foi gerado offline e não foi salvo no servidor</li><li>O código digitado está incorreto</li><li>O código pertence a uma sessão anterior</li></ul><p style="font-size:.74rem;color:var(--g);margin-top:8px"><strong style="color:#fff">💡 Solução:</strong> Use o botão <strong>📋 Exemplo</strong> acima para ver um voto real.</p></div>';}else{box.innerHTML='<div class="conf-row"><b style="color:var(--bad)">❌ '+esc(e.message||'Erro ao consultar')+'</b><span></span></div>';}
   }
 }
-function confEx(){const d='16948051304534262993';[...document.querySelectorAll('#s-conf input.ci')].forEach((i,j)=>i.value=d.slice(j*4,j*4+4));conf()}
+async function confEx(){
+  const box=document.getElementById('conf-box');
+  box.classList.add('on');
+  box.innerHTML='<p style="font-size:.8rem;color:var(--g)">⏳ Registrando voto de exemplo (Lula + Mailza/AC)...</p>';
+  try {
+    const tok=await garantirSessao();
+    const j=await fetchJson('/api/voto/cargo-lote',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      sessionToken:tok,
+      cargos:{Presidente:'2T-PRE-1',Governador:'2T-AC-1'},
+      cargosMeta:{
+        Presidente:{nomeUrna:'LULA',partido:'PT',numero:'13',uf:'BR'},
+        Governador:{nomeUrna:'MAILZA ASSIS',partido:'PP',numero:'11',uf:'AC'}
+      }
+    })});
+    const d=j.codigo;
+    [...document.querySelectorAll('#s-conf input.ci')].forEach((i,idx)=>i.value=d.slice(idx*4,idx*4+4));
+    showToast('✅ Voto de exemplo registrado: '+j.formatado);
+    conf();
+  } catch(e) {
+    box.innerHTML='<div class="conf-row"><b style="color:var(--bad)">❌ Erro ao gerar exemplo: '+esc(e.message)+'</b></div>';
+  }
+}
 const SITE=(API||location.origin).replace(/\/$/,'');
 function linkConferirSite(){return SITE+'/index.html#conferir-voto'}
 function abrirConferirNoSite(){window.open(linkConferirSite(),'_blank','noopener')}

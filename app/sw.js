@@ -1,45 +1,76 @@
-const CACHE = 'meuvoto-app-v4-2turno';
-const ASSETS = [
-  './',
-  './index.html',
+const CACHE = 'meuvoto-app-v5-2turno-fix';
+const STATIC_ASSETS = [
   '/manifest.json',
-  './assets/logo/footer-icon.png',
-  './icon.png'
+  '/icon.png',
+  '/favicon.ico'
 ];
 
-// Install event with cache handling
+// Install event - cache only static assets (NOT HTML)
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE).then(c => {
       return Promise.allSettled(
-        ASSETS.map(url => c.add(url).catch(err => console.warn('[SW] Falha ao cachear asset:', url, err)))
+        STATIC_ASSETS.map(url => c.add(url).catch(err => console.warn('[SW] Falha ao cachear:', url, err)))
       );
     })
   );
   self.skipWaiting();
 });
 
-// Activate event - clear old caches
+// Activate event - clear ALL old caches
 self.addEventListener('activate', e => {
   e.waitUntil(
-    caches.keys().then(keys => 
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== CACHE).map(k => {
+        console.log('[SW] Removendo cache antigo:', k);
+        return caches.delete(k);
+      }))
     ).then(() => self.clients.claim())
   );
 });
 
-// Fetch event
+// Fetch event - NETWORK FIRST for HTML, cache-first for static assets
 self.addEventListener('fetch', e => {
+  const url = new URL(e.request.url);
+
+  // HTML pages: ALWAYS network first (never serve stale HTML)
+  if (e.request.mode === 'navigate' || url.pathname.endsWith('.html') || url.pathname === '/' || url.pathname === '/app' || url.pathname === '/app/') {
+    e.respondWith(
+      fetch(e.request)
+        .then(res => {
+          // Update cache with fresh copy
+          if (res && res.status === 200) {
+            const clone = res.clone();
+            caches.open(CACHE).then(cache => cache.put(e.request, clone));
+          }
+          return res;
+        })
+        .catch(() => {
+          // Fallback: try cache, then offline page
+          return caches.match(e.request).then(cached => {
+            return cached || caches.match('/offline.html');
+          });
+        })
+    );
+    return;
+  }
+
+  // API calls: ALWAYS network, never cache
+  if (url.pathname.startsWith('/api/')) {
+    e.respondWith(fetch(e.request));
+    return;
+  }
+
+  // Static assets (CSS, JS, images): cache-first
   e.respondWith(
     caches.match(e.request).then(cached => {
-      const networked = fetch(e.request).then(res => {
+      return cached || fetch(e.request).then(res => {
         if (res && res.status === 200 && res.type === 'basic') {
           const clone = res.clone();
           caches.open(CACHE).then(cache => cache.put(e.request, clone));
         }
         return res;
-      }).catch(() => cached);
-      return cached || networked;
+      });
     })
   );
 });
@@ -48,7 +79,6 @@ self.addEventListener('fetch', e => {
 // Push notifications (ciclo 33)
 // ==========================================
 
-// Handler de evento push: exibe notificação quando chega um push do servidor
 self.addEventListener('push', e => {
   let data = {};
   try {
@@ -64,7 +94,7 @@ self.addEventListener('push', e => {
     badge: data.badge || '/icon.png',
     vibrate: data.vibrate || [200, 100, 200],
     tag: data.tag || 'meuvoto-notification',
-    renotify: !!data.renotify,
+    renoteify: !!data.renotify,
     data: data.data || { url: '/' },
     actions: data.actions || []
   };
@@ -74,19 +104,16 @@ self.addEventListener('push', e => {
   );
 });
 
-// Clique na notificação: abre a URL associada (se houver) e foca a janela
 self.addEventListener('notificationclick', e => {
   e.notification.close();
   const targetUrl = (e.notification.data && e.notification.data.url) || '/';
   e.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clients => {
-      // Se já tem uma janela aberta com o site, foca nela
       for (const client of clients) {
         if (client.url.includes(self.location.origin) && 'focus' in client) {
           return client.focus();
         }
       }
-      // Senão, abre uma nova
       if (self.clients.openWindow) {
         return self.clients.openWindow(targetUrl);
       }
@@ -94,14 +121,13 @@ self.addEventListener('notificationclick', e => {
   );
 });
 
-// Renovação automática quando a assinatura push expira ou muda
 self.addEventListener('pushsubscriptionchange', e => {
   e.waitUntil(
     Promise.all([
       fetch('/api/push/vapid-public').then(r => r.ok ? r.json() : null).catch(() => null),
       self.registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: null // preenchido dinamicamente abaixo
+        applicationServerKey: null
       }).catch(() => null)
     ]).then(async ([vapid, sub]) => {
       if (!vapid || !vapid.publicKey) return;
@@ -118,9 +144,8 @@ self.addEventListener('pushsubscriptionchange', e => {
   );
 });
 
-// Helper: converte VAPID publicKey base64url para Uint8Array
 function urlBase64ToUint8Array(base64String) {
-  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
   const rawData = self.atob(base64);
   const outputArray = new Uint8Array(rawData.length);
