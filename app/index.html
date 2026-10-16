@@ -975,6 +975,17 @@ if(location.hash==='#conferir'){
 }
 // Erros globais não quebram a página
 window.onerror=function(){return true;};
+// Rede de segurança: garante que alguma seção esteja visível (evita tela em branco)
+setTimeout(function(){
+  try{
+    var anyOn = document.querySelector('.s.on, .f.on');
+    if(!anyOn && location.hash === '#conferir'){
+      document.querySelectorAll('.s,.f').forEach(x=>x.classList.remove('on'));
+      var s=document.getElementById('s-conf');
+      if(s)s.classList.add('on');
+    }
+  }catch(_){}
+}, 500);
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
 </script>
 <script>
@@ -996,6 +1007,5 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch
   document.body.appendChild(b);
 })();
 </script>
-<script defer src="wikidata-fotos.js"></script>
 </body>
 </html>
