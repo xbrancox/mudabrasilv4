@@ -557,13 +557,26 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
 
 <section class="sec" id="sec-conferir"><div class="wrap" style="max-width:640px">
 <span class="kick">CONFERIR VOTO</span><h2 style="margin:8px 0 6px">Conferir voto</h2>
-<p class="muted">Local onde você prova que seu voto existe e confirma em quem realmente votou.</p>
-<div class="card" style="margin-top:18px"><label class="muted">Cole seu codigo de verificacao</label>
-<input id="chk" placeholder="0000 0000 0000 0000 0000" style="text-align:center;letter-spacing:2px;margin:10px 0"/>
-<button class="btn gold" style="width:100%" onclick="conferir()"><i class="fa-solid fa-magnifying-glass"></i> Conferir</button>
-<button class="btn sm" style="width:100%;margin-top:8px" onclick="usarDemo()">Testar com um exemplo</button></div>
+<p class="muted">Local onde vocÃª prova que seu voto existe e confirma em quem realmente votou.</p>
+<div class="card" style="margin-top:18px">
+<label class="muted">ðŸ” Cole seu cÃ³digo de 20 dÃ­gitos</label>
+<div class="cis" style="display:flex;gap:8px;margin:14px 0">
+<input class="ci" type="text" inputmode="numeric" maxlength="4" placeholder="0000">
+<input class="ci" type="text" inputmode="numeric" maxlength="4" placeholder="0000">
+<input class="ci" type="text" inputmode="numeric" maxlength="4" placeholder="0000">
+<input class="ci" type="text" inputmode="numeric" maxlength="4" placeholder="0000">
+<input class="ci" type="text" inputmode="numeric" maxlength="4" placeholder="0000">
+</div>
+<button class="btn gold" style="width:100%" onclick="conferir()"><i class="fa-solid fa-magnifying-glass"></i> Verificar CÃ³digo</button>
+<button class="btn sm" style="width:100%;margin-top:8px" onclick="usarDemo()">ðŸ“‹ Testar com um exemplo</button>
+</div>
 <div id="chkRes"></div>
-</div></div></div></div></div></div></section>
+<div class="card" style="margin-top:18px;border-color:rgba(231,76,60,.4)">
+<h4 style="color:var(--red);margin-bottom:10px"><i class="fa-solid fa-lock"></i> Portal Oficial de VerificaÃ§Ã£o</h4>
+<p class="muted" style="margin-bottom:12px">Para auditoria completa, histÃ³rico de votos e processo de revogaÃ§Ã£o, acesse o portal oficial:</p>
+<a href="https://meu-voto.app" target="_blank" rel="noopener" class="btn red" style="width:100%">ðŸŒ Acessar Portal Oficial</a>
+</div>
+</div></section>
 <section class="sec" id="sec-revogar"><div class="wrap" style="max-width:640px">
 <span class="kick" style="color:var(--red)">REVOGAR VOTO</span><h2 style="margin:8px 0 6px">Não cumpriu? Revogue.</h2>
 <p class="muted">A revogação abre <b>a partir da posse</b> e fica aberta durante o mandato.</p>
@@ -1328,18 +1341,26 @@ let TERM_RANK={};
    sintéticos (PL 5183/2026 "Lei Rouanet", PL 5182/2026 "Rodovias") — dados
    fake que violam a regra "tudo real". O renderPLS() ainda quebrava com
    TypeError porque #plBusca/#plsList não existem mais no DOM da home. */
-const DEMO_BAL={'Presidente':'Maria Santos (PT 13)','Governador':'Roberto Lima (MDB 15)','Senador':'BRANCO'};
-function usarDemo(){renderCedula('35001500100212345789',DEMO_BAL)}
-function conferir(){const raw=($('#chk').value||'').replace(/\D/g,'');if(raw.length!==20){toast('Código inválido (20 dígitos).');return}
-/* FIX: o app salva o código em mb_eleicao_codigo (com traços) e os votos em mb_eleicao_votos —
-   o site antes só lia mb_codigo, então nunca localizava o voto feito no app */
-const codeApp=String(LS.get('mb_eleicao_codigo','')||'').replace(/\D/g,'');
-if(codeApp&&codeApp===raw){
-  const votos=LS.get('mb_eleicao_votos',{})||{};const bal={};
-  Object.keys(votos).forEach(c=>{const v=votos[c]||{};
-    bal[c]=v.tipo==='branco'?'BRANCO':v.tipo==='nulo'?('NULO ('+(v.numero||'')+')'):((v.nome||'—')+(v.partido?' ('+v.partido+' '+v.numero+')':''));});
-  renderCedula(raw,bal);return}
-const st=LS.get('mb_codigo',null);const bal=(st&&st.code===raw)?st.ballot:DEMO_BAL;renderCedula(raw,bal)}
+const DEMO_BAL={'Presidente':'Luiz InÃ¡cio Lula da Silva (PT 13)','Governador':'Mailza Assis (PP 11)'};
+async function usarDemo(){
+  const demoCode='84904557878914318677';
+  const ins=[...document.querySelectorAll('#sec-conferir input.ci')];
+  ins.forEach((inp,i)=>inp.value=demoCode.slice(i*4,i*4+4));
+  await conferir();
+}
+function conferir(){
+  const ins=[...document.querySelectorAll('#sec-conferir input.ci')];
+  const raw=ins.map(i=>i.value).join('').replace(/\D/g,'');
+  if(raw.length!==20){toast('CÃ³digo invÃ¡lido (20 dÃ­gitos).');return}
+  /* FIX: o app salva o cÃ³digo em mb_eleicao_codigo (com traÃ§os) e os votos em mb_eleicao_votos â€”
+     o site antes sÃ³ lia mb_codigo, entÃ£o nunca localizava o voto feito no app */
+  const codeApp=String(LS.get('mb_eleicao_codigo','')||'').replace(/\D/g,'');
+  if(codeApp&&codeApp===raw){
+    const votos=LS.get('mb_eleicao_votos',{})||{};const bal={};
+    Object.keys(votos).forEach(c=>{const v=votos[c]||{};
+      bal[c]=v.tipo==='branco'?'BRANCO':v.tipo==='nulo'?('NULO ('+(v.numero||'')+')'):((v.nome||'â€”')+(v.partido?' ('+v.partido+' '+v.numero+')':''));});
+    renderCedula(raw,bal);return}
+  const st=LS.get('mb_codigo',null);const bal=(st&&st.code===raw)?st.ballot:DEMO_BAL;renderCedula(raw,bal)}
 function renderCedula(code,bal){$('#chkRes').innerHTML=`<div class="card" style="margin-top:14px"><b style="color:var(--green)"><i class="fa-solid fa-circle-check"></i> Voto localizado</b>
 <div style="margin-top:10px">${Object.keys(bal).map(c=>`<div class="rank"><div><b style="font-size:13px">${c}</b><div class="muted">${bal[c]}</div></div><span class="badge ok">ativo</span></div>`).join('')}</div></div>`}
 const REV=[{n:'João Lima',p:'PL',uf:'RJ',el:1510,rev:1180},{n:'Carlos Rocha',p:'PSD',uf:'MG',el:980,rev:610},{n:'Pedro Alves',p:'PP',uf:'BA',el:1200,rev:700},{n:'Ana Souza',p:'PT',uf:'SP',el:800,rev:430},{n:'Rui Costa',p:'MDB',uf:'RS',el:900,rev:470},{n:'Tereza Lemos',p:'UNIÃO',uf:'CE',el:1100,rev:540},{n:'Beto Farias',p:'PSB',uf:'PE',el:850,rev:400},{n:'Lúcia Prado',p:'PSDB',uf:'GO',el:950,rev:430},{n:'Nino Sales',p:'PTB',uf:'AM',el:700,rev:300},{n:'Dora Pires',p:'REDE',uf:'ES',el:760,rev:320}];
