@@ -8,7 +8,7 @@
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" href="icon.svg">
 <!-- Config inline fallback (evita erro se config.local.js falhar) --><script>(function(){if(window.MeuVoto&&typeof window.MeuVoto.API_BASE==="string")return;console.warn("[MeuVoto] config.local.js nao carregou, usando fallback inline");var API_BASE=(window.location.hostname==="localhost"||window.location.hostname==="127.0.0.1")?"http://localhost:8080":"https://api.meu-voto.app";window.MeuVoto=window.MeuVoto||{};window.MeuVoto.API_BASE=API_BASE;window.MeuVoto.MODO="producao";})();</script>
-<script src="../config.local.js?v=2"></script>
+<script src="../config.local.js?v=3"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{--navy:#0A1628;--card:#1E293B;--gold:#FFD700;--gold2:#B8860B;--ggrad:linear-gradient(135deg,#FFD700,#B8860B);--w:#fff;--g:#94A3B8;--ok:#10B981;--bad:#EF4444;--r:16px;--rb:12px}
@@ -955,11 +955,26 @@ document.addEventListener('paste',e=>{if(!document.getElementById('s-conf').clas
 
 /* hidratar comprovante salvo no aparelho + restaurar rascunho */
 (function initV23(){
-  const comp=JSON.parse(localStorage.getItem(LS.comprov)||'null');
-  if(comp&&comp.codigo){document.getElementById('cg').textContent=fmtCod(comp.codigo);flowGo('f4')}
-  renderCedula();
+  try{
+    const comp=JSON.parse(localStorage.getItem(LS.comprov)||'null');
+    if(comp&&comp.codigo){
+      const cg=document.getElementById('cg');
+      if(cg) cg.textContent=fmtCod(comp.codigo);
+    }
+  }catch(_){}
+  try{renderCedula();}catch(_){}
 })();
-if(location.hash==='#conferir')go('s-conf');
+// Garante que a tela Conferir Voto sempre aparece quando a hash é #conferir
+if(location.hash==='#conferir'){
+  try{go('s-conf');}catch(_){
+    // Fallback: mostra a seção conferir mesmo se go() falhar
+    document.querySelectorAll('.s,.f').forEach(x=>x.classList.remove('on'));
+    const s=document.getElementById('s-conf');
+    if(s)s.classList.add('on');
+  }
+}
+// Erros globais não quebram a página
+window.onerror=function(){return true;};
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
 </script>
 <script>
