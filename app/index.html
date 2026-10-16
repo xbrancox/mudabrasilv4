@@ -14,13 +14,15 @@
 <script>
 // Unregister todos os Service Workers antigos para forçar atualização
 (function(){
+  // Evita loop infinito: só faz reload uma vez por sessão
+  if(sessionStorage.getItem('mv_sw_cleaned') === '1') return;
   if('serviceWorker' in navigator){
     navigator.serviceWorker.getRegistrations().then(function(regs){
       if(regs.length > 0){
+        sessionStorage.setItem('mv_sw_cleaned', '1');
         regs.forEach(function(reg){
           reg.unregister().then(function(){}).catch(function(){});
         });
-        // Recarrega para buscar versão nova sem SW antigo
         setTimeout(function(){ location.reload(); }, 500);
       }
     });
