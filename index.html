@@ -830,6 +830,19 @@ async function carregaTurnoStats(){
 async function carregaSpotlight(){
   const grid=document.getElementById('spotGrid');if(!grid)return;
   let pres=[];
+  let fotosPres = {};
+  
+  // Carregar fotos dos candidatos
+  try {
+    const rf = await fetch('data/fotos-candidatos-2026.json');
+    if (rf.ok) {
+      const fd = await rf.json();
+      fotosPres = fd.presidente || {};
+    }
+  } catch(e) {
+    console.warn('[spotlight] Fotos não carregadas:', e.message);
+  }
+  
   try{
     const r=await fetch('data/candidatos-2026.json');
     const d=await r.json();
@@ -842,8 +855,8 @@ async function carregaSpotlight(){
     // Se tiver Lula e Bolsonaro, exibe estes como os 2 do 2º turno
     if(lula && bolsonaro){
       pres = [
-        {nome: lula.nomeUrna||lula.nomeCivil||'LULA', partido: lula.partido||'PT', uf: lula.uf||'BR', numero: lula.numero||'13', situacao: lula.situacao||'', foto: lula.foto||''},
-        {nome: bolsonaro.nomeUrna||bolsonaro.nomeCivil||'FLAVIO BOLSONARO', partido: bolsonaro.partido||'PL', uf: bolsonaro.uf||'BR', numero: bolsonaro.numero||'22', situacao: bolsonaro.situacao||'', foto: bolsonaro.foto||''}
+        {nome: lula.nomeUrna||lula.nomeCivil||'LULA', partido: lula.partido||'PT', uf: lula.uf||'BR', numero: lula.numero||'13', situacao: lula.situacao||'', foto: fotosPres['LULA'] || lula.foto || ''},
+        {nome: bolsonaro.nomeUrna||bolsonaro.nomeCivil||'FLAVIO BOLSONARO', partido: bolsonaro.partido||'PL', uf: bolsonaro.uf||'BR', numero: bolsonaro.numero||'22', situacao: bolsonaro.situacao||'', foto: fotosPres['FLAVIO BOLSONARO'] || bolsonaro.foto || ''}
       ];
     }else{
       // Lógica original: prioriza ELEITO/DEFERIDO, limitando a 2

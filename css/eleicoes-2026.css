@@ -838,6 +838,75 @@
   font-size: 11px;
 }
 
+/* ===== FOTO DO CANDIDATO (GOVERNADOR) ===== */
+.estado-candidato-foto {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--line);
+  flex-shrink: 0;
+}
+.estado-candidato.primeiro .estado-candidato-foto {
+  border-color: var(--gold);
+}
+.estado-candidato-foto-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #2ECC71, #27AE60);
+  color: #fff;
+  font: 900 20px Montserrat;
+  text-transform: uppercase;
+}
+
+/* ===== BARRA DE PROGRESSO DO CANDIDATO ===== */
+.estado-candidato-barra {
+  margin-top: 8px;
+  width: 100%;
+  max-width: 180px;
+}
+.estado-candidato-barra .pesquisa-barra-track {
+  height: 8px;
+  border-radius: 4px;
+}
+.estado-candidato-barra .pesquisa-barra-fill {
+  border-radius: 4px;
+}
+
+/* ===== FOTO DO ELEITO (1º TURNO) ===== */
+.estado-eleito-foto {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--gold);
+  margin-bottom: 12px;
+}
+.estado-eleito-foto-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--gold), #B8941F);
+  color: #16223A;
+  font: 900 24px Montserrat;
+  text-transform: uppercase;
+}
+
+/* ===== BARRA DE PROGRESSO DO ELEITO ===== */
+.estado-eleito-barra {
+  margin: 12px auto;
+  max-width: 300px;
+  width: 100%;
+}
+.estado-eleito-barra .pesquisa-barra-track {
+  height: 10px;
+  border-radius: 5px;
+}
+.estado-eleito-barra .pesquisa-barra-fill {
+  border-radius: 5px;
+}
+
 /* ===== STEPS ===== */
 .steps-grid {
   display: grid;

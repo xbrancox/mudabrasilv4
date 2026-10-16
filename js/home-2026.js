@@ -190,9 +190,9 @@
 
     console.log('[home-2026] Elementos encontrados, buscando dados...');
 
-    let govData, pesqData;
+    let govData, pesqData, fotosData;
     try {
-      const [r1, r2] = await Promise.all([
+      const [r1, r2, r3] = await Promise.all([
         fetch('data/governadores-2026.json').then(function(r) {
           console.log('[home-2026] Fetch governadores:', r.status, r.ok);
           if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -205,11 +205,20 @@
         }).catch(function(err) { 
           console.warn('[home-2026] Pesquisas de governadores não disponíveis:', err.message);
           return { pesquisas: {} }; 
+        }),
+        fetch('data/fotos-candidatos-2026.json').then(function(r) {
+          console.log('[home-2026] Fetch fotos candidatos:', r.status, r.ok);
+          if (!r.ok) return { presidente: {}, governadores: {}, eleitos_1_turno: {} };
+          return r.json();
+        }).catch(function(err) {
+          console.warn('[home-2026] Fotos não disponíveis:', err.message);
+          return { presidente: {}, governadores: {}, eleitos_1_turno: {} };
         })
       ]);
       
       govData = r1;
       pesqData = r2;
+      fotosData = r3;
       
       console.log('[home-2026] Dados de governadores carregados:', govData);
       console.log('[home-2026] Número de estados:', Object.keys(govData.estados || {}).length);
@@ -274,18 +283,39 @@
           return;
         }
         
+        // Buscar foto do eleito
+        const ufUpper = uf.toUpperCase();
+        const fotosUf = fotosData.eleitos_1_turno && fotosData.eleitos_1_turno[ufUpper];
+        const fotoUrl = fotosUf && fotosUf[eleito.nome] || '';
+        const iniciais = (eleito.nome || '?').trim().split(/\s+/).slice(0,2).map(w => w[0] || '').join('').toUpperCase();
+        const fotoHtml = fotoUrl 
+          ? '<img class="estado-eleito-foto" src="' + fotoUrl + '" alt="' + eleito.nome + '" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement(\'div\'),{className:\'estado-eleito-foto estado-eleito-foto-placeholder\',textContent:\'' + iniciais + '\'}))">'
+          : '<div class="estado-eleito-foto estado-eleito-foto-placeholder">' + iniciais + '</div>';
+        
         const votosHtml = eleito.votos ? '<p class="estado-eleito-votos">' + eleito.votos.toLocaleString('pt-BR') + ' votos válidos</p>' : '';
         const obsHtml = eleito.observacao ? '<p class="estado-eleito-obs"><small>' + eleito.observacao + '</small></p>' : '';
+        
+        // Barra de progresso para o percentual
+        const pct = eleito.percentual || 0;
+        const barraHtml = pct > 0 ? `
+          <div class="estado-eleito-barra">
+            <div class="pesquisa-barra-track">
+              <div class="pesquisa-barra-fill" style="width:${pct}%"></div>
+            </div>
+          </div>
+        ` : '';
         
         card.innerHTML = `
           <div class="estado-resultado">
             <span class="estado-situacao">✅ ELEITO NO 1º TURNO</span>
             <h3 class="estado-nome">${estado.nome}</h3>
             <div class="estado-eleito-box">
+              ${fotoHtml}
               <div class="estado-eleito-icone"><i class="fa-solid fa-trophy"></i></div>
               <h4 class="estado-eleito-nome">${eleito.nome_completo || eleito.nome}</h4>
               <p class="estado-eleito-partido">${eleito.partido} · Nº ${eleito.numero || '—'}</p>
-              <div class="estado-eleito-destaque">${eleito.percentual ? eleito.percentual.toFixed(2) + '%' : '—'}</div>
+              <div class="estado-eleito-destaque">${pct ? pct.toFixed(2) + '%' : '—'}</div>
+              ${barraHtml}
               ${votosHtml}
               ${obsHtml}
             </div>
@@ -298,17 +328,41 @@
         // 2º turno
         const top2 = estado.candidatos_2turno || [];
         console.log('[home-2026] Candidatos no 2º turno:', top2.length);
+        
+        // Buscar fotos dos candidatos
+        const ufUpper = uf.toUpperCase();
+        const fotosUf = fotosData.governadores && fotosData.governadores[ufUpper] || {};
 
         const candidatosHtml = top2.map(function(c, i) {
           const votosHtml = c.votos ? '<span class="estado-candidato-abs">' + c.votos.toLocaleString('pt-BR') + ' votos</span>' : '';
-          const pctHtml = c.percentual ? '<div class="estado-candidato-percent">' + c.percentual.toFixed(1) + '%</div>' : '';
+          const pct = c.percentual || 0;
+          const pctHtml = pct ? '<div class="estado-candidato-percent">' + pct.toFixed(1) + '%</div>' : '';
+          
+          // Buscar foto do candidato
+          const fotoUrl = fotosUf[c.nome] || '';
+          const iniciais = (c.nome || '?').trim().split(/\s+/).slice(0,2).map(w => w[0] || '').join('').toUpperCase();
+          const fotoHtml = fotoUrl 
+            ? '<img class="estado-candidato-foto" src="' + fotoUrl + '" alt="' + c.nome + '" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement(\'div\'),{className:\'estado-candidato-foto estado-candidato-foto-placeholder\',textContent:\'' + iniciais + '\'}))">'
+            : '<div class="estado-candidato-foto estado-candidato-foto-placeholder">' + iniciais + '</div>';
+          
+          // Barra de progresso para o percentual
+          const barraHtml = pct > 0 ? `
+            <div class="estado-candidato-barra">
+              <div class="pesquisa-barra-track">
+                <div class="pesquisa-barra-fill" style="width:${pct}%"></div>
+              </div>
+            </div>
+          ` : '';
+          
           return `
           <div class="estado-candidato ${i === 0 ? 'primeiro' : ''}">
+            ${fotoHtml}
             <div class="estado-candidato-info">
               <div class="estado-candidato-posicao">${i + 1}º</div>
               <div>
                 <p class="estado-candidato-nome">${c.nome}</p>
                 <p class="estado-candidato-partido">${c.partido} · Nº ${c.numero || '—'}</p>
+                ${barraHtml}
               </div>
             </div>
             <div class="estado-candidato-votos">
