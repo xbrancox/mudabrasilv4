@@ -25,7 +25,7 @@
       font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.3rem;
       color: #fff; text-decoration: none; white-space: nowrap;
     }
-    .mb-logo img { height: 48px; width: auto; max-width: 200px; object-fit: contain; }
+    .mb-logo img { height: 120px; width: 120px; object-fit: contain; border-radius: 0; filter: drop-shadow(0 0 20px rgba(46,204,113,0.7)); }
     .mb-logo:hover { opacity: 0.9; }
     .mb-logo .mv-slogan{display:block;color:#D4AF37;font-size:0.65rem;font-weight:700;white-space:nowrap;font-style:italic;letter-spacing:0.02em;margin-top:2px}
     .mb-nav-links {
@@ -165,7 +165,7 @@
 <header class="mb-header">
   <div class="mb-nav-inner">
     <a href="${prefix}index.html" class="mb-logo" aria-label="MeuVoto">
-      <img src="${prefix}assets/logo/header-icon-48.png" alt="MeuVoto" width="48" height="48" style="border-radius:10px;display:block;object-fit:contain">
+      <img src="${prefix}assets/logo/header-icon-120.png" alt="MeuVoto" width="120" height="120" style="border-radius:0;display:block;object-fit:contain;filter:drop-shadow(0 0 20px rgba(46,204,113,0.7))">
       <span><b style="background:linear-gradient(90deg,#fff 0%,#fff 45%,#D4AF37 45%,#D4AF37 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:#fff">MeuVoto</b><span class="mv-slogan">Meu voto coloca, meu voto tira.</span></span>
     </a>
     <nav aria-label="Navegação principal">

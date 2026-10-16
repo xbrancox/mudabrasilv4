@@ -19,7 +19,7 @@
     '#mbtopo header{display:flex!important;gap:10px!important;align-items:center!important;padding:0!important;margin:0!important;background:none!important;border:none!important;box-shadow:none!important;backdrop-filter:none!important;flex-wrap:nowrap!important;width:100%;position:static!important;top:auto!important}',
     '#mbtopo .lg{display:flex;gap:12px;align-items:center;text-decoration:none;transition:transform 0.2s ease}',
     '#mbtopo .lg:hover{transform:translateY(-1px)}',
-    '#mbtopo .lg .ic{width:72px;height:72px;border-radius:16px;background:transparent;display:flex;align-items:center;justify-content:center;color:#061a3a;font-size:24px;flex:none;filter:drop-shadow(0 0 12px rgba(46,204,113,0.6))}',
+    '#mbtopo .lg .ic{width:120px;height:120px;border-radius:0;background:transparent;display:flex;align-items:center;justify-content:center;color:#061a3a;font-size:24px;flex:none;filter:drop-shadow(0 0 20px rgba(46,204,113,0.7))}',
     '#mbtopo .lg b{font-family:Montserrat,sans-serif;font-size:20px;font-weight:900;color:#fff;display:block;white-space:nowrap;letter-spacing:-0.02em}',
     '#mbtopo .lg .mv-slogan{display:block;color:#FFD700;font-size:10.5px;font-weight:700;white-space:nowrap;font-style:italic;letter-spacing:0.01em}',
     '#mbtopo nav{display:flex;gap:4px;flex-wrap:nowrap;margin-left:auto;min-width:0}',
@@ -41,8 +41,8 @@
     '#mbtopo .mnav a{color:#eaf1fb;text-decoration:none;padding:11px 8px;border-bottom:1px dashed rgba(127,176,245,0.15);font-size:14px;font-weight:600;display:flex;align-items:center;gap:10px;transition:color 0.2s ease}',
     '#mbtopo .mnav a:hover{color:#FFD700;padding-left:12px}',
     '@media(max-width:1180px){#mbtopo nav{display:none}#mbtopo .ham{display:block}}',
-    '#mbtopo .lg img{height:72px;width:72px;object-fit:contain}',
-    '@media(max-width:640px){#mbtopo .lg img{height:48px!important;width:48px!important}#mbtopo .lg b{font-size:16px!important}#mbtopo .lg .mv-slogan{font-size:0.7rem!important}}'
+    '#mbtopo .lg img{height:120px;width:120px;object-fit:contain}',
+    '@media(max-width:640px){#mbtopo .lg img{height:72px!important;width:72px!important}#mbtopo .lg b{font-size:16px!important}#mbtopo .lg .mv-slogan{font-size:0.7rem!important}}'
   ].join('\n');
 
   var ITENS = [
@@ -102,7 +102,7 @@
     topo.id = 'mbtopo';
     topo.innerHTML =
       '<header>' +
-      ' <a class="lg" href="' + R + 'index.html"><span class="ic"><img src="' + R + 'assets/logo/header-icon-72.png" alt="MeuVoto" width="72" height="72" style="border-radius:16px;object-fit:contain;display:block;filter:drop-shadow(0 0 12px rgba(46,204,113,0.6))"></span><span><b>MeuVoto</b><span class="mv-slogan">Meu voto coloca, meu voto tira.</span></span></a>' +
+      ' <a class="lg" href="' + R + 'index.html"><span class="ic"><img src="' + R + 'assets/logo/header-icon-120.png" alt="MeuVoto" width="120" height="120" style="border-radius:0;object-fit:contain;display:block;filter:drop-shadow(0 0 20px rgba(46,204,113,0.7))"></span><span><b>MeuVoto</b><span class="mv-slogan">Meu voto coloca, meu voto tira.</span></span></a>' +
       ' <button class="ham" aria-label="Menu" onclick="document.getElementById(\'mbtopo-mnav\').classList.toggle(\'open\')"><i class="fa-solid fa-bars"></i></button>' +
       ' <nav>' + nav + '</nav>' +
       ' <div class="hact"><span class="hbadge" id="mbtopo-badge" hidden>conectando\u2026</span>' +

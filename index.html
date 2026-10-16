@@ -244,7 +244,7 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
 .overlay.open{display:flex}
 .modal{background:var(--bg);border:1px solid var(--line);border-radius:20px;max-width:760px;width:100%;max-height:90vh;overflow:auto;padding:24px}
 #toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--card2);border:1px solid var(--line);color:var(--ink);padding:12px 18px;border-radius:12px;z-index:300;display:none;max-width:90%}
-@media(max-width:960px){#radList{grid-template-columns:1fr}.explore{grid-template-columns:repeat(2,1fr)}.donuts{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:1fr}.filtros{grid-template-columns:1fr 1fr}.ft{grid-template-columns:1fr 1fr}.stats{grid-template-columns:repeat(2,1fr)}nav{display:none}.ham{display:inline-flex}}
+@media(max-width:960px){#radList{grid-template-columns:1fr}.explore{grid-template-columns:repeat(2,1fr)}.donuts{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:1fr}.filtros{grid-template-columns:1fr 1fr}.ft{grid-template-columns:1fr 1fr}.stats{grid-template-columns:repeat(2,1fr)}nav{display:none}.ham{display:inline-flex}.ft .ic img{height:80px;width:80px}}
 @media(max-width:600px){.explore{grid-template-columns:1fr}.hero2 .cta .btn{width:100%}.spot-grid{grid-template-columns:1fr}.ttip{position:absolute;z-index:9999;background:#000;color:#fff;font:600 11px Manrope;padding:6px 10px;border-radius:8px;white-space:normal;max-width:220px;pointer-events:none;opacity:0;transition:opacity .15s;margin-top:8px}}
 /* Onboarding overlay */
 #mOnboard{display:none}.overlay.mOnboard{display:flex}
@@ -318,7 +318,7 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
 <!-- Landmarks semânticos: o conteúdo é injetado por js/site-header.js -->
 <header id="mbtopo-header" aria-label="Cabeçalho do site MeuVoto" style="background:var(--ink);padding:10px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)">
 <div style="display:flex;align-items:center;gap:10px">
-<img src="assets/logo/header-icon-72.png" alt="MeuVoto" width="36" height="36" style="width:36px;height:36px;border-radius:0;object-fit:contain">
+<img src="assets/logo/header-icon-120.png" alt="MeuVoto" width="120" height="120" style="width:120px;height:120px;border-radius:0;object-fit:contain;filter:drop-shadow(0 0 15px rgba(46,204,113,0.6))">
 <b style="color:var(--gold);font-size:18px">MeuVoto</b>
 </div>
 <div style="display:flex;align-items:center;gap:12px">
@@ -596,7 +596,7 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
 </div></section>
 </main>
 <footer><div class="wrap"><div class="ft">
-<div><div class="lg"><div class="ic"><img src="assets/logo/header-icon-72.png" alt="MeuVoto" width="48" height="48" style="border-radius:0;display:block;filter:drop-shadow(0 0 10px rgba(46,204,113,0.5));object-fit:contain"></div><b>MeuVoto</b></div>
+<div><div class="lg"><div class="ic"><img src="assets/logo/footer-icon-120.png" alt="MeuVoto" width="120" height="120" style="border-radius:0;display:block;filter:drop-shadow(0 0 18px rgba(46,204,113,0.6));object-fit:contain"></div><b>MeuVoto</b></div>
 <p class="muted" style="margin:12px 0">Plataforma de opinião e participação para um Brasil com mais transparência, voz e poder de voto real.</p>
 <p style="color:var(--gold);font-weight:800;font-size:13px">"Meu voto coloca, meu voto tira."</p></div>
 <div><h5>Navegar</h5><a onclick="go('radar')">Radar Político</a><a href="pages/fundo-eleitoral.html">Fundo Eleitoral</a><a href="pages/congresso.html">PLs no Congresso</a><a onclick="go('conferir')">Conferir Voto</a><a onclick="go('revogados')">Revogados</a></div>
@@ -1341,12 +1341,24 @@ let TERM_RANK={};
    sintéticos (PL 5183/2026 "Lei Rouanet", PL 5182/2026 "Rodovias") — dados
    fake que violam a regra "tudo real". O renderPLS() ainda quebrava com
    TypeError porque #plBusca/#plsList não existem mais no DOM da home. */
-const DEMO_BAL={'Presidente':'Luiz InÃ¡cio Lula da Silva (PT 13)','Governador':'Mailza Assis (PP 11)'};
 async function usarDemo(){
-  const demoCode='84904557878914318677';
-  const ins=[...document.querySelectorAll('#sec-conferir input.ci')];
-  ins.forEach((inp,i)=>inp.value=demoCode.slice(i*4,i*4+4));
-  await conferir();
+  $('#chkRes').innerHTML='<div class="card" style="margin-top:14px"><p class="muted">Registrando voto de exemplo (Lula + Mailza/AC)...</p></div>';
+  try{
+    const reg=await fetch(API_BASE+'/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:'demo-'+Date.now()+'@meu-voto.app',nome:'Eleitor Demo'})});
+    const regJ=await reg.json();
+    if(!regJ.ok||!regJ.sessionToken) throw new Error('Falha ao criar sessão demo');
+    const tok=regJ.sessionToken;
+    const lote=await fetch(API_BASE+'/api/voto/cargo-lote',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionToken:tok,cargos:{Presidente:'2T-PRE-1',Governador:'2T-AC-1'},cargosMeta:{Presidente:{nomeUrna:'LULA',partido:'PT',numero:'13',uf:'BR'},Governador:{nomeUrna:'MAILZA ASSIS',partido:'PP',numero:'11',uf:'AC'}}})});
+    const loteJ=await lote.json();
+    if(!loteJ.ok||!loteJ.codigo) throw new Error('Falha ao registrar voto demo');
+    const code=loteJ.codigo;
+    const ins=[...document.querySelectorAll('#sec-conferir input.ci')];
+    ins.forEach((inp,i)=>inp.value=code.slice(i*4,i*4+4));
+    toast('✅ Voto de exemplo registrado: '+loteJ.formatado);
+    await conferir();
+  }catch(e){
+    $('#chkRes').innerHTML=`<div class="card" style="margin-top:14px"><b style="color:var(--red)"><i class="fa-solid fa-circle-xmark"></i> Erro ao gerar exemplo</b><p class="muted" style="margin-top:8px">${e.message}</p></div>`;
+  }
 }
 function conferir(){
   const ins=[...document.querySelectorAll('#sec-conferir input.ci')];

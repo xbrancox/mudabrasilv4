@@ -14,7 +14,7 @@ body{padding-bottom:90px}
 /* HEADER */
 header{position:sticky;top:0;background:var(--navy);padding:14px 16px;z-index:100;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between}
 .logo{display:flex;align-items:center;gap:10px}
-.logo img{height:44px;width:44px;max-width:180px;object-fit:contain;border-radius:50%}
+.logo img{height:120px;width:120px;max-width:180px;object-fit:contain;border-radius:0;filter:drop-shadow(0 0 18px rgba(46,204,113,0.6))}
 .logo-icon{width:36px;height:36px;background:var(--green);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--white);font-weight:900;font-size:.85rem}
 .logo-text{font-size:1.15rem;font-weight:800;color:var(--white)}
 .header-right{display:flex;align-items:center;gap:10px}
@@ -260,3 +260,5 @@ textarea.form-input{resize:vertical;min-height:80px}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.7)}70%{box-shadow:0 0 0 7px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
 
 @media(min-width:768px){body{max-width:480px;margin:0 auto}.nav,header{max-width:480px;left:50%;transform:translateX(-50%)}}
+
+@media(max-width:420px){.logo img{height:80px!important;width:80px!important}}

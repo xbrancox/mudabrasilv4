@@ -9,8 +9,9 @@ A plataforma utiliza a logomarca oficial **MeuVoto** com smartphone azul e check
 - **SVG Vetorial:** `icon.svg` (escala perfeita sem perda)
 - **PNG Transparente:** `assets/logo/logo-meuvoto.png` (992×616)
 - **Ícones Otimizados:**
-  - Header: `header-icon-48.png` (desktop) e `header-icon-36.png` (mobile)
-  - Footer & App: `footer-icon.png` (48px)
+  - Header: `header-icon-120.png` (desktop) e `header-icon-72.png` (mobile)
+  - Footer: `footer-icon-120.png` (desktop) e `footer-icon-72.png` (mobile)
+  - App: `header-icon-120.png` (com glow de destaque)
   - Favicon: `favicon-16/32/48.png` + `favicon.ico`
   - PWA: `icon-192.png` e `icon-512.png`
   - Redes Sociais: `og-image.png` (1200×630)
