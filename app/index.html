@@ -16,9 +16,13 @@
 (function(){
   if('serviceWorker' in navigator){
     navigator.serviceWorker.getRegistrations().then(function(regs){
-      regs.forEach(function(reg){
-        reg.unregister().then(function(){}).catch(function(){});
-      });
+      if(regs.length > 0){
+        regs.forEach(function(reg){
+          reg.unregister().then(function(){}).catch(function(){});
+        });
+        // Recarrega para buscar versão nova sem SW antigo
+        setTimeout(function(){ location.reload(); }, 500);
+      }
     });
   }
   // Limpar caches do navegador
@@ -30,6 +34,17 @@
     });
   }
 })();
+
+// Rede de segurança: se após 3 segundos nenhuma seção estiver visível, força recarregamento
+setTimeout(function(){
+  try{
+    var anyOn = document.querySelector('.s.on, .f.on');
+    var hasHero = document.querySelector('.hero h1') || document.querySelector('h1');
+    if(!anyOn && !hasHero){
+      location.reload();
+    }
+  }catch(_){}
+}, 3000);
 </script>
 <!-- Config inline fallback (evita erro se config.local.js falhar) --><script>(function(){if(window.MeuVoto&&typeof window.MeuVoto.API_BASE==="string")return;console.warn("[MeuVoto] config.local.js nao carregou, usando fallback inline");var API_BASE=(window.location.hostname==="localhost"||window.location.hostname==="127.0.0.1")?"http://localhost:8080":"https://api.meu-voto.app";window.MeuVoto=window.MeuVoto||{};window.MeuVoto.API_BASE=API_BASE;window.MeuVoto.MODO="producao";})();</script>
 <script src="../config.local.js?v=3"></script>
