@@ -165,7 +165,7 @@
 <header class="mb-header">
   <div class="mb-nav-inner">
     <a href="${prefix}index.html" class="mb-logo" aria-label="MeuVoto">
-      <img src="${prefix}assets/logo/logo-meuvoto.png" alt="MeuVoto" width="180" height="180" style="border-radius:10px;display:block;object-fit:contain">
+      <img src="${prefix}assets/logo/header-icon-48.png" alt="MeuVoto" width="48" height="48" style="border-radius:10px;display:block;object-fit:contain">
       <span><b style="background:linear-gradient(90deg,#fff 0%,#fff 45%,#D4AF37 45%,#D4AF37 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:#fff">MeuVoto</b><span class="mv-slogan">Meu voto coloca, meu voto tira.</span></span>
     </a>
     <nav aria-label="Navegação principal">
