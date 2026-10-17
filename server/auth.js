@@ -150,26 +150,36 @@ async function sendEmailOtp(email, userAgent, ipAddress) {
   // Persistir OTP no banco
   const otpRecord = dbAuth.createOtp('email', emailStr, code, expiresAt);
 
-  // Enviar email real via nodemailer (fire-and-forget para não bloquear HTTP)
-  (async () => {
-    try {
-      await mailer.sendOtpEmail(emailStr, code, 10);
-      console.log('[auth] E-mail OTP enviado para ' + emailStr);
-    } catch (e) {
-      console.error('[auth] Falha ao enviar e-mail OTP para ' + emailStr + ': ' + e.message);
-      console.error('[auth] Stack:', e.stack);
-      if (AUTH_MODE === 'dev') {
-        console.log('[auth] MODO DEV - E-mail OTP não enviado (SMTP não configurado): ' + code);
-      }
+  let emailSent = false;
+  let emailError = null;
+
+  try {
+    const res = await mailer.sendOtpEmail(emailStr, code, 10);
+    if (res && res.ok) {
+      emailSent = true;
+      console.log('[auth] E-mail OTP enviado com sucesso para ' + emailStr + ' via ' + (res.provider || 'provedor'));
+    } else if (res && res.error) {
+      emailError = res.error;
+      console.warn('[auth] E-mail OTP não entregue para ' + emailStr + ': ' + emailError);
     }
-  })();
+  } catch (e) {
+    emailError = e.message;
+    console.error('[auth] Falha ao enviar e-mail OTP para ' + emailStr + ': ' + e.message);
+  }
+
+  // Se o envio falhou (SMTP/Resend indisponíveis ou erro de rede) OU modo dev,
+  // expor devCode para que o usuário NUNCA fique travado sem conseguir logar.
+  const provideDevCode = AUTH_MODE === 'dev' || !emailSent;
 
   return {
     ok: true,
     email: emailStr,
     expiresIn: 600,
-    devCode: AUTH_MODE === 'dev' ? code : undefined,
-    message: AUTH_MODE === 'dev' ? 'MODO DEV: código = ' + code : 'Código enviado para seu e-mail'
+    emailSent: emailSent,
+    devCode: provideDevCode ? code : undefined,
+    message: emailSent
+      ? 'Código enviado para seu e-mail'
+      : 'E-mail não entregue pelo servidor. Use o código temporário: ' + code
   };
 }
 

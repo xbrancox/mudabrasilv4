@@ -71,8 +71,8 @@ jobs:
             exit 1
           fi
           # Valida que tem Lula e Bolsonaro (2º turno)
-          LULA=$(node -e 'const b=require("/tmp/cand.json"); const list=Array.isArray(b)?b:(b.candidatos||[]); const lula=list.find(c=>(c.nomeUrna||c.nome||"").toUpperCase()==="LULA" && (c.cargo||"").toUpperCase().includes("PRESIDENTE")); console.log(lula?"1":"0")')
-          BOLSO=$(node -e 'const b=require("/tmp/cand.json"); const list=Array.isArray(b)?b:(b.candidatos||[]); const b=list.find(c=>(c.nomeUrna||c.nome||"").toUpperCase().includes("FLAVIO BOLSONARO") && (c.cargo||"").toUpperCase().includes("PRESIDENTE")); console.log(b?"1":"0")')
+          LULA=$(node -e 'const b=require("/tmp/cand.json"); const list=Array.isArray(b)?b:(b.candidatos||[]); const lula=list.find(c=>(c.nomeUrna||c.nome||"").toUpperCase()==="LULA" && String(c.cargo||"")==="1"); console.log(lula?"1":"0")')
+          BOLSO=$(node -e 'const b=require("/tmp/cand.json"); const list=Array.isArray(b)?b:(b.candidatos||[]); const bolso=list.find(c=>(c.nomeUrna||c.nome||"").toUpperCase().includes("FLAVIO BOLSONARO") && String(c.cargo||"")==="1"); console.log(bolso?"1":"0")')
           TOTAL=$(node -e 'const b=require("/tmp/cand.json"); const list=Array.isArray(b)?b:(b.candidatos||[]); console.log(list.length)')
           echo "📊 Total candidatos: $TOTAL · Lula: $LULA · Bolsonaro: $BOLSO"
           if [ "$LULA" != "1" ] || [ "$BOLSO" != "1" ]; then

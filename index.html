@@ -1264,9 +1264,12 @@ async function enviarCodigoLogin(){
       if(data.devCode){
         const dv=document.getElementById('loginDevCode');
         dv.style.display='block';
-        dv.innerHTML='MODO DEV — código: <b>'+data.devCode+'</b>';
+        dv.innerHTML='⚠️ <b>Aviso:</b> '+(data.message||'E-mail não entregue.')+'<br>🔑 Código de acesso: <b>'+data.devCode+'</b>';
+      } else {
+        const dv=document.getElementById('loginDevCode');
+        dv.style.display='none';
       }
-      toast('Código enviado para '+email+'!');
+      toast(data.message || ('Código enviado para '+email+'!'));
     } else {
       toast(data.error||'Falha ao enviar código.');
     }
