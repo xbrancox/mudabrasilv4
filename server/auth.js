@@ -167,9 +167,14 @@ async function sendEmailOtp(email, userAgent, ipAddress) {
     console.error('[auth] Falha ao enviar e-mail OTP para ' + emailStr + ': ' + e.message);
   }
 
-  // Se o envio falhou (SMTP/Resend indisponíveis ou erro de rede) OU modo dev,
-  // expor devCode para que o usuário NUNCA fique travado sem conseguir logar.
-  const provideDevCode = AUTH_MODE === 'dev' || !emailSent;
+  // Em desenvolvimento, expor devCode para permitir testes locais sem SMTP.
+  // Em produção, NUNCA expor o código na UI — exigir que o provedor de e-mail funcione.
+  const isDev = AUTH_MODE === 'dev';
+  const provideDevCode = isDev && !emailSent;
+
+  if (!isDev && !emailSent) {
+    throw new Error('Não foi possível enviar o código por e-mail. Tente novamente em instantes.');
+  }
 
   return {
     ok: true,
