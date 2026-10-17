@@ -169,7 +169,7 @@
   var u = '';
   for (var i = 0; i < sc.length; i++) {
     var s = sc[i].src || '';
-    if (/site-header\.js(\?|$)/.test(s)) { u = s.replace(/[^/]*$/, '') + 'busca-global.js'; break; }
+    if (/site-header\.js(\?|$)/.test(s)) { u = s.replace(/[^/]*$/, '') + 'busca-global.js?v=2'; break; }
   }
   if (!u) return;
   var t = document.createElement('script');

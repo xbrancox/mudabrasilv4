@@ -38,6 +38,19 @@
       "lida": false,
       "createdAt": 1791902838048,
       "createdAtISO": "2026-10-13T14:47:18.048Z"
+    },
+    {
+      "id": "msg-97ba757a63c26f46",
+      "protocolo": "MV-CONTATO-2026-174018",
+      "nome": "Teste",
+      "email": "teste@example.com",
+      "assunto": "Teste de SMTP",
+      "mensagem": "Esta é uma mensagem de teste do sistema MeuVota.",
+      "ip": null,
+      "userAgent": null,
+      "lida": false,
+      "createdAt": 1792238654444,
+      "createdAtISO": "2026-10-17T12:04:14.444Z"
     }
   ]
 }

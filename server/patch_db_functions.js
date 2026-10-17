@@ -14,10 +14,10 @@ function createSession(session) {
   const now = Date.now();
   if (BACKEND === 'sqlite') {
     openSqlite();
-    db.prepare(`
+    db.prepare('
       INSERT INTO auth_sessions (token, voter_id, expires_at, created_at, user_agent, ip_address)
       VALUES (?, ?, ?, ?, ?, ?)
-    `).run(session.token, session.voterId, session.expiresAt, now, session.userAgent || null, session.ipAddress || null);
+    ').run(session.token, session.voterId, session.expiresAt, now, session.userAgent || null, session.ipAddress || null);
     return;
   }
   // Fallback JSON não implementado para auth (requer SQLite)
@@ -66,10 +66,10 @@ function createOtp(otp) {
   const id = 'otp-' + crypto.randomBytes(8).toString('hex');
   if (BACKEND === 'sqlite') {
     openSqlite();
-    db.prepare(`
+    db.prepare('
       INSERT INTO auth_otp (id, type, target, code, expires_at, attempts, used, created_at)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(id, otp.type, otp.target, otp.code, otp.expiresAt, otp.attempts || 0, otp.used || 0, now);
+    ').run(id, otp.type, otp.target, otp.code, otp.expiresAt, otp.attempts || 0, otp.used || 0, now);
     return id;
   }
   throw new Error('OTP requer SQLite');
