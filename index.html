@@ -330,7 +330,7 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
 <nav id="mbtopo-nav" aria-label="Menu principal do MeuVoto"></nav>
 
 <!-- ===== MODAL DE ONBOARDING (primeira visitação) ===== -->
-<div class="overlay" id="mOnboard" style="display:none">
+<div class="overlay" id="mOnboard" style="display:none" onclick="if(event.target===this){this.style.display='none';}">
   <div class="modal" style="max-width:520px">
     <div style="text-align:center;padding:8px 0 16px">
       <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#FFA500);display:grid;place-items:center;font-size:32px;margin:0 auto 16px"><i class="fa-solid fa-shield-halved"></i></div>
@@ -1849,6 +1849,13 @@ window.addEventListener('load',function(){setTimeout(work,250);});
         }, 800);
         localStorage.setItem('meuvoto-onboarded','1');
       }
+      // ESC fecha o onboarding
+      document.addEventListener('keydown', function(e){
+        if(e.key==='Escape'){
+          var m=document.getElementById('mOnboard');
+          if(m) m.style.display='none';
+        }
+      });
     }catch(e){}
   }
 
