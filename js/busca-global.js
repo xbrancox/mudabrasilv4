@@ -39,6 +39,7 @@
     ['Roadmap', 'pages/roadmap.html'],
     ['Digest semanal', 'pages/digest.html'],
     ['Mandato responsável', 'pages/mandato-responsavel.html'],
+    ['Quem Somos', 'index.html#quem-somos'],
     ['API pública', 'pages/api-publica.html'],
     ['Status do sistema', 'pages/status.html'],
     ['Métricas do digest', 'pages/digest-metrics.html'],
