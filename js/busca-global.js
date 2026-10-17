@@ -198,10 +198,6 @@
     paint();
   }
 
-    sel = items.length ? 0 : -1;
-    paint();
-  }
-
   function paint() {
     if (!items.length) {
       res.innerHTML = '<p style="color:#94A3B8;font:12.5px Manrope,sans-serif">Nada encontrado.</p>';
