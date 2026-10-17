@@ -22,7 +22,7 @@
     "node": ">=22.0.0"
   },
   "dependencies": {
-    "nodemailer": "^9.1.1",
+    "nodemailer": "^10.1.2",
     "web-push": "^3.6.7"
   },
   "devDependencies": {

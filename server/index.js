@@ -136,10 +136,17 @@ setInterval(() => {
   }
 }, 5 * 60 * 1000).unref();
 
-function sendJson(res, status, obj, methods = 'GET, POST, OPTIONS') {
+function sendJson(res, status, obj, methods = 'GET, POST, OPTIONS', req = null) {
+  let origin = '*';
+  if (req && req.headers && req.headers.origin) {
+    const o = req.headers.origin;
+    if (o === 'https://meu-voto.app' || o === 'https://www.meu-voto.app' || /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(o)) {
+      origin = o;
+    }
+  }
   res.writeHead(status, {
     'Content-Type': 'application/json; charset=utf-8',
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': origin,
     'Access-Control-Allow-Methods': methods,
     'Access-Control-Allow-Headers': 'Content-Type',
     'Cache-Control': 'no-store',
