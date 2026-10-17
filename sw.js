@@ -1,5 +1,5 @@
 /* MeuVoto SW - shell offline + runtime cache + Web Push */
-var SHELL = 'meuvoto-shell-v10-conferir-fix';
+var SHELL = 'meuvoto-shell-v12-pages-cache';
 var PRE = [
   './', './index.html', './config.local.js', 
   './js/cache.js', './js/offline.js', './js/push-notifications.js',
@@ -11,7 +11,7 @@ var PRE = [
 ];
 
 // Arquivos que NUNCA devem ser cacheados (sempre buscar versão nova)
-var NO_CACHE = ['/index.html', '/app/index.html', '/app/'];
+var NO_CACHE = ['/index.html', '/app/index.html', '/app/', '/pages/meu-voto.html', '/pages/'];
 
 self.addEventListener('install', function(e) {
   e.waitUntil(
