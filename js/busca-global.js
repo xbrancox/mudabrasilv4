@@ -81,7 +81,7 @@
   fab.type = 'button';
   fab.setAttribute('aria-label', 'Abrir busca global (Ctrl+K)');
   fab.innerHTML = '🔍 <span style="margin-left:6px">Buscar</span> <kbd style="margin-left:8px;background:#061a3a;border:1px solid rgba(127,176,245,.3);border-radius:4px;padding:1px 5px;font:600 10px Manrope,sans-serif;color:#94A3B8">Ctrl K</kbd>';
-  fab.style.cssText = 'position:fixed;right:14px;bottom:14px;z-index:9001;border-radius:999px;border:1px solid rgba(255,215,0,.45);background:linear-gradient(135deg,#123059,#0d2242);color:#fff;font:700 12.5px Manrope,sans-serif;padding:10px 16px;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.55);display:flex;align-items:center';
+  fab.style.cssText = 'position:fixed;right:14px;bottom:14px;z-index:99999;border-radius:999px;border:1px solid rgba(255,215,0,.45);background:linear-gradient(135deg,#123059,#0d2242);color:#fff;font:700 12.5px Manrope,sans-serif;padding:10px 16px;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.55);display:flex;align-items:center';
 
   // === UI: modal ===
   var wrap = document.createElement('div');
@@ -89,7 +89,7 @@
   wrap.setAttribute('role', 'dialog');
   wrap.setAttribute('aria-modal', 'true');
   wrap.setAttribute('aria-label', 'Busca global');
-  wrap.style.cssText = 'display:none;position:fixed;inset:0;z-index:9002;background:rgba(4,8,20,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:14px;overflow-y:auto';
+  wrap.style.cssText = 'display:none;position:fixed;inset:0;z-index:100000;background:rgba(4,8,20,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:14px;overflow-y:auto';
   wrap.innerHTML =
     '<div style="max-width:680px;margin:6vh auto 0;background:#0d2242;border:1px solid rgba(255,215,0,.5);border-radius:16px;padding:14px;box-shadow:0 20px 60px rgba(0,0,0,.6)">' +
     '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">' +
