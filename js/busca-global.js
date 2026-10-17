@@ -32,6 +32,9 @@
     ['PLs no Congresso', 'pages/congresso.html'],
     ['Votações do Plenário', 'pages/votacoes.html'],
     ['Conferir/Revogar Voto', 'pages/meu-voto.html'],
+    ['Conferir Voto', 'index.html#conferir-voto'],
+    ['Revogar Voto', 'index.html#revogar-voto'],
+    ['Quem Somos', 'index.html#quem-somos'],
     ['Proposta', 'pages/proposta.html'],
     ['Comunidade', 'pages/comunidade.html'],
     ['Fundo Eleitoral', 'pages/fundo-eleitoral.html'],
@@ -39,12 +42,17 @@
     ['Roadmap', 'pages/roadmap.html'],
     ['Digest semanal', 'pages/digest.html'],
     ['Mandato responsável', 'pages/mandato-responsavel.html'],
-    ['Quem Somos', 'index.html#quem-somos'],
     ['API pública', 'pages/api-publica.html'],
     ['Status do sistema', 'pages/status.html'],
     ['Métricas do digest', 'pages/digest-metrics.html'],
     ['Privacidade', 'privacidade.html'],
-    ['Termos', 'termos.html']
+    ['Termos', 'termos.html'],
+    ['Contato', 'index.html#contato'],
+    ['Hub de páginas', 'pages/links.html'],
+    ['Iniciativa Cidadã', 'pages/iniciativa-cidada.html'],
+    ['Resultados 2026', 'pages/resultados-2026.html'],
+    ['Comparador', 'pages/comparador.html'],
+    ['Termômetro', 'pages/termometro.html']
   ];
 
   var cache = { vot: null, cand: null, ts: 0 };
@@ -73,7 +81,7 @@
   fab.type = 'button';
   fab.setAttribute('aria-label', 'Abrir busca global (Ctrl+K)');
   fab.innerHTML = '🔍 <span style="margin-left:6px">Buscar</span> <kbd style="margin-left:8px;background:#061a3a;border:1px solid rgba(127,176,245,.3);border-radius:4px;padding:1px 5px;font:600 10px Manrope,sans-serif;color:#94A3B8">Ctrl K</kbd>';
-  fab.style.cssText = 'position:fixed;right:14px;bottom:14px;z-index:180;border-radius:999px;border:1px solid rgba(255,215,0,.45);background:linear-gradient(135deg,#123059,#0d2242);color:#fff;font:700 12.5px Manrope,sans-serif;padding:10px 16px;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.55);display:flex;align-items:center';
+  fab.style.cssText = 'position:fixed;right:14px;bottom:14px;z-index:9001;border-radius:999px;border:1px solid rgba(255,215,0,.45);background:linear-gradient(135deg,#123059,#0d2242);color:#fff;font:700 12.5px Manrope,sans-serif;padding:10px 16px;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.55);display:flex;align-items:center';
 
   // === UI: modal ===
   var wrap = document.createElement('div');
@@ -81,7 +89,7 @@
   wrap.setAttribute('role', 'dialog');
   wrap.setAttribute('aria-modal', 'true');
   wrap.setAttribute('aria-label', 'Busca global');
-  wrap.style.cssText = 'display:none;position:fixed;inset:0;z-index:300;background:rgba(4,8,20,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:14px;overflow-y:auto';
+  wrap.style.cssText = 'display:none;position:fixed;inset:0;z-index:9002;background:rgba(4,8,20,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:14px;overflow-y:auto';
   wrap.innerHTML =
     '<div style="max-width:680px;margin:6vh auto 0;background:#0d2242;border:1px solid rgba(255,215,0,.5);border-radius:16px;padding:14px;box-shadow:0 20px 60px rgba(0,0,0,.6)">' +
     '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">' +
@@ -220,7 +228,19 @@
       location.href = rootPath() + 'pages/votacoes.html#v' + it.vid;
       return;
     }
-    if (it.el) it.el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (it.el) {
+      // Seções ocultas na home (display:none) precisam ser reveladas com go()
+      // antes de scrollar — senão o usuário vê a seção invisível
+      var parent = it.el.closest('main h1, main h2, main h3, .painel h3, .ecard h3');
+      var secEl = it.el.closest('section');
+      if (secEl && window.go) {
+        var secId = secEl.id || '';
+        // mapeia id="sec-conferir" -> go('conferir'), id="sec-quem" -> go('quem')
+        var key = secId.replace(/^sec-/, '');
+        if (key) window.go(key);
+      }
+      setTimeout(function () { it.el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 150);
+    }
   }
 
   var tBusca = null;
