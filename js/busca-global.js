@@ -161,31 +161,42 @@
     items = [];
     var r = rootPath();
 
-    // 1. Páginas
+    // 1. Páginas (síncrono — aparece imediatamente)
     PAGES.forEach(function (p) {
       if (p[0].toLowerCase().indexOf(s) >= 0) items.push({ g: 'Páginas', t: p[0], href: r + p[1] });
     });
 
-    // 2. Seções
+    // 2. Seções (síncrono — aparece imediatamente)
     secoes().forEach(function (x) {
       if (x.t.toLowerCase().indexOf(s) >= 0) items.push({ g: 'Seções desta página', t: x.t, el: x.el });
     });
 
-    // 3 e 4. Votações + Parlamentares
-    var d = await dados();
-    (d.vot || []).forEach(function (v) {
-      var t = v.tituloVotacao || v.descricaoProposicao || (v.proposicao && v.proposicao.titulo) || '';
-      var sig = (v.siglaProposicao || '') + (v.numeroProposicao ? (' ' + v.numeroProposicao) : '');
-      if ((t + ' ' + sig).toLowerCase().indexOf(s) >= 0) {
-        items.push({ g: 'Votações', t: (sig ? sig + ' — ' : '') + String(t).slice(0, 90), vid: v.id });
-      }
-    });
-    (d.cand || []).slice(0, 600).forEach(function (c) {
-      var n = c.name || c.nome || '';
-      if (n.toLowerCase().indexOf(s) >= 0) {
-        items.push({ g: 'Parlamentares', t: n + ' · ' + (c.party || c.partido || '') + '-' + (c.state || c.uf || ''), href: r + 'pages/parlamentares.html?id=' + encodeURIComponent(c.id) });
-      }
-    });
+    // Pinta os resultados de páginas/seções antes de buscar dados assíncronos
+    sel = items.length ? 0 : -1;
+    paint();
+
+    // 3 e 4. Votações + Parlamentares (assíncrono — pode demorar, não trava a UI)
+    try {
+      var d = await dados();
+      (d.vot || []).forEach(function (v) {
+        var t = v.tituloVotacao || v.descricaoProposicao || (v.proposicao && v.proposicao.titulo) || '';
+        var sig = (v.siglaProposicao || '') + (v.numeroProposicao ? (' ' + v.numeroProposicao) : '');
+        if ((t + ' ' + sig).toLowerCase().indexOf(s) >= 0) {
+          items.push({ g: 'Votações', t: (sig ? sig + ' — ' : '') + String(t).slice(0, 90), vid: v.id });
+        }
+      });
+      (d.cand || []).slice(0, 600).forEach(function (c) {
+        var n = c.name || c.nome || '';
+        if (n.toLowerCase().indexOf(s) >= 0) {
+          items.push({ g: 'Parlamentares', t: n + ' · ' + (c.party || c.partido || '') + '-' + (c.state || c.uf || ''), href: r + 'pages/parlamentares.html?id=' + encodeURIComponent(c.id) });
+        }
+      });
+    } catch (e) {
+      // Se a API falhar, mantém apenas os resultados de páginas/seções
+    }
+    sel = items.length ? 0 : -1;
+    paint();
+  }
 
     sel = items.length ? 0 : -1;
     paint();
