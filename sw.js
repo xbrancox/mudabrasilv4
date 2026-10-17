@@ -11,7 +11,7 @@ var PRE = [
 ];
 
 // Arquivos que NUNCA devem ser cacheados (sempre buscar versão nova)
-var NO_CACHE = ['/index.html', '/app/index.html', '/app/', '/pages/meu-voto.html', '/pages/'];
+var NO_CACHE = ['/index.html', '/app/index.html', '/app/', '/pages/meu-voto.html', '/pages/', '/js/busca-global.js', '/js/site-header.js'];
 
 self.addEventListener('install', function(e) {
   e.waitUntil(
