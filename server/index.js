@@ -1484,7 +1484,7 @@ async function handleApi(req, res, url) {
     let body;
     try { body = await readBody(req); } catch (e) { return sendJson(res, 400, { ok: false, error: e.message }); }
     try {
-      const voter = auth.getVoterFromToken(body.sessionToken || '');
+      const voter = auth.getVoterFromTokenOrAnon(body.sessionToken || '', clientIp(req));
       const r = await votes.castVote({ ...body, voterHash: voter ? voter.voterHash : null }, ip);
       return sendJson(res, r.ok ? 201 : (r.status || 400), r);
     } catch (e) {
@@ -2016,7 +2016,7 @@ async function handleApi(req, res, url) {
   if (p === '/api/voto/cargo-lote' && req.method === 'POST') {
     let body;
     try { body = await readBody(req); } catch (e) { return sendJson(res, 400, { ok: false, error: e.message }); }
-    const voter = auth.getVoterFromToken(body.sessionToken || '');
+    const voter = auth.getVoterFromTokenOrAnon(body.sessionToken || '', clientIp(req));
     if (!voter) return sendJson(res, 401, { ok: false, error: 'Faça login para registrar sua cédula' });
     const rlLote = votes.checkRateLimit(clientIp(req), 'cargo-lote');
     if (!rlLote.allowed) return sendJson(res, 429, { ok: false, error: 'Muitas tentativas em pouco tempo. Aguarde um instante.' });

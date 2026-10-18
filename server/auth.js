@@ -141,7 +141,8 @@ async function verifyOtp(phone, code) {
 
 async function sendEmailOtp(email, userAgent, ipAddress) {
   const emailStr = String(email).trim().toLowerCase();
-  if (!emailStr.includes('@') || !emailStr.includes('.')) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(emailStr)) {
     throw new Error('E-mail inválido.');
   }
   const code = String(Math.floor(100000 + Math.random() * 900000));
@@ -212,7 +213,8 @@ async function verifyEmailOtp(email, code, userAgent, ipAddress) {
 
 async function register(email, name, phone, userAgent, ipAddress) {
   const emailStr = email ? String(email).trim().toLowerCase() : null;
-  if (emailStr && (!emailStr.includes('@') || !emailStr.includes('.'))) throw new Error('E-mail inválido.');
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (emailStr && !emailRegex.test(emailStr)) throw new Error('E-mail inválido.');
   const id = 'voter-' + crypto.randomBytes(8).toString('hex');
   const voterHash = db.hashVoter('email', emailStr || 'anon-' + id);
   const voter = { id: id, method: emailStr ? 'email' : 'anon', googleId: null, phone: phone ? String(phone).replace(/\D/g, '') : null, email: emailStr, name: name || null, photo: null, voterHash: voterHash, verifiedAt: Date.now(), createdAt: Date.now() };
@@ -236,6 +238,14 @@ function getVoterFromToken(token) {
   return db.getVoterById(session.voterId);
 }
 
+function getVoterFromTokenOrAnon(token, ip) {
+  const voter = getVoterFromToken(token);
+  if (voter) return voter;
+  // Gerar voterHash anônimo determinístico por IP+tempo (não persistido no banco)
+  const anonHash = 'anon-' + crypto.createHash('sha256').update(ip + ':' + Date.now()).digest('hex').slice(0, 16);
+  return { id: null, method: 'anon', googleId: null, phone: null, email: null, name: null, photo: null, voterHash: anonHash, verifiedAt: null, createdAt: null };
+}
+
 function logout(token) { dbAuth.deleteSession(token); }
 
 module.exports = {
@@ -243,6 +253,6 @@ module.exports = {
   sendOtp, verifyOtp,
   sendEmailOtp, verifyEmailOtp,
   register,
-  generateSessionToken, getVoterFromToken, logout,
+  generateSessionToken, getVoterFromToken, getVoterFromTokenOrAnon, logout,
   AUTH_MODE
 };
