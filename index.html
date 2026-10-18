@@ -633,7 +633,7 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
 <div id="loginPasso1" style="display:none">
 <label class="muted" style="display:block;margin-bottom:4px">Seu e-mail</label>
 <input id="loginEmail" type="email" placeholder="seu@email.com" style="width:100%;padding:10px;margin-bottom:12px;border:1px solid var(--line);border-radius:8px"/>
-	<button class="btn blue" type="button" style="width:100%" onclick="enviarCodigoLogin()"><i class="fa-solid fa-paper-plane"></i> Enviar código</button>
+	<button id="btnEnviarCodigo" class="btn blue" type="button" style="width:100%"><i class="fa-solid fa-paper-plane"></i> Enviar código</button>
 <button class="btn" style="width:100%;margin-top:8px" onclick="voltarLoginInicio()">Voltar</button>
 </div>
 <div id="loginPasso2" style="display:none">
@@ -641,7 +641,7 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
 	<label class="muted" style="display:block;margin-bottom:4px">Código de verificação</label>
 	<input id="loginCode" type="text" placeholder="000000" maxlength="6" style="width:100%;padding:10px;margin-bottom:8px;border:1px solid var(--line);border-radius:8px;font-size:20px;letter-spacing:8px;text-align:center"/>
 	<div id="loginDevCode" style="display:none;background:var(--gold);color:#000;padding:8px;border-radius:6px;margin:8px 0;font-size:13px;text-align:center"></div>
-		<button class="btn gold" type="button" style="width:100%" onclick="verificarCodigoLogin()"><i class="fa-solid fa-check"></i> Verificar e entrar</button>
+		<button id="btnVerificarCodigo" class="btn gold" type="button" style="width:100%"><i class="fa-solid fa-check"></i> Verificar e entrar</button>
 	<button class="btn" style="width:100%;margin-top:8px" onclick="voltarLoginPasso1()">Voltar</button>
 	</div>
 </div></div>
@@ -692,6 +692,17 @@ if(window.caches){caches.keys().then(ks=>ks.forEach(k=>caches.delete(k)));}
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 /* API_BASE vem do config.local.js (carregado no <head>) — não redeclarar aqui, isso quebrava o script todo */
 function toast(m){const t=$('#toast');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',2600)}
+(function(){
+  // LOGIN: envio de código OTP via botão com type="button" + addEventListener (mais robusto que onclick)
+  var btn = document.getElementById('btnEnviarCodigo');
+  if(btn){
+    btn.addEventListener('click', function(e){ e.preventDefault(); enviarCodigoLogin(); });
+  }
+  var btn2 = document.getElementById('btnVerificarCodigo');
+  if(btn2){
+    btn2.addEventListener('click', function(e){ e.preventDefault(); verificarCodigoLogin(); });
+  }
+})();
 (function(){const qv=new URLSearchParams(location.search);if(qv.has('verificado')){if(qv.get('verificado')==='1')toast('✅ E-mail confirmado! Selo de verificado ativado.');else toast('Falha na confirmação: '+(qv.get('erro')||'token inválido'));history.replaceState({},'',location.pathname)}})();
 function fechar(id){document.getElementById(id).classList.remove('open')}
 function atualizarUI(){
