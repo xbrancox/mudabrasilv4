@@ -88,11 +88,11 @@
     { href: 'index.html',               label: 'Início' },
     { href: 'pages/parlamentares.html', label: 'Pesquisar Políticos' },
     { href: 'pages/iniciativa-cidada.html', label: 'Iniciativa Cidadã' },
-    { href: 'pages/conferir.html',      label: 'Conferir Voto' },
+    { href: 'index.html#conferir-voto', label: 'Conferir Voto' },
     { href: 'pages/congresso.html',     label: 'PLs no Congresso' },
     { href: 'pages/revogados.html',     label: 'Políticos Revogados' },
-    { href: 'pages/quem-somos.html',    label: 'Quem Somos' },
-    { href: 'pages/meu-voto.html',      label: 'Revogar Voto' },
+    { href: 'index.html#quem-somos',    label: 'Quem Somos' },
+    { href: 'index.html#revogar-voto',  label: 'Revogar Voto' },
   ];
 
   // ---- Prefixo relativo (raiz = '' , pages/ = '../') ----
