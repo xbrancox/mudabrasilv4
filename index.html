@@ -1277,8 +1277,9 @@ async function verificarCodigoLogin(){
   const email=(document.getElementById('loginEmail').value||'').trim().toLowerCase();
   const code=(document.getElementById('loginCode').value||'').trim();
   if(!code||code.length<6)return toast('Informe o código de 6 dígitos.');
+  const apiBase = (typeof API_BASE !== 'undefined' ? API_BASE : (window.MeuVoto && window.MeuVoto.API_BASE) || 'https://api.meu-voto.app');
   try{
-    const r=await fetch(API_BASE+'/api/auth/email/verify',{
+    const r=await fetch(apiBase+'/api/auth/email/verify',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({email,code})
