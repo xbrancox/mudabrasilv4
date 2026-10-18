@@ -7,7 +7,7 @@
 
 let API_BASE = (typeof window !== 'undefined' && window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))
   ? ''
-  : 'https://mudabrasil-production-79eb.up.railway.app';
+  : 'https://api.meu-voto.app';
 
 /* Para que o localhost use exatamente o mesmo backend e dados da Produção (Railway),
    mantemos API_BASE apontando para o servidor de produção. */
