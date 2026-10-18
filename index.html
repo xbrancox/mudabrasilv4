@@ -393,6 +393,10 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
     <p>Candidatos confirmados para o 2º turno (dia 25): LULA (PT) e FLAVIO BOLSONARO (PL). Clique para ver a ficha completa, o histórico e como cada um votou.</p>
   </div>
   <div class="spot-grid" id="spotGrid"></div>
+  <div class="apoio-total-wrap" id="turnoTotalApoiosWrap" style="margin-top:18px">
+    <div class="apoio-total-num" id="turnoTotalApoios">0</div>
+    <div class="apoio-total-label">👥 Pessoas que já declararam apoio no 2º turno</div>
+  </div>
   <p class="spot-note">📊 Dados públicos do TSE (DivulgaCand) · <a href="pages/eleicoes-2026.html">ver todos os candidatos e filtros →</a><br>O MeuVoto é um protótipo cívico independente, sem vínculo com TSE, partidos ou candidatos.</p>
 </div>
 
@@ -769,12 +773,19 @@ function spotCard(c,i){
   const sitCls=/DEFERID/.test(sit)?'ok':/INDEFERID|CASSAD/.test(sit)?'red':'amb';
   const sitTxt=sit?sit.charAt(0)+sit.slice(1).toLowerCase():'Registrado';
   const candId=c.id||c.sq_tse||`${c.numero}-${c.partido||''}`;
-  return `<article class="pcard">
+  return `<article class="pcard" data-turno-id="${candId}">
     ${av}
     <h3>${c.nome}</h3>
     <div class="pmeta">${c.partido||'—'}${c.uf&&c.uf!=='BR'?' · '+c.uf:''}</div>
     <div class="pnum">#${c.numero||'—'}</div>
     <div style="margin-top:10px"><span class="badge ${sitCls}">${sitTxt}</span></div>
+    <div class="apoio-barra-wrap">
+      <div class="apoio-barra-label">
+        <span class="apoio-barra-count" id="apoio-count-${candId}">0 apoios</span>
+        <span class="apoio-barra-pct" id="apoio-pct-${candId}">0%</span>
+      </div>
+      <div class="apoio-barra-track"><div class="apoio-barra-fill" id="apoio-barra-${candId}" style="width:0%"></div></div>
+    </div>
     <div class="pcta">
       <button class="btn sm gold" onclick="apoiarTurno('${candId}','${(c.nome||'').replace(/'/g,"\\'")}')"><i class="fa-solid fa-hand"></i> Apoiar</button>
       <a class="btn sm" href="pages/eleicoes-2026.html" style="text-decoration:none">Ver ficha</a>
@@ -841,12 +852,23 @@ async function carregaTurnoStats(){
     const r=await fetch(API_BASE+'/api/turno');
     const j=await r.json();
     if(j&&j.ok){
+      const total=j.total||0;
+      // Atualizar total de participantes
       const totalEl=document.getElementById('turnoTotalApoios');
-      if(totalEl) totalEl.textContent=j.total||0;
-      // Update per-candidate counts on cards
+      if(totalEl) totalEl.textContent=total;
+      // Atualizar barras de progresso e contagens por candidato
       (j.porCandidato||[]).forEach(c=>{
-        const el=document.querySelector('[data-turno-id="'+c.candidateId+'"] .turno-count');
-        if(el) el.textContent=c.total+' apoios';
+        const candId=c.candidateId;
+        const pct=total>0?Math.round(c.total/total*100):0;
+        // Atualizar contagem
+        const countEl=document.getElementById('apoio-count-'+candId);
+        if(countEl) countEl.textContent=c.total+' apoio'+(c.total!==1?'s':'');
+        // Atualizar percentual
+        const pctEl=document.getElementById('apoio-pct-'+candId);
+        if(pctEl) pctEl.textContent=pct+'%';
+        // Atualizar barra de progresso
+        const barEl=document.getElementById('apoio-barra-'+candId);
+        if(barEl) barEl.style.width=pct+'%';
       });
     }
   }catch(e){}

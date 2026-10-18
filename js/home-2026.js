@@ -252,9 +252,9 @@
 
     console.log('[home-2026] Select populado com sucesso');
 
-    function renderizar(uf) {
+    async function renderizar(uf) {
       console.log('[home-2026] Renderizando estado:', uf);
-      
+
       if (!uf) {
         card.innerHTML = `
           <div class="estado-placeholder">
@@ -328,32 +328,55 @@
         // 2º turno
         const top2 = estado.candidatos_2turno || [];
         console.log('[home-2026] Candidatos no 2º turno:', top2.length);
-        
+
         // Buscar fotos dos candidatos
         const ufUpper = uf.toUpperCase();
         const fotosUf = fotosData.governadores && fotosData.governadores[ufUpper] || {};
+
+        // Obter dados de apoio do backend (se disponível)
+        let apoioData = { total: 0, porCandidato: [] };
+        try {
+          const ar = await fetch('/api/turno');
+          if (ar.ok) {
+            const aj = await ar.json();
+            if (aj && aj.ok) apoioData = aj;
+          }
+        } catch (e) { /* silently ignore */ }
 
         const candidatosHtml = top2.map(function(c, i) {
           const votosHtml = c.votos ? '<span class="estado-candidato-abs">' + c.votos.toLocaleString('pt-BR') + ' votos</span>' : '';
           const pct = c.percentual || 0;
           const pctHtml = pct ? '<div class="estado-candidato-percent">' + pct.toFixed(1) + '%</div>' : '';
-          
+
           // Buscar foto do candidato
           const fotoUrl = fotosUf[c.nome] || '';
           const iniciais = (c.nome || '?').trim().split(/\s+/).slice(0,2).map(w => w[0] || '').join('').toUpperCase();
-          const fotoHtml = fotoUrl 
+          const fotoHtml = fotoUrl
             ? '<img class="estado-candidato-foto" src="' + fotoUrl + '" alt="' + c.nome + '" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement(\'div\'),{className:\'estado-candidato-foto estado-candidato-foto-placeholder\',textContent:\'' + iniciais + '\'}))">'
             : '<div class="estado-candidato-foto estado-candidato-foto-placeholder">' + iniciais + '</div>';
-          
-          // Barra de progresso para o percentual
-          const barraHtml = pct > 0 ? `
-            <div class="estado-candidato-barra">
-              <div class="pesquisa-barra-track">
-                <div class="pesquisa-barra-fill" style="width:${pct}%"></div>
+
+          // Determinar o candidateId para este governador (formato: 2T-{UF}-{1|2})
+          const candId = '2T-' + ufUpper + '-' + (i + 1);
+          const apoioInfo = (apoioData.porCandidato || []).find(p => p.candidateId === candId);
+          const apoioCount = apoioInfo ? apoioInfo.total : 0;
+          const apoioTotal = apoioData.total || 0;
+          const apoioPct = apoioTotal > 0 ? Math.round(apoioCount / apoioTotal * 100) : 0;
+
+          // Barra de progresso de apoio
+          const apoioBarraHtml = apoioTotal > 0 ? `
+            <div class="apoio-barra-wrap" style="margin-top:6px">
+              <div class="apoio-barra-label">
+                <span class="apoio-barra-count" id="gov-apoio-count-${candId}">${apoioCount} apoio${apoioCount !== 1 ? 's' : ''}</span>
+                <span class="apoio-barra-pct" id="gov-apoio-pct-${candId}">${apoioPct}%</span>
               </div>
+              <div class="apoio-barra-track"><div class="apoio-barra-fill" id="gov-apoio-barra-${candId}" style="width:${apoioPct}%"></div></div>
             </div>
           ` : '';
-          
+
+          // Botão de apoio (só aparece se houver backend)
+          const apoioBtn = (typeof BACKEND_OK !== 'undefined' && BACKEND_OK) ?
+            `<button class="btn sm gold" onclick="apoiarTurno('${candId}','${c.nome.replace(/'/g, "\\'")}')"><i class="fa-solid fa-hand"></i> Apoiar</button>` : '';
+
           return `
           <div class="estado-candidato ${i === 0 ? 'primeiro' : ''}">
             ${fotoHtml}
@@ -362,12 +385,13 @@
               <div>
                 <p class="estado-candidato-nome">${c.nome}</p>
                 <p class="estado-candidato-partido">${c.partido} · Nº ${c.numero || '—'}</p>
-                ${barraHtml}
+                ${apoioBarraHtml}
               </div>
             </div>
             <div class="estado-candidato-votos">
               ${pctHtml}
               ${votosHtml}
+              ${apoioBtn ? '<div style="margin-top:8px">' + apoioBtn + '</div>' : ''}
             </div>
           </div>
         `;
