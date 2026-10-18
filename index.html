@@ -331,6 +331,7 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
 
 <!-- ===== MODAL DE ONBOARDING (primeira visitação) ===== -->
 <div class="overlay" id="mOnboard" style="display:none" onclick="if(event.target===this){this.style.display='none';}">
+  <button type="button" onclick="document.getElementById('mOnboard').style.display='none'" style="position:absolute;top:12px;right:16px;background:transparent;border:none;color:#fff;font-size:24px;cursor:pointer;z-index:10">✕</button>
   <div class="modal" style="max-width:520px">
     <div style="text-align:center;padding:8px 0 16px">
       <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#FFA500);display:grid;place-items:center;font-size:32px;margin:0 auto 16px"><i class="fa-solid fa-shield-halved"></i></div>
@@ -1842,6 +1843,13 @@ window.addEventListener('load',function(){setTimeout(work,250);});
   /* ---- Onboarding: mostra modal na primeira visitação ---- */
   function initOnboarding(){
     try{
+      // Se há hash de navegação direta (ex: #conferir-voto, #quem-somos), não mostra o onboarding
+      const hash = (location.hash || '').replace('#', '').split('?')[0];
+      const hashMapa = {'conferir-voto':1,'revogar-voto':1,'revogados':1,'quem-somos':1};
+      if(hashMapa[hash]){
+        localStorage.setItem('meuvoto-onboarded','1');
+        return;
+      }
       if(!localStorage.getItem('meuvoto-onboarded')){
         setTimeout(function(){
           var m=document.getElementById('mOnboard');
