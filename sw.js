@@ -1,5 +1,5 @@
 /* MeuVoto SW - shell offline + runtime cache + Web Push */
-var SHELL = 'meuvoto-shell-v12-pages-cache';
+var SHELL = 'meuvoto-shell-v13-pages-cache';
 var PRE = [
   './', './index.html', './config.local.js', 
   './js/cache.js', './js/offline.js', './js/push-notifications.js',
@@ -11,7 +11,8 @@ var PRE = [
 ];
 
 // Arquivos que NUNCA devem ser cacheados (sempre buscar versão nova)
-var NO_CACHE = ['/index.html', '/app/index.html', '/app/', '/pages/meu-voto.html', '/pages/', '/js/busca-global.js', '/js/site-header.js'];
+// Inclui '/' e './index.html' para que a home sempre busque a versão mais recente
+var NO_CACHE = ['/', '/index.html', './index.html', '/app/index.html', '/app/', '/pages/meu-voto.html', '/pages/', '/js/busca-global.js', '/js/site-header.js', '/sw.js'];
 
 self.addEventListener('install', function(e) {
   e.waitUntil(
@@ -28,9 +29,7 @@ self.addEventListener('install', function(e) {
 self.addEventListener('activate', function(e) {
   e.waitUntil(
     caches.keys().then(function(ks) {
-      return Promise.all(ks.filter(function(k) {
-        return k !== SHELL;
-      }).map(function(k) {
+      return Promise.all(ks.map(function(k) {
         return caches.delete(k);
       }));
     }).then(function() {
