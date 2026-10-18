@@ -55,7 +55,11 @@
     function renderizar(valor) {
       console.log('[home-2026] Renderizando pesquisa para:', valor);
       
-      const pesquisa = pesquisasData.pesquisas.find(p => p.instituto.toLowerCase() === valor);
+      const pesquisa = pesquisasData.pesquisas.find(p => {
+        const nomeInst = (p.instituto || '').toLowerCase().replace(/\//g, '').replace(/\s/g, '');
+        const valorLimpo = valor.toLowerCase().replace(/\//g, '').replace(/\s/g, '');
+        return nomeInst === valorLimpo || nomeInst.startsWith(valorLimpo);
+      });
       
       if (!pesquisa) {
         console.warn('[home-2026] Pesquisa não encontrada para valor:', valor);
