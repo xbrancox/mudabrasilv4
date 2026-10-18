@@ -692,11 +692,6 @@ const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 /* API_BASE vem do config.local.js (carregado no <head>) — não redeclarar aqui, isso quebrava o script todo */
 function toast(m){const t=$('#toast');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',2600)}
 (function(){const qv=new URLSearchParams(location.search);if(qv.has('verificado')){if(qv.get('verificado')==='1')toast('✅ E-mail confirmado! Selo de verificado ativado.');else toast('Falha na confirmação: '+(qv.get('erro')||'token inválido'));history.replaceState({},'',location.pathname)}})();
-/* FIX: âncoras vindas de outras páginas/app (#conferir-voto etc.) — antes caíam no topo da home sem abrir a seção */
-(function(){const h=location.hash.replace('#','');if(!h)return;
-const M={'conferir-voto':'conferir','revogar-voto':'revogar','revogados':'revogados','quem-somos':'quem'};
-if(h==='congresso'||h==='radar'){location.replace('pages/parlamentares.html');return}
-if(M[h]){go(M[h]);history.replaceState({},'',location.pathname)}})();
 function fechar(id){document.getElementById(id).classList.remove('open')}
 function atualizarUI(){
   const hdr=document.getElementById('mbtopo-header');
@@ -715,7 +710,7 @@ function atualizarUI(){
   }
 }
 function toggleMenu(){document.getElementById('mnav').classList.toggle('open')}
-function go(p){if(p==='radar'){window.location.href='pages/parlamentares.html';return}$$('.sec').forEach(s=>s.classList.remove('on'));$('#sec-'+p).classList.add('on');$$('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.p===p));window.scrollTo(0,0);document.getElementById('mOnboard')?.style.display='none'}
+function go(p){if(p==='radar'){window.location.href='pages/parlamentares.html';return}$$('.sec').forEach(s=>s.classList.remove('on'));$('#sec-'+p).classList.add('on');$$('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.p===p));window.scrollTo(0,0);var m=document.getElementById('mOnboard');if(m)m.style.display='none'}
 $$('#nav a').forEach(a=>a.onclick=()=>go(a.dataset.p));
 /* Deep-link: #conferir-voto, #radar, #revogados etc. abrem a seção direto
    (usado pelos menus das páginas internas: congresso, votações…) */
@@ -1845,9 +1840,11 @@ window.addEventListener('load',function(){setTimeout(work,250);});
     try{
       // Se há hash de navegação direta (ex: #conferir-voto, #quem-somos), não mostra o onboarding
       const hash = (location.hash || '').replace('#', '').split('?')[0];
-      const hashMapa = {'conferir-voto':1,'revogar-voto':1,'revogados':1,'quem-somos':1};
+      const hashMapa = {'conferir-voto':'conferir','revogar-voto':'revogar','revogados':'revogados','quem-somos':'quem','congresso':'inicio','voto':'revogar'};
       if(hashMapa[hash]){
         localStorage.setItem('meuvoto-onboarded','1');
+        // Ativa a seção correspondente ao hash direto na URL
+        setTimeout(function(){ if(typeof go==='function') go(hashMapa[hash]); }, 100);
         return;
       }
       if(!localStorage.getItem('meuvoto-onboarded')){
@@ -1929,6 +1926,17 @@ window.addEventListener('load',function(){setTimeout(work,250);});
 
   /* Expor funções globais */
   window.MeuVotoOnboarding={showEmptyState:showEmptyState};
+})();
+
+// Fallback: garante que hash direto na URL ative a seção mesmo que algo falhe antes
+(function(){
+  try{
+    var h=(location.hash||'').replace('#','').split('?')[0];
+    var M={'conferir-voto':'conferir','revogar-voto':'revogar','revogados':'revogados','quem-somos':'quem','congresso':'inicio','voto':'revogar'};
+    if(M[h]&&typeof go==='function'){
+      window.addEventListener('load',function(){setTimeout(function(){go(M[h]);},50);});
+    }
+  }catch(e){}
 })();
 
 function abrirContato(){
