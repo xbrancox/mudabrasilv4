@@ -1247,8 +1247,9 @@ function voltarLoginInicio(){
 async function enviarCodigoLogin(){
   const email=(document.getElementById('loginEmail').value||'').trim().toLowerCase();
   if(!email||!email.includes('@'))return toast('Informe um e-mail válido.');
+  const apiBase = (typeof API_BASE !== 'undefined' ? API_BASE : (window.MeuVoto && window.MeuVoto.API_BASE) || 'https://api.meu-voto.app');
   try{
-    const r=await fetch(API_BASE+'/api/auth/email/send',{
+    const r=await fetch(apiBase+'/api/auth/email/send',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({email})
