@@ -90,31 +90,74 @@
 
       console.log('[home-2026] Candidatos encontrados:', listaCandidatos);
 
-      const partidoMap = {
-        'Flávio Bolsonaro': { partido: 'PL', cor: 'azul' },
-        'Lula': { partido: 'PT', cor: 'vermelho' }
+      // Cores profissionais dos candidatos
+      const CORES = {
+        'Lula': { partido: 'PT', cor: '#E74C3C', corGrad: 'linear-gradient(90deg, #E74C3C, #C0392B)' },
+        'Flávio Bolsonaro': { partido: 'PL', cor: '#1A73E8', corGrad: 'linear-gradient(90deg, #1A73E8, #1557b0)' }
       };
 
-      const barrasHtml = listaCandidatos.map(function(nome) {
-        const info = partidoMap[nome] || { partido: '', cor: '' };
+      // Encontrar Lula e Flávio para comparação lado a lado
+      const pctLula = espont['Lula'] || 0;
+      const pctFlavio = espont['Flávio Bolsonaro'] || 0;
+      const vv = pesquisa.votos_validos || {};
+      const vvLula = vv['Lula'] || 0;
+      const vvFlavio = vv['Flávio Bolsonaro'] || 0;
+
+      // Badge de status da pesquisa
+      const statusMap = {
+        'divulgada': { label: 'DIVULGADA', cor: '#2ECC71', icon: 'fa-check-circle' },
+        'em campo': { label: 'EM CAMPO', cor: '#F39C12', icon: 'fa-clock' },
+        'em divulgação': { label: 'EM DIVULGAÇÃO', cor: '#95A5A6', icon: 'fa-hourglass-half' }
+      };
+      const st = statusMap[pesquisa.status] || statusMap['em campo'];
+
+      // Indicador de atualização constante (relógio ao vivo)
+      const agora = new Date();
+      const ultimaAtualizacao = pesquisa.data || '08/10/2026';
+
+      // Barras lado a lado dos dois candidatos
+      const comparacaoHtml = `
+        <div class="pesquisa-duelo">
+          <div class="pesquisa-duelo-col azul">
+            <div class="pesquisa-duelo-topo">
+              <div class="pesquisa-duelo-nome">Flávio Bolsonaro <small>PL</small></div>
+              <div class="pesquisa-duelo-pct">${pctFlavio}%</div>
+            </div>
+            <div class="pesquisa-duelo-track">
+              <div class="pesquisa-duelo-fill" style="width:${pctFlavio}%;background:${CORES['Flávio Bolsonaro'].corGrad}"></div>
+            </div>
+          </div>
+          <div class="pesquisa-duelo-col vermelho">
+            <div class="pesquisa-duelo-topo">
+              <div class="pesquisa-duelo-nome">Lula <small>PT</small></div>
+              <div class="pesquisa-duelo-pct">${pctLula}%</div>
+            </div>
+            <div class="pesquisa-duelo-track">
+              <div class="pesquisa-duelo-fill" style="width:${pctLula}%;background:${CORES['Lula'].corGrad}"></div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Outros candidatos e indecisos
+      const outrosHtml = listaCandidatos.filter(n => n !== 'Lula' && n !== 'Flávio Bolsonaro').map(function(nome) {
+        const info = CORES[nome] || { partido: '', cor: '#95A5A6', corGrad: 'linear-gradient(90deg,#95A5A6,#7F8C8D)' };
         const pct = espont[nome];
         return `
-          <div class="pesquisa-barra-item">
+          <div class="pesquisa-barra-simples">
             <div class="pesquisa-barra-topo">
-              <div class="pesquisa-barra-nome">
-                ${nome} <small>${info.partido}</small>
-              </div>
+              <div class="pesquisa-barra-nome">${nome} <small>${info.partido}</small></div>
               <div class="pesquisa-barra-percent">${pct}%</div>
             </div>
             <div class="pesquisa-barra-track">
-              <div class="pesquisa-barra-fill" style="width:${pct}%"></div>
+              <div class="pesquisa-barra-fill" style="width:${pct}%;background:${info.corGrad}"></div>
             </div>
           </div>
         `;
       }).join('');
 
       const indecisosHtml = indecisos > 0 ? `
-        <div class="pesquisa-barra-item">
+        <div class="pesquisa-barra-simples">
           <div class="pesquisa-barra-topo">
             <div class="pesquisa-barra-nome">Indecisos / Brancos / Nulos</div>
             <div class="pesquisa-barra-percent">${indecisos}%</div>
@@ -125,36 +168,54 @@
         </div>
       ` : '';
 
-      const vv = pesquisa.votos_validos || {};
-      const vvHtml = Object.keys(vv).map(function(nome) {
-        const info = partidoMap[nome] || { cor: '' };
-        return `
-          <div class="pesquisa-vv-card ${info.cor}">
-            <div class="pesquisa-vv-nome">${nome}</div>
-            <div class="pesquisa-vv-percent">${vv[nome]}%</div>
-            <div class="pesquisa-vv-label">Votos válidos</div>
+      // Votos válidos lado a lado
+      const votosValidosHtml = `
+        <div class="pesquisa-votos-validos-pro">
+          <div class="pesquisa-vv-card-pro azul">
+            <div class="pesquisa-vv-nome-pro">Flávio Bolsonaro</div>
+            <div class="pesquisa-vv-percent-pro">${vvFlavio}%</div>
+            <div class="pesquisa-vv-label-pro">Votos válidos</div>
           </div>
-        `;
-      }).join('');
+          <div class="pesquisa-vv-card-pro vermelho">
+            <div class="pesquisa-vv-nome-pro">Lula</div>
+            <div class="pesquisa-vv-percent-pro">${vvLula}%</div>
+            <div class="pesquisa-vv-label-pro">Votos válidos</div>
+          </div>
+        </div>
+      `;
 
       card.innerHTML = `
-        <div class="pesquisa-header">
-          <h3 class="pesquisa-instituto">📊 PESQUISA ${pesquisa.instituto.toUpperCase()}</h3>
-          <p class="pesquisa-meta">
-            <strong>${pesquisa.data}</strong> · Registro TSE: <strong>${pesquisa.registro_tse}</strong><br>
-            Amostra: <strong>${pesquisa.amostra ? pesquisa.amostra.toLocaleString('pt-BR') : '—'} entrevistas</strong> · Margem de erro: <strong>±${pesquisa.margem_erro} p.p.</strong>
-          </p>
-        </div>
+        <div class="pesquisa-card-pro">
+          <div class="pesquisa-header-pro">
+            <div class="pesquisa-instituto-wrap">
+              <span class="pesquisa-badge-status" style="background:${st.cor}">${st.icon ? '<i class="fa-solid '+st.icon+'"></i>' : ''} ${st.label}</span>
+              <h3 class="pesquisa-instituto-pro">Pesquisa ${pesquisa.instituto}</h3>
+            </div>
+            <div class="pesquisa-meta-wrap">
+              <span><i class="fa-solid fa-calendar"></i> ${pesquisa.data}</span>
+              <span><i class="fa-solid fa-hashtag"></i> ${pesquisa.registro_tse}</span>
+              <span><i class="fa-solid fa-user-group"></i> ${pesquisa.contratante || '—'}</span>
+            </div>
+            <p class="pesquisa-meta-pro">
+              <strong>Amostra:</strong> ${pesquisa.amostra ? pesquisa.amostra.toLocaleString('pt-BR') : '—'} entrevistas ·
+              <strong>Margem de erro:</strong> ±${pesquisa.margem_erro || '—'} p.p. ·
+              <strong>2º Turno:</strong> 25/10/2026
+            </p>
+            <div class="pesquisa-atualizacao">
+              <i class="fa-solid fa-sync-alt"></i>
+              <span>Última atualização: <strong>${ultimaAtualizacao}</strong> · <span id="pesquisa-relogio">${agora.toLocaleTimeString('pt-BR')}</span></span>
+            </div>
+          </div>
 
-        <div class="pesquisa-titulo-secao">Intenções de voto (total)</div>
-        <div class="pesquisa-barras">
-          ${barrasHtml}
-          ${indecisosHtml}
-        </div>
+          <div class="pesquisa-corpo-pro">
+            <div class="pesquisa-titulo-secao-pro">Intenções de voto — Espontânea</div>
+            ${comparacaoHtml}
+            ${outrosHtml}
+            ${indecisosHtml}
+          </div>
 
-        <div class="pesquisa-titulo-secao">Votos válidos (exclui brancos, nulos e indecisos)</div>
-        <div class="pesquisa-votos-validos">
-          ${vvHtml}
+          <div class="pesquisa-titulo-secao-pro" style="margin-top:24px">Votos válidos (exclui brancos, nulos e indecisos)</div>
+          ${vvFlavio > 0 || vvLula > 0 ? votosValidosHtml : '<div class="pesquisa-vazio-pro"><p>Dados de votos válidos não disponíveis para esta pesquisa.</p></div>'}
         </div>
       `;
       
