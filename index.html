@@ -277,11 +277,25 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
   .card[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important}
 }
 
-@media(max-width:480px){
-  .explore{grid-template-columns:1fr}
-  .exp{padding:16px}
-}
+/* ===== BARRA DE PROGRESSO DE APOIOS (2º TURNO) ===== */
+.apoio-barra-wrap{margin-top:10px;width:100%}
+.apoio-barra-track{height:10px;background:var(--card2);border-radius:5px;overflow:hidden;border:1px solid var(--line)}
+.apoio-barra-fill{height:100%;background:linear-gradient(90deg,var(--green),#00C853);border-radius:5px;transition:width 0.6s ease}
+.apoio-barra-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:12px}
+.apoio-barra-count{font:900 13px Montserrat;color:var(--gold)}
+.apoio-barra-pct{color:var(--muted);font-size:11px}
+.apoio-total-wrap{text-align:center;margin:16px 0 8px;padding:12px;background:var(--card2);border:1px solid var(--line);border-radius:12px}
+.apoio-total-wrap .apoio-total-num{font:900 28px Montserrat;color:var(--gold)}
+.apoio-total-wrap .apoio-total-label{font:700 13px Manrope;color:var(--ink);margin-top:4px}
 
+/* Foto do candidato (governador) */
+.estado-candidato-foto{width:64px;height:64px;min-width:64px;min-height:64px;max-width:80px;max-height:80px;border-radius:50%;object-fit:cover;border:2px solid var(--line);flex-shrink:0}
+.estado-candidato.primeiro .estado-candidato-foto{border-color:var(--gold)}
+.estado-candidato-foto-placeholder{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#2ECC71,#27AE60);color:#fff;font:900 20px Montserrat;text-transform:uppercase}
+
+@media(max-width:600px){
+  .apoio-total-wrap .apoio-total-num{font:900 22px Montserrat}
+}
 </style>
   <script src="js/site-header.js?v=3"></script>
 <link rel="icon" type="image/svg+xml" href="icon.svg">
