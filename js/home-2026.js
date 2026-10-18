@@ -348,8 +348,8 @@
           const pct = c.percentual || 0;
           const pctHtml = pct ? '<div class="estado-candidato-percent">' + pct.toFixed(1) + '%</div>' : '';
 
-          // Buscar foto do candidato
-          const fotoUrl = fotosUf[c.nome] || '';
+          // Buscar foto do candidato (tenta nomeUrna primeiro, depois nome)
+          const fotoUrl = fotosUf[c.nomeUrna || c.nome] || '';
           const iniciais = (c.nome || '?').trim().split(/\s+/).slice(0,2).map(w => w[0] || '').join('').toUpperCase();
           const fotoHtml = fotoUrl
             ? '<img class="estado-candidato-foto" src="' + fotoUrl + '" alt="' + c.nome + '" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement(\'div\'),{className:\'estado-candidato-foto estado-candidato-foto-placeholder\',textContent:\'' + iniciais + '\'}))">'
@@ -364,7 +364,7 @@
 
           // Barra de progresso de apoio
           const apoioBarraHtml = apoioTotal > 0 ? `
-            <div class="apoio-barra-wrap" style="margin-top:6px">
+            <div class="apoio-barra-wrap" style="margin-top:4px">
               <div class="apoio-barra-label">
                 <span class="apoio-barra-count" id="gov-apoio-count-${candId}">${apoioCount} apoio${apoioCount !== 1 ? 's' : ''}</span>
                 <span class="apoio-barra-pct" id="gov-apoio-pct-${candId}">${apoioPct}%</span>
@@ -378,16 +378,19 @@
             `<button class="btn sm gold" onclick="apoiarTurno('${candId}','${c.nome.replace(/'/g, "\\'")}')"><i class="fa-solid fa-hand"></i> Apoiar</button>` : '';
 
           return `
-          <div class="estado-candidato ${i === 0 ? 'primeiro' : ''}">
-            ${fotoHtml}
-            <div class="estado-candidato-info" style="flex:1;gap:0">
-              <div>
-                <p class="estado-candidato-nome">${c.nome}</p>
-                <p class="estado-candidato-partido">${c.partido}</p>
-                ${apoioBarraHtml}
+          <div class="estado-candidato ${i === 0 ? 'primeiro' : ''}" style="display:flex;align-items:center;gap:14px;padding:14px">
+            <div style="flex:none">${fotoHtml}</div>
+            <div style="flex:1">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+                <div style="flex:1">
+                  <p class="estado-candidato-nome" style="margin:0 0 2px 0">${c.nome}</p>
+                  <p class="estado-candidato-partido" style="margin:0">${c.partido}</p>
+                </div>
+                <div class="estado-candidato-percent" style="font:900 20px Montserrat;color:var(--gold)">${pctHtml || ''}</div>
               </div>
+              ${apoioBarraHtml}
             </div>
-            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+            <div style="flex:none;display:flex;gap:8px">
               ${apoioBtn}
             </div>
           </div>
