@@ -16,7 +16,7 @@ const db = require('./db');
 const dbAuth = require('./db_auth');
 const mailer = require('./mailer');
 
-const AUTH_MODE = process.env.NODE_ENV === 'production' ? 'prod' : (process.env.MB_AUTH_MODE || 'dev');
+const AUTH_MODE = process.env.MB_AUTH_MODE || 'dev';
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
 const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID || '';
 const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN || '';
