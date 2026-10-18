@@ -380,18 +380,15 @@
           return `
           <div class="estado-candidato ${i === 0 ? 'primeiro' : ''}">
             ${fotoHtml}
-            <div class="estado-candidato-info">
-              <div class="estado-candidato-posicao">${i + 1}º</div>
+            <div class="estado-candidato-info" style="flex:1;gap:0">
               <div>
                 <p class="estado-candidato-nome">${c.nome}</p>
-                <p class="estado-candidato-partido">${c.partido} · Nº ${c.numero || '—'}</p>
+                <p class="estado-candidato-partido">${c.partido}</p>
                 ${apoioBarraHtml}
               </div>
             </div>
-            <div class="estado-candidato-votos">
-              ${pctHtml}
-              ${votosHtml}
-              ${apoioBtn ? '<div style="margin-top:8px">' + apoioBtn + '</div>' : ''}
+            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+              ${apoioBtn}
             </div>
           </div>
         `;
