@@ -715,7 +715,7 @@ function atualizarUI(){
   }
 }
 function toggleMenu(){document.getElementById('mnav').classList.toggle('open')}
-function go(p){if(p==='radar'){window.location.href='pages/parlamentares.html';return}$$('.sec').forEach(s=>s.classList.remove('on'));$('#sec-'+p).classList.add('on');$$('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.p===p));window.scrollTo(0,0)}
+function go(p){if(p==='radar'){window.location.href='pages/parlamentares.html';return}$$('.sec').forEach(s=>s.classList.remove('on'));$('#sec-'+p).classList.add('on');$$('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.p===p));window.scrollTo(0,0);document.getElementById('mOnboard')?.style.display='none'}
 $$('#nav a').forEach(a=>a.onclick=()=>go(a.dataset.p));
 /* Deep-link: #conferir-voto, #radar, #revogados etc. abrem a seção direto
    (usado pelos menus das páginas internas: congresso, votações…) */
