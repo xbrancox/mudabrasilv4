@@ -348,8 +348,14 @@
           const pct = c.percentual || 0;
           const pctHtml = pct ? '<div class="estado-candidato-percent">' + pct.toFixed(1) + '%</div>' : '';
 
-          // Buscar foto do candidato (tenta nomeUrna primeiro, depois nome)
-          const fotoUrl = fotosUf[c.nomeUrna || c.nome] || '';
+          // Buscar foto do candidato (tenta múltiplas variações de nome)
+          const nomeBusca = [c.nomeUrna, c.nome, c.nomeUrna ? c.nomeUrna.charAt(0) + c.nomeUrna.slice(1).toLowerCase() : '', c.nome ? c.nome.charAt(0) + c.nome.slice(1).toLowerCase() : ''];
+          let fotoUrl = '';
+          for (const nb of nomeBusca) {
+            if (nb && fotosUf[nb]) { fotoUrl = fotosUf[nb]; break; }
+          }
+          // Fallback: foto direta do candidato no JSON de segundo turno
+          if (!fotoUrl && c.foto) fotoUrl = c.foto;
           const iniciais = (c.nome || '?').trim().split(/\s+/).slice(0,2).map(w => w[0] || '').join('').toUpperCase();
           const fotoHtml = fotoUrl
             ? '<img class="estado-candidato-foto" src="' + fotoUrl + '" alt="' + c.nome + '" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement(\'div\'),{className:\'estado-candidato-foto estado-candidato-foto-placeholder\',textContent:\'' + iniciais + '\'}))">'

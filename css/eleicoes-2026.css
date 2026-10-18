@@ -842,6 +842,10 @@
 .estado-candidato-foto {
   width: 64px;
   height: 64px;
+  min-width: 64px;
+  min-height: 64px;
+  max-width: 80px;
+  max-height: 80px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid var(--line);
