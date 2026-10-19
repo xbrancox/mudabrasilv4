@@ -18,10 +18,14 @@ jobs:
       - name: Instalar nodemailer
         run: npm install nodemailer --no-save
 
-      - name: Enviar digest (o script sai sem erro se faltar segredo)
+      - name: Enviar digest
         env:
+          # Resend primeiro (mesmo provedor do OTP e do selo político);
+          # SMTP como fallback secundário se o primário falhar.
           DIGEST_API: ${{ secrets.DIGEST_API }}
           DIGEST_SECRET: ${{ secrets.DIGEST_SECRET }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_FROM: ${{ secrets.RESEND_FROM }}
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
           SMTP_PORT: ${{ secrets.SMTP_PORT }}
           SMTP_SECURE: ${{ secrets.SMTP_SECURE }}

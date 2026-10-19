@@ -17,7 +17,12 @@
 
 const crypto = require('crypto');
 const db = require('./db');
-const nodemailer = require('nodemailer');
+const mailer = require('./mailer');
+
+/* Reutiliza server/mailer.js (Resend primeiro, SMTP como fallback) em vez de
+   manter um transporter SMTP separado em server/verificacao.js. O transporter
+   antigo apontava para smtp.zoho.com, que em produção caía em timeout e nunca
+   entregava os e-mails de verificação do selo político. */
 
 const AUTHORIZED_DOMAINS = [
   'camara.leg.br',
@@ -27,27 +32,6 @@ const AUTHORIZED_DOMAINS = [
 ];
 
 const pendingVerifications = new Map();
-
-// Email transporter (configurado via env vars)
-let emailTransporter = null;
-function getEmailTransporter() {
-  if (emailTransporter) return emailTransporter;
-  const host = process.env.SMTP_HOST || 'smtp.zoho.com';
-  const port = parseInt(process.env.SMTP_PORT || '587');
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
-  if (!user || !pass) {
-    console.warn('[verificacao] SMTP não configurado - e-mails serão logados apenas');
-    return null;
-  }
-  emailTransporter = nodemailer.createTransport({
-    host,
-    port,
-    secure: port === 465,
-    auth: { user, pass }
-  });
-  return emailTransporter;
-}
 
 function isAuthorizedDomain(email) {
   if (!email || typeof email !== 'string') return null;
@@ -66,7 +50,6 @@ function normalizeEmail(email) {
 }
 
 async function sendVerificationEmail(email, token, politicianName, baseUrl) {
-  const transporter = getEmailTransporter();
   const confirmUrl = `${baseUrl}/api/verificacao/confirmar?token=${token}`;
   
   const html = `
@@ -116,25 +99,29 @@ async function sendVerificationEmail(email, token, politicianName, baseUrl) {
     MeuVoto — Meu voto coloca. Meu voto tira.
   `;
 
-  if (transporter) {
-    try {
-      await transporter.sendMail({
-        from: `"MeuVoto" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
-        to: email,
-        subject: '🇧🇷 MeuVoto - Confirme seu e-mail para obter o selo de verificado',
-        text,
-        html
-      });
-      console.log('[verificacao] E-mail de verificação enviado para:', email);
+  try {
+    const result = await mailer.sendEmail({
+      to: email,
+      subject: '🇧🇷 MeuVoto - Confirme seu e-mail para obter o selo de verificado',
+      text,
+      html
+    });
+    if (result && result.ok) {
+      /* Em dev sem provedor de e-mail, o mailer simula o envio (simulated:true).
+         O fluxo local depende do link de confirmação vir junto, então ele é
+         devolvido em devMode — em produção esse caminho não existe. */
+      if (result.simulated) {
+        console.log('[verificacao] MODO DEV - Link de confirmação:', confirmUrl);
+        return { sent: false, devMode: true, confirmUrl };
+      }
+      console.log('[verificacao] E-mail de verificação enviado para:', email, 'via', result.provider || 'desconhecido');
       return { sent: true };
-    } catch (e) {
-      console.error('[verificacao] Falha ao enviar e-mail:', e.message);
-      return { sent: false, error: e.message };
     }
-  } else {
-    // Dev mode: log the confirmation link
-    console.log('[verificacao] MODO DEV - Link de confirmação:', confirmUrl);
-    return { sent: false, devMode: true, confirmUrl };
+    console.error('[verificacao] mailer.sendEmail devolveu erro:', result && result.error);
+    return { sent: false, error: (result && result.error) || 'Falha ao enviar e-mail' };
+  } catch (e) {
+    console.error('[verificacao] Falha ao enviar e-mail:', e.message);
+    return { sent: false, error: e.message };
   }
 }
 

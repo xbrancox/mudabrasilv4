@@ -1261,7 +1261,15 @@ async function handleApi(req, res, url) {
     fs.writeFileSync(COB_FILE, JSON.stringify(obj, null, 2));
   }
   function cobSecret() {
-    return process.env.COB_SECRET || process.env.DIGEST_SECRET || 'meuvoto-cob-default-v1';
+    const s = process.env.COB_SECRET || process.env.DIGEST_SECRET;
+    if (s) return s;
+    /* O fallback público 'meuvoto-cob-default-v1' permitia forgear tokens de
+       cobrança em qualquer ambiente sem o segredo configurado. Em produção isso
+       é inaceitável: falha explícita em vez de assinar com um valor conhecido. */
+    if (auth.IS_PROD) {
+      throw new Error('COB_SECRET/DIGEST_SECRET não configurado em produção');
+    }
+    return 'meuvoto-cob-default-v1';
   }
   function cobToken(id, ts) {
     return crypto.createHmac('sha256', cobSecret()).update(id + '.' + ts).digest('hex').slice(0, 32);

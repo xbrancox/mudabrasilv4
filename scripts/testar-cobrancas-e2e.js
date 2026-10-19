@@ -47,6 +47,10 @@ async function main() {
 
   let stderr = '';
   child.stderr.on('data', d => { stderr += String(d); });
+  /* O stdout do servidor nunca era lido: o pipe enche com os logs, fica em
+     estado "closing" e o Node aborta com "Assertion failed:
+     !(handle->flags & UV_HANDLE_CLOSING)" ao encerrar. Drenar resolve. */
+  child.stdout.resume();
 
   const ok = await waitServer();
   if (!ok) {
@@ -136,12 +140,26 @@ async function main() {
     console.log(failed === 0 ? '✅ TODOS OS TESTES PASSARAM' : '❌ ALGUNS TESTES FALHARAM');
 
   } finally {
-    child.kill();
+    /* No Windows, process.exit() enquanto os pipes do filho ainda estão
+       fechando derruba o processo com "Assertion failed:
+       !(handle->flags & UV_HANDLE_CLOSING)" (libuv, src\win\async.c).
+       Encerrar o filho, destruir os streams e deixar o processo terminar
+       naturalmente evita o crash e preserva o código de saída. */
+    await new Promise(resolve => {
+      if (child.exitCode !== null || child.signalCode) return resolve();
+      child.once('exit', resolve);
+      child.kill();
+      setTimeout(() => { try { child.kill('SIGKILL'); } catch (_) {} resolve(); }, 3000).unref();
+    });
+    for (const s of [child.stdout, child.stderr]) {
+      try { if (s && !s.destroyed) s.destroy(); } catch (_) {}
+    }
+    try { child.unref(); } catch (_) {}
     try { fs.rmSync(COB_FILE, { force: true }); } catch (_) {}
     console.log('\nCleanup: server/data/cobrancas.json removido');
   }
 
-  process.exit(failed === 0 ? 0 : 1);
+  process.exitCode = failed === 0 ? 0 : 1;
 }
 
 main().catch(e => {

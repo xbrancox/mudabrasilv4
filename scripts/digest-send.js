@@ -40,23 +40,68 @@ function bodyFor(sub){
   return "Resumo semanal MeuVoto\n\n"+it+tm+"\n\nPara cancelar: "+baseUrl+"/pages/digest.html";
 }
 
-if(!process.env.SMTP_HOST||!process.env.SMTP_USER||!process.env.SMTP_PASS){
-  console.log("SMTP incompleto; dry-run por inscrito:");
-  for(const sub of subs){
-    const body=bodyFor(sub);
-    console.log("["+sub.email+"] topics=["+(sub.topics||[]).join(",")+"]\n"+body+"\n[pixel: "+pixelUrl+"]\n");
-  }
-  return;
+/* Envia por Resend primeiro, SMTP como fallback, dry-run se nenhum estiver
+   configurado. O transporter SMTP antigo (Zoho) caía em timeout em cada ciclo. */
+const RESEND_API_KEY=process.env.RESEND_API_KEY;
+const RESEND_FROM=process.env.RESEND_FROM||'MeuVoto <noreply@meu-voto.app>';
+const SMTP_HOST=process.env.SMTP_HOST;
+const SMTP_PORT=Number(process.env.SMTP_PORT||587);
+const SMTP_SECURE=String(process.env.SMTP_SECURE||"")==="true";
+const SMTP_USER=process.env.SMTP_USER;
+const SMTP_PASS=process.env.SMTP_PASS;
+const SMTP_FROM=process.env.SMTP_FROM||SMTP_USER;
+
+async function sendViaResend({to,subject,text,html}){
+  if(!RESEND_API_KEY) return {ok:false,error:"RESEND_API_KEY ausente"};
+  try{
+    const r=await fetch("https://api.resend.com/emails",{
+      method:"POST",
+      headers:{"Content-Type":"application/json",Authorization:"Bearer "+RESEND_API_KEY},
+      body:JSON.stringify({from:RESEND_FROM,to,subject,text,html}),
+      signal:AbortSignal.timeout(10000)
+    });
+    const d=await r.json();
+    if(!r.ok) return {ok:false,error:d.message||d.error||"Resend API error"};
+    return {ok:true,provider:"resend",id:d.id};
+  }catch(e){return {ok:false,error:e.message};}
 }
 
-const nm=require("nodemailer");
-const tr=nm.createTransport({host:process.env.SMTP_HOST,port:Number(process.env.SMTP_PORT||587),secure:String(process.env.SMTP_SECURE||"")==="true",auth:{user:process.env.SMTP_USER,pass:process.env.SMTP_PASS}});
-const from=process.env.SMTP_FROM||process.env.SMTP_USER;
+let smtpTransporter=null;
+async function sendViaSmtp({to,subject,text,html}){
+  if(!SMTP_HOST||!SMTP_USER||!SMTP_PASS) return {ok:false,error:"SMTP incompleto"};
+  if(!smtpTransporter){
+    const nm=require("nodemailer");
+    smtpTransporter=nm.createTransport({host:SMTP_HOST,port:SMTP_PORT,secure:SMTP_SECURE,auth:{user:SMTP_USER,pass:SMTP_PASS}});
+  }
+  try{
+    const info=await smtpTransporter.sendMail({from:SMTP_FROM,to,subject,text,html});
+    return {ok:true,provider:"smtp",messageId:info.messageId};
+  }catch(e){return {ok:false,error:e.message};}
+}
+
 for(const sub of subs){
   const body=bodyFor(sub);
   const html="<div style='font-family:system-ui,sans-serif;font-size:14px;line-height:1.55;color:#1a1a1a;max-width:640px;margin:0 auto;white-space:pre-wrap'>"+escapeHtml(body)+"</div><img src='"+pixelUrl+"' width='1' height='1' alt='' style='display:block;width:1px;height:1px;opacity:0'>";
-  await tr.sendMail({from,to:sub.email,subject:"MeuVoto - Resumo semanal",text:body,html:html});
-  console.log("enviado "+sub.email+" (temas: "+((sub.topics||[]).join(",")||"todos")+")");
+
+  let result;
+  if(RESEND_API_KEY){
+    result=await sendViaResend({to:sub.email,subject:"MeuVoto - Resumo semanal",text:body,html});
+    if(!result.ok){
+      console.log("Resend falhou para "+sub.email+": "+result.error+" — tentando SMTP");
+      result=await sendViaSmtp({to:sub.email,subject:"MeuVoto - Resumo semanal",text:body,html});
+    }
+  }else if(SMTP_HOST&&SMTP_USER&&SMTP_PASS){
+    result=await sendViaSmtp({to:sub.email,subject:"MeuVoto - Resumo semanal",text:body,html});
+  }else{
+    console.log("["+sub.email+"] topics=["+(sub.topics||[]).join(",")+"]\n"+body+"\n[pixel: "+pixelUrl+"]\n");
+    continue;
+  }
+
+  if(result.ok){
+    console.log("enviado "+sub.email+" via "+result.provider+" (temas: "+((sub.topics||[]).join(",")||"todos")+")");
+  }else{
+    console.log("FALHA "+sub.email+": "+result.error);
+  }
 }
 // ciclo 33 - Web Push (opcional, apos os e-mails)
 try {
