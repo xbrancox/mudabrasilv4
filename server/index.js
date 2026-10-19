@@ -1416,15 +1416,8 @@ async function handleApi(req, res, url) {
     try {
       const path = require('path');
       const fs = require('fs');
-      // Caminhos possíveis: /app/data (Railway) ou __dirname/../data (local)
-      const candidates = [
-        path.join(__dirname, 'data'),
-        path.join(__dirname, '..', 'data'),
-        path.join('/app', 'data')
-      ];
-      let base = null;
-      for (const c of candidates) { if (fs.existsSync(c)) { base = c; break; } }
-      if (!base) throw new Error('Pasta de dados não encontrada');
+      // No Railway os dados estão em /app/data (não /app/server/data)
+      const base = path.join(__dirname, '..', 'data');
       const load = (file) => JSON.parse(fs.readFileSync(path.join(base, file), 'utf8'));
       const resp = {
         presidente: load('presidente-2026.json'),
