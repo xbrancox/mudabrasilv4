@@ -609,12 +609,15 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
   <div style="max-width:400px;margin:0 auto 24px">
     <label for="seletor-pesquisa" style="display:block;margin-bottom:8px;font-weight:600">🔽 Selecione o instituto:</label>
     <select id="seletor-pesquisa" style="width:100%;padding:12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--text-primary);font-size:14px">
+      <!-- Os rótulos definitivos são gerados por js/home-2026.js a partir de
+           data/pesquisas-presidente-2026.json. Estas opções são o fallback
+           estático caso o JSON não carregue. -->
       <option value="datafolha">Datafolha (08/10/2026)</option>
+      <option value="gerp">Gerp (13/10/2026)</option>
+      <option value="indexabroadcast">Indexa/Broadcast (11/10/2026)</option>
       <option value="quaest">Quaest (em breve)</option>
-      <option value="futura">Futura (13/10/2026)</option>
+      <option value="futura">Futura (em breve)</option>
       <option value="ipec">Ipec (em breve)</option>
-      <option value="gerp">Gerp (em breve)</option>
-      <option value="indexa">Indexa (em breve)</option>
     </select>
   </div>
 

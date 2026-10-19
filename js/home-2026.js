@@ -52,6 +52,32 @@
       return;
     }
 
+    /* Os rótulos do <select> eram escritos à mão no HTML e ficavam
+       desatualizados: Gerp e Indexa já estavam divulgadas no JSON, mas o
+       dropdown ainda anunciava "(em breve)". Montar as opções a partir dos
+       dados elimina a divergência. */
+    function rotuloInstituto(p) {
+      const nome = p.instituto || '';
+      if (p.status === 'divulgada' && p.data) return nome + ' (' + p.data + ')';
+      return nome + ' (em breve)';
+    }
+    function valorInstituto(p) {
+      return (p.instituto || '').toLowerCase().replace(/\//g, '').replace(/\s/g, '');
+    }
+    const valorAtual = select.value;
+    select.innerHTML = '';
+    pesquisasData.pesquisas.forEach(function (p) {
+      const opt = document.createElement('option');
+      opt.value = valorInstituto(p);
+      opt.textContent = rotuloInstituto(p);
+      select.appendChild(opt);
+    });
+    if (valorAtual) {
+      const existe = Array.prototype.some.call(select.options, function (o) { return o.value === valorAtual; });
+      if (existe) select.value = valorAtual;
+    }
+    console.log('[home-2026] Dropdown reconstruído com', pesquisasData.pesquisas.length, 'institutos');
+
     function renderizar(valor) {
       console.log('[home-2026] Renderizando pesquisa para:', valor);
       
