@@ -903,9 +903,13 @@ async function handleApi(req, res, url) {
       /* Provedor de e-mail em uso — apenas o nome, nunca a chave.
          Sem isso, um login por e-mail quebrado em produção não deixa
          rastro: a API responde "não foi possível enviar" e não há como
-         saber se o problema é SMTP, Resend ou variável ausente. */
+         saber se o problema é SMTP, Resend ou variável ausente.
+         "provider" é o que será tentado primeiro; os demais flags dizem
+         o que está configurado. */
       email: {
-        provider: mailer.IS_DEV ? 'nenhum' : (process.env.SMTP_HOST ? 'smtp' : 'resend'),
+        provider: process.env.RESEND_API_KEY ? 'resend' : (process.env.SMTP_HOST ? 'smtp' : 'nenhum'),
+        resend: !!process.env.RESEND_API_KEY,
+        smtp: !!(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS),
         remetente: process.env.RESEND_FROM || process.env.SMTP_FROM || null
       },
       metrics: '/api/metrics'
