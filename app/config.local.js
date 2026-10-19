@@ -1,7 +1,7 @@
 /* ============================================================
    MeuVoto — Configuração Global (App Mobile)
    -----------------------------------------------------------
-   Backend: https://api.meu-voto.app (Railway - Projeto VotaBrasil 198baa4d)
+   Backend: https://api.meu-voto.app (Railway - projeto MeuVoto)
    Frontend: https://meu-voto.app/app/
    ============================================================ */
 
