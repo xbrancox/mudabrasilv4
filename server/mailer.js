@@ -1,8 +1,7 @@
 /* ============================================================
    MEUVOTO — SERVIÇO DE E-MAIL
    ------------------------------------------------------------
-   Tenta SMTP primeiro, depois Resend se configurado,
-   por último modo dev.
+   Tenta o Resend primeiro, depois SMTP, por último modo dev.
    ============================================================ */
 
 const nodemailer = require('nodemailer');
@@ -105,21 +104,27 @@ function devLog({ to, subject, text, html }) {
 }
 
 async function sendEmail({ to, subject, html, text }) {
-  // 1. Try SMTP
-  if (HAS_SMTP) {
-    const result = await trySmtp({ to, subject, html, text });
-    if (result && result.ok) return result;
-    if (result && result.error) {
-      console.log('[mailer] SMTP falhou: ' + result.error);
-    }
-  }
+  /* Ordem dos provedores: Resend primeiro, SMTP depois.
 
-  // 2. Try Resend as fallback
+     O projeto migrou para o Resend (domínio meu-voto.app verificado) e foi
+     para ele que as credenciais de produção apontam. O SMTP do Zoho ficou
+     como configuração legada: do container do Railway ele estourava o
+     timeout de 15 s a cada envio, e só depois o Resend atendia — o login
+     por e-mail demorava 15 s para responder. Com o Resend na frente, o
+     envio é imediato e o SMTP continua disponível como reserva. */
   if (HAS_RESEND) {
     const result = await tryResend({ to, subject, html, text });
     if (result && result.ok) return result;
     if (result && result.error) {
       console.log('[mailer] Resend falhou: ' + result.error);
+    }
+  }
+
+  if (HAS_SMTP) {
+    const result = await trySmtp({ to, subject, html, text });
+    if (result && result.ok) return result;
+    if (result && result.error) {
+      console.log('[mailer] SMTP falhou: ' + result.error);
     }
   }
 
