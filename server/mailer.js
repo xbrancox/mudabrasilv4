@@ -14,7 +14,13 @@ const SMTP_PASS = process.env.SMTP_PASS || '';
 const SMTP_FROM = process.env.SMTP_FROM || 'nao-responda@meu-voto.app';
 const SMTP_TIMEOUT = parseInt(process.env.SMTP_TIMEOUT || '15000', 10);
 const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
-const RESEND_FROM = process.env.RESEND_FROM || 'MeuVoto <onboarding@resend.dev>';
+/* Remetente padrão: o domínio meu-voto.app está verificado no Resend (DKIM + SPF),
+   então ele entrega para qualquer destinatário.
+
+   O fallback anterior era 'onboarding@resend.dev', que o Resend só aceita para o
+   e-mail do dono da conta — todo OTP enviado para outro endereço falhava com
+   "You can only send testing emails to your own email address". */
+const RESEND_FROM = process.env.RESEND_FROM || 'MeuVoto <noreply@meu-voto.app>';
 
 const HAS_SMTP = !!(SMTP_HOST && SMTP_USER && SMTP_PASS);
 const HAS_RESEND = !!RESEND_API_KEY;
@@ -119,6 +125,14 @@ async function sendEmail({ to, subject, html, text }) {
 
   // 3. Dev mode fallback
   if (!HAS_SMTP && !HAS_RESEND) {
+    /* A simulação existe para o ambiente local não depender de SMTP. Em
+       produção, porém, ela mentia: devolvia ok:true sem enviar nada, e o
+       login por e-mail dizia "código enviado" quando o e-mail nunca saía.
+       Aqui a falha é explícita, e a rota de login devolve um erro de verdade. */
+    if (process.env.NODE_ENV === 'production' || process.env.AUTH_MODE === 'prod') {
+      console.error('[mailer] Nenhum provedor de e-mail configurado (RESEND_API_KEY/SMTP_* ausentes)');
+      throw new Error('Provedor de e-mail não configurado no servidor.');
+    }
     console.log('[mailer] MODO DEV: SMTP e Resend não configurados');
     return devLog({ to, subject, text, html });
   }

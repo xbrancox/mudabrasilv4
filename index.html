@@ -27,7 +27,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://meu-voto.app/og-image.png">
 <link rel="icon" type="image/svg+xml" href="icon.svg">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -115,6 +115,58 @@ a{color:var(--gold);text-decoration:none}
 .pcard .pcta{margin-top:16px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 .spot-note{text-align:center;color:var(--muted);font-size:11.5px;margin-top:18px;line-height:1.6}
 .spot-note a{font-weight:800}
+/* ===== FAIXA DUELO 2º TURNO (Flávio x Lula) ===== */
+.duelo-wrap{max-width:1180px;margin:34px auto 0;padding:0 20px}
+.duelo{display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;background:linear-gradient(135deg,var(--card),rgba(13,34,66,.75));border:1px solid var(--line);border-radius:18px;padding:18px 22px}
+.duelo-tag{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#1E3A8A,#3B82F6);color:#fff;font:800 10.5px Manrope;letter-spacing:.08em;padding:7px 14px;border-radius:999px;text-transform:uppercase;flex:0 0 auto}
+.duelo-cand{display:flex;align-items:center;gap:11px;text-decoration:none;color:inherit}
+.duelo-foto{width:52px;height:52px;border-radius:50%;object-fit:cover;object-position:top center;border:3px solid rgba(255,215,0,.35);background:var(--card2);flex:0 0 auto}
+.duelo-info{display:flex;flex-direction:column;gap:1px}
+.duelo-nome{font:800 15px Montserrat;line-height:1.2}
+.duelo-part{color:var(--muted);font-size:11.5px}
+.duelo-pct{font:900 21px Montserrat;color:var(--gold);margin-left:4px}
+.duelo-vs{font:900 13px Montserrat;color:var(--muted);padding:0 4px;letter-spacing:.06em}
+.duelo-cta{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;background:linear-gradient(135deg,var(--gold),#FFA500);color:#1a1400;border-radius:999px;font:800 13px Manrope;text-decoration:none;flex:0 0 auto;transition:transform .15s ease,box-shadow .15s ease}
+.duelo-cta:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(212,175,55,.35)}
+/* ===== FAQ ACCORDION ===== */
+.faq-list{display:flex;flex-direction:column;gap:12px;margin:24px 0}
+.faq-item{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;transition:all .3s ease}
+.faq-item:hover{border-color:rgba(255,215,0,.35)}
+.faq-question{display:flex;align-items:center;gap:12px;padding:16px 20px;cursor:pointer;user-select:none}
+.faq-question:hover{background:rgba(255,215,0,.05)}
+.faq-icon{font-size:20px;flex:none}
+.faq-question h3{font-size:15px;font-weight:700;margin:0;color:var(--ink)}
+.faq-answer{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.faq-item.active .faq-answer{max-height:600px}
+.faq-item.active .faq-question{background:rgba(255,215,0,.08)}
+.faq-item.active .faq-icon{transform:rotate(180deg);transition:transform .3s ease}
+.faq-answer p{padding:0 20px 16px 44px;margin:0;color:var(--muted);font-size:14px;line-height:1.6}
+@media(max-width:600px){.faq-question{padding:14px 16px}.faq-question h3{font-size:14px}.faq-answer p{padding:0 16px 14px 40px;font-size:13px}}
+/* ===== CARDS GRANDES DOS CANDIDATOS DO 2º TURNO ===== */
+.cand-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;max-width:900px;margin:0 auto}
+.cand-card{background:linear-gradient(180deg,var(--card),rgba(13,34,66,.6));border:1px solid var(--line);border-radius:20px;padding:26px 22px;text-align:center;position:relative;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.cand-card:hover{transform:translateY(-5px);box-shadow:0 18px 42px rgba(0,0,0,.42)}
+.cand-card.cand-flavio{border-color:rgba(51,153,255,.4)}
+.cand-card.cand-flavio:hover{border-color:rgba(51,153,255,.75)}
+.cand-card.cand-lula{border-color:rgba(231,76,60,.4)}
+.cand-card.cand-lula:hover{border-color:rgba(231,76,60,.75)}
+.cand-num{position:absolute;top:14px;right:14px;background:rgba(0,0,0,.34);border:1px solid var(--line);border-radius:10px;padding:5px 13px;font:900 19px Montserrat;color:var(--gold)}
+.cand-foto{width:120px;height:120px;border-radius:50%;object-fit:cover;object-position:top center;border:3px solid rgba(255,215,0,.32);display:block;margin:0 auto 14px;background:var(--card2)}
+.cand-fallback{width:120px;height:120px;border-radius:50%;display:grid;place-items:center;font:900 38px Montserrat;color:#fff;margin:0 auto 14px;border:3px solid rgba(255,215,0,.32)}
+.cand-flavio .cand-fallback{background:linear-gradient(135deg,#1E3A8A,#3B82F6)}
+.cand-lula .cand-fallback{background:linear-gradient(135deg,#B91C1C,#EF4444)}
+.cand-card h3{font-size:20px;font-weight:900;line-height:1.2}
+.cand-part{color:var(--muted);font-size:13px;margin-top:5px}
+.cand-cargo{color:var(--gold);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-top:8px}
+.cand-resumo{border-top:1px dashed var(--line);padding-top:14px;margin-top:16px;text-align:left}
+.cand-resumo div{display:flex;justify-content:space-between;gap:10px;padding:4px 0;font-size:12.5px}
+.cand-resumo span:first-child{color:var(--muted)}
+.cand-resumo span:last-child{font-weight:700;text-align:right}
+.cand-cta{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.cand-cta .btn{font-size:12.5px;padding:10px 16px;min-height:40px}
+.cand-cta .btn.primary{background:linear-gradient(135deg,var(--gold),#FFA500);color:#1a1400;border-color:transparent;font-weight:800}
+.cand-cta .btn.primary:hover{filter:brightness(1.08)}
+@media(max-width:600px){.duelo{gap:12px;padding:16px}.duelo-pct{font-size:18px}.duelo-foto{width:44px;height:44px}.duelo-nome{font-size:13.5px}}
 /* ===== SEÇÃO GENÉRICA ===== */
 .sec-head{text-align:center;margin-bottom:6px}
 .sec-head h2{font-size:clamp(22px,3.4vw,32px);font-weight:900}
@@ -451,6 +503,31 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
 <!-- Provas de Impacto removidas — dados reais carregados via API -->
 </div>
 
+<!-- ===== FAIXA DUELO 2º TURNO — LULA x FLÁVIO (dados oficiais TSE) ===== -->
+<div class="duelo-wrap">
+  <div class="duelo">
+    <span class="duelo-tag"><i class="fa-solid fa-check-circle"></i> 1º turno · dados oficiais do TSE</span>
+    <a class="duelo-cand" href="pages/flavio-bolsonaro.html">
+      <img class="duelo-foto" src="https://commons.wikimedia.org/wiki/Special:FilePath/Foto_oficial_do_senador_Fl%C3%A1vio_Bolsonaro_(v._AgSen)_(3x4).jpg?width=220" alt="Flávio Bolsonaro" loading="lazy">
+      <span class="duelo-info">
+        <span class="duelo-nome">Flávio Bolsonaro</span>
+        <span class="duelo-part">PL · Nº 22</span>
+      </span>
+      <span class="duelo-pct">47,03%</span>
+    </a>
+    <span class="duelo-vs">VS</span>
+    <a class="duelo-cand" href="pages/lula.html">
+      <img class="duelo-foto" src="https://commons.wikimedia.org/wiki/Special:FilePath/Foto_oficial_de_Luiz_In%C3%A1cio_Lula_da_Silva_(3x4_cropped).jpg?width=220" alt="Lula" loading="lazy">
+      <span class="duelo-info">
+        <span class="duelo-nome">Lula</span>
+        <span class="duelo-part">PT · Nº 13</span>
+      </span>
+      <span class="duelo-pct">45,16%</span>
+    </a>
+    <a class="duelo-cta" href="pages/resultados-2026.html">Ver resultado completo <i class="fa-solid fa-arrow-right"></i></a>
+  </div>
+</div>
+
 <!-- ===== SPOTLIGHT 2º TURNO — PRESIDENCIÁVEIS (dados reais TSE) ===== -->
 <div class="spot" id="spot-presidente">
   <div class="spot-head">
@@ -464,6 +541,55 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
     <div class="apoio-total-label">👥 Pessoas que já declararam apoio no 2º turno</div>
   </div>
   <p class="spot-note">📊 Dados públicos do TSE (DivulgaCand) · <a href="pages/eleicoes-2026.html">ver todos os candidatos e filtros →</a><br>O MeuVoto é um protótipo cívico independente, sem vínculo com TSE, partidos ou candidatos.</p>
+</div>
+
+<!-- ===== CARDS GRANDES — FICHAS DE LULA E FLÁVIO (restaurado) ===== -->
+<div class="wrap" id="candidatos" style="margin-top:52px;scroll-margin-top:150px">
+  <div class="sec-head">
+    <span class="tag">DISPUTA PRESIDENCIAL</span>
+    <h2 style="margin-top:14px">Quem disputa o 2º turno</h2>
+    <p>Os dois candidatos mais votados no 1º turno — fotos oficiais do TSE</p>
+  </div>
+
+  <div class="cand-grid">
+    <article class="cand-card cand-flavio">
+      <div class="cand-num">22</div>
+      <img class="cand-foto" src="https://commons.wikimedia.org/wiki/Special:FilePath/Foto_oficial_do_senador_Fl%C3%A1vio_Bolsonaro_(v._AgSen)_(3x4).jpg?width=320" alt="Flávio Bolsonaro — foto oficial do TSE" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'cand-fallback',textContent:'FB'}))">
+      <h3>Flávio Bolsonaro</h3>
+      <p class="cand-part">PL · Partido Liberal</p>
+      <p class="cand-cargo">Candidato à Presidência</p>
+      <div class="cand-resumo">
+        <div><span>1º turno:</span><span>47,03% · 56.104.503 votos</span></div>
+        <div><span>Vice:</span><span>A definir</span></div>
+        <div><span>Coligação:</span><span>PL / Republicanos / PP</span></div>
+      </div>
+      <div class="cand-cta">
+        <a class="btn primary" href="pages/flavio-bolsonaro.html" style="text-decoration:none"><i class="fa-solid fa-file-lines"></i> Ver propostas</a>
+        <a class="btn" href="pages/comparador.html" style="text-decoration:none"><i class="fa-solid fa-scale-balanced"></i> Comparar</a>
+      </div>
+    </article>
+
+    <article class="cand-card cand-lula">
+      <div class="cand-num">13</div>
+      <img class="cand-foto" src="https://commons.wikimedia.org/wiki/Special:FilePath/Foto_oficial_de_Luiz_In%C3%A1cio_Lula_da_Silva_(3x4_cropped).jpg?width=320" alt="Lula — foto oficial do TSE" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'cand-fallback',textContent:'L'}))">
+      <h3>Lula</h3>
+      <p class="cand-part">PT · Partido dos Trabalhadores</p>
+      <p class="cand-cargo">Candidato à Presidência (reeleição)</p>
+      <div class="cand-resumo">
+        <div><span>1º turno:</span><span>45,16% · 53.879.538 votos</span></div>
+        <div><span>Vice:</span><span>A definir</span></div>
+        <div><span>Coligação:</span><span>PT / PSB / PCdoB / PV</span></div>
+      </div>
+      <div class="cand-cta">
+        <a class="btn primary" href="pages/lula.html" style="text-decoration:none"><i class="fa-solid fa-file-lines"></i> Ver propostas</a>
+        <a class="btn" href="pages/comparador.html" style="text-decoration:none"><i class="fa-solid fa-scale-balanced"></i> Comparar</a>
+      </div>
+    </article>
+  </div>
+
+  <div style="text-align:center;margin-top:22px">
+    <a href="pages/comparador.html" class="btn gold" style="text-decoration:none"><i class="fa-solid fa-scale-balanced"></i> Comparar os dois candidatos lado a lado <i class="fa-solid fa-arrow-right"></i></a>
+  </div>
 </div>
 
 
@@ -667,7 +793,44 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
 <div class="filtros" style="grid-template-columns:1fr"><input id="revBusca" placeholder="nome, numero, partido, estado…" oninput="renderRevogados()"/></div>
 <div id="revList" class="grid g2"></div>
 </div></section>
-<section class="sec" id="sec-quem"><div class="wrap" style="max-width:700px">
+<section class="sec" id="sec-ajuda" data-anchor="ajuda"><div class="wrap" style="max-width:700px">
+<span class="kick">AJUDA</span><h2 style="margin:8px 0 14px">Perguntas frequentes</h2>
+<div class="faq-list">
+  <div class="faq-item">
+    <div class="faq-question"><span class="faq-icon">❓</span><h3>O que é o MeuVoto?</h3></div>
+    <div class="faq-answer"><p>Plataforma cívica independente que permite acompanhar votações, cobrar promessas e revogar a confiança de políticos que não cumpriram. Protótipo demonstrativo, sem valor jurídico.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question"><span class="faq-icon">❓</span><h3>Como funciona o voto?</h3></div>
+    <div class="faq-answer"><p>Você escolhe seus candidatos no App, e cada voto gera um código único de 20 dígitos — seu comprovante. Pode conferir a qualquer momento no site.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question"><span class="faq-icon">❓</span><h3>Como revogar meu voto?</h3></div>
+    <div class="faq-answer"><p>Após a posse do eleito, você pode revogar a confiança se ele não cumprir promessas. O processo é simples: selecione o candidato, justifique e confirme.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question"><span class="faq-icon">❓</span><h3>Os dados são reais?</h3></div>
+    <div class="faq-answer"><p>Sim. Nomes, números, partidos, fotos e resultados vêm do TSE e das APIs oficiais da Câmara e do Senado. As fotos oficiais dos presidenciáveis foram verificadas: Lula (PT) SQ 280002542548 e Flávio Bolsonaro (PL) SQ 280002551544.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question"><span class="faq-icon">❓</span><h3>Quem disputa o 2º turno?</h3></div>
+    <div class="faq-answer"><p>Lula (PT, nº 13) e Flávio Bolsonaro (PL, nº 22), com 45,16% e 47,03% dos votos válidos no 1º turno. A votação é em 25 de outubro de 2026.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question"><span class="faq-icon">❓</span><h3>Posso votar mais de uma vez?</h3></div>
+    <div class="faq-answer"><p>Sim. Você pode atualizar sua cédula quantas vezes quiser — cada voto gera um código diferente. O último código registrado é o que vale.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question"><span class="faq-icon">❓</span><h3>Meu voto é anônimo?</h3></div>
+    <div class="faq-answer"><p>O voto é vinculado apenas a um código de 20 dígitos, sem dados pessoais identificadores. Apenas o hash do código é armazenado para permitir a conferência e a revogação.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question"><span class="faq-icon">❓</span><h3>O MeuVoto tem vínculo com partidos ou candidatos?</h3></div>
+    <div class="faq-answer"><p>Não. O MeuVoto é um protótipo cívico independente. Os dados vêm do TSE e das Casas Legislativas, mas as informações sobre os candidatos são organizadas pela plataforma sem qualquer endosso.</p></div>
+  </div>
+</div>
+</div></section>
+<section class="sec" id="sec-quem" data-anchor="quem-somos"><div class="wrap" style="max-width:700px">
 <span class="kick">QUEM SOMOS</span><h2 style="margin:8px 0 14px">MeuVoto</h2>
 <div class="card"><p>Plataforma cívica de <b>revogação do voto</b> (protótipo demonstrativo, sem valor jurídico). O poder emana do povo — e não acaba no dia da eleição.</p>
 <p style="color:var(--gold);font-weight:800">"Meu voto coloca, meu voto tira."</p></div>
@@ -679,7 +842,7 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
 <p style="color:var(--gold);font-weight:800;font-size:13px">"Meu voto coloca, meu voto tira."</p></div>
 <div><h5>Navegar</h5><a onclick="go('radar')">Radar Político</a><a href="pages/fundo-eleitoral.html">Fundo Eleitoral</a><a href="pages/congresso.html">PLs no Congresso</a><a onclick="go('conferir')">Conferir Voto</a><a onclick="go('revogados')">Revogados</a></div>
 <div><h5>Participar</h5><a onclick="go('conferir')">Meus Votos</a><a onclick="go('radar')">Reclame Aqui</a><a onclick="abrirForm(-1,'rec')">📝 Reclamar ou 👍 Apoiar</a><a onclick="abrirLogin()">Sou Político/Candidato</a></div>
-<div><h5>Institucional</h5><a href="app/">📱 App de Votação</a><a onclick="go('quem')">Quem Somos</a><a href="termos.html">Termos de Uso</a><a href="privacidade.html">Política de Privacidade</a><a onclick="abrirContato()">Contato</a></div>
+<div><h5>Institucional</h5><a href="app/">📱 App de Votação</a><a onclick="go('quem')">Quem Somos</a><a onclick="go('ajuda')">Ajuda (FAQ)</a><a href="termos.html">Termos de Uso</a><a href="privacidade.html">Política de Privacidade</a><a onclick="abrirContato()">Contato</a></div>
 </div><div class="fbot" style="flex-direction: column; gap: 16px; text-align: center;">
   <div style="display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; font-size: 14px;">
     <span><i class="fa-solid fa-envelope" style="color: var(--gold); margin-right: 6px;"></i> <a href="mailto:contato@meu-voto.app" style="color: var(--ink); text-decoration: none; font-weight: 600;">contato@meu-voto.app</a></span>
@@ -805,11 +968,13 @@ $$('#nav a').forEach(a=>a.onclick=()=>go(a.dataset.p));
 /* Deep-link: #conferir-voto, #radar, #revogados etc. abrem a seção direto
    (usado pelos menus das páginas internas: congresso, votações…) */
 (function(){
-  const mapa={'conferir-voto':'conferir','revogar-voto':'revogar','revogados':'revogados','quem-somos':'quem','congresso':'inicio','voto':'revogar'};
+  const mapa={'conferir-voto':'conferir','revogar-voto':'revogar','revogados':'revogados','quem-somos':'quem','ajuda':'ajuda','congresso':'inicio','voto':'revogar'};
   const h=(location.hash||'').replace('#','').split('?')[0];
   if(h==='radar'){location.replace('pages/parlamentares.html');return}
+  /* #contato abre o modal de contato (usado pela busca global) */
+  if(h==='contato'){setTimeout(()=>{if(typeof abrirContato==='function')abrirContato();},80);return}
   if(mapa[h]!==undefined){setTimeout(()=>go(mapa[h]),50)}
-  window.addEventListener('hashchange',()=>{const hh=(location.hash||'').replace('#','').split('?')[0];if(hh==='radar'||hh==='congresso'){location.href='pages/parlamentares.html';return}if(mapa[hh]!==undefined)go(mapa[hh])});
+  window.addEventListener('hashchange',()=>{const hh=(location.hash||'').replace('#','').split('?')[0];if(hh==='radar'||hh==='congresso'){location.href='pages/parlamentares.html';return}if(hh==='contato'){if(typeof abrirContato==='function')abrirContato();return}if(mapa[hh]!==undefined)go(mapa[hh])});
 })();
 const LS={get:(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))};
 const CORES=['#2ECC71','#FFD700','#4a90f0','#E74C3C','#A855F7'],NOMES=['Maria','Carlos','Ana','João','Outros'];
@@ -833,6 +998,8 @@ popula();renderRad();carregaRemoteRec();atualizarUI()}
    ============================================================ */
 const SPOT_CORES=['#2ECC71','#FFD700','#4a90f0','#E74C3C','#A855F7','#f39c12','#1abc9c','#e67e22'];
 function spotIniciais(nome){return (nome||'?').trim().split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase()}
+/* Normaliza nome para comparar ignorando acentos: "FLÁVIO" ≡ "FLAVIO" */
+function normKey(nome){return (nome||'').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g,'')}
 function spotCard(c,i){
   const cor=SPOT_CORES[i%SPOT_CORES.length];
   const fotoSrc=c.foto||'';
@@ -842,12 +1009,19 @@ function spotCard(c,i){
   const sit=(c.situacao||'').toUpperCase();
   const sitCls=/DEFERID/.test(sit)?'ok':/INDEFERID|CASSAD/.test(sit)?'red':'amb';
   const sitTxt=sit?sit.charAt(0)+sit.slice(1).toLowerCase():'Registrado';
-  const candId=c.id||c.sq_tse||`${c.numero}-${c.partido||''}`;
+  const candId=c.id||c.turnoId||`${c.numero}-${c.partido||''}`;
+  /* Ficha individual: LULA → pages/lula.html, FLAVIO BOLSONARO → pages/flavio-bolsonaro.html */
+  const up=(c.nome||'').toUpperCase();
+  const ficha=(up.includes('LULA')&&!up.includes('BOLSONARO'))?'pages/lula.html'
+    :(up.includes('FLAVIO BOLSONARO')||up.includes('FLÁVIO BOLSONARO'))?'pages/flavio-bolsonaro.html'
+    :'pages/eleicoes-2026.html';
+  const pct1T=c.perc1T?`<div class="pmeta" style="margin-top:8px;color:var(--gold);font-weight:800">1º turno: ${String(c.perc1T).replace('.',',')}%${c.votos1T?' · '+Number(c.votos1T).toLocaleString('pt-BR')+' votos':''}</div>`:'';
   return `<article class="pcard" data-turno-id="${candId}">
     ${av}
     <h3>${c.nome}</h3>
     <div class="pmeta">${c.partido||'—'}${c.uf&&c.uf!=='BR'?' · '+c.uf:''}</div>
     <div class="pnum">#${c.numero||'—'}</div>
+    ${pct1T}
     <div style="margin-top:10px"><span class="badge ${sitCls}">${sitTxt}</span></div>
     <div class="apoio-barra-wrap">
       <div class="apoio-barra-label">
@@ -858,7 +1032,7 @@ function spotCard(c,i){
     </div>
     <div class="pcta">
       <button class="btn sm gold" onclick="apoiarTurno('${candId}','${(c.nome||'').replace(/'/g,"\\'")}')"><i class="fa-solid fa-hand"></i> Apoiar</button>
-      <a class="btn sm" href="pages/eleicoes-2026.html" style="text-decoration:none">Ver ficha</a>
+      <a class="btn sm" href="${ficha}" style="text-decoration:none">Ver ficha</a>
       <button class="btn sm" onclick="go('radar')">Radar</button>
     </div>
   </article>`;
@@ -947,7 +1121,7 @@ async function carregaSpotlight(){
   const grid=document.getElementById('spotGrid');if(!grid)return;
   let pres=[];
   let fotosPres = {};
-  
+
   // Carregar fotos dos candidatos
   try {
     const rf = await fetch('data/fotos-candidatos-2026.json');
@@ -958,34 +1132,60 @@ async function carregaSpotlight(){
   } catch(e) {
     console.warn('[spotlight] Fotos não carregadas:', e.message);
   }
-  
+
+  /* Fonte primária: data/segundo-turno-2026.json (7,6 KB) — já traz os 2
+     presidenciáveis do 2º turno com foto, votos do 1º turno e coligação.
+     Evita baixar o snapshot completo de candidatos (4,3 MB) só para 2 cards. */
   try{
-    const r=await fetch('data/candidatos-2026.json');
-    const d=await r.json();
-    const arr=Array.isArray(d)?d:(d.candidatos||d.dados||[]);
-    // Filtra candidatos a presidente (cargo 1)
-    const candidatosPres = arr.filter(x=>String(x.cargo)==='1');
-    // LULA e FLAVIO BOLSONARO sao os candidatos do 2º turno (dia 25)
-    const lula = candidatosPres.find(x=>(x.nomeUrna||x.nomeCivil||'').toUpperCase().includes('LULA'));
-    const bolsonaro = candidatosPres.find(x=>(x.nomeUrna||x.nomeCivil||'').toUpperCase().includes('FLAVIO BOLSONARO'));
-    // Se tiver Lula e Bolsonaro, exibe estes como os 2 do 2º turno
-    if(lula && bolsonaro){
-      pres = [
-        {nome: lula.nomeUrna||lula.nomeCivil||'LULA', partido: lula.partido||'PT', uf: lula.uf||'BR', numero: lula.numero||'13', situacao: lula.situacao||'', foto: fotosPres['LULA'] || lula.foto || ''},
-        {nome: bolsonaro.nomeUrna||bolsonaro.nomeCivil||'FLAVIO BOLSONARO', partido: bolsonaro.partido||'PL', uf: bolsonaro.uf||'BR', numero: bolsonaro.numero||'22', situacao: bolsonaro.situacao||'', foto: fotosPres['FLAVIO BOLSONARO'] || bolsonaro.foto || ''}
-      ];
-    }else{
-      // Lógica original: prioriza ELEITO/DEFERIDO, limitando a 2
-      const prioritarios = candidatosPres.filter(x=>
-        ['ELEITO','DEFERIDO'].includes((x.situacao||'').toUpperCase())
-      );
-      if(prioritarios.length > 0){
-        pres = prioritarios.slice(0, 2).map(x=>({nome:x.nomeUrna||x.nomeCivil||'',partido:x.partido||'',uf:x.uf||'BR',numero:x.numero||'',situacao:x.situacao||'',foto:x.foto||''}));
-      }else if(candidatosPres.length > 0){
-        pres = candidatosPres.slice(0, 2).map(x=>({nome:x.nomeUrna||x.nomeCivil||'',partido:x.partido||'',uf:x.uf||'BR',numero:x.numero||'',situacao:x.situacao||'',foto:x.foto||''}));
+    const r=await fetch('data/segundo-turno-2026.json');
+    if(r.ok){
+      const d=await r.json();
+      const lista=(d.presidente||[]).filter(x=>String(x.cargo)==='1');
+      if(lista.length===2){
+        pres=lista.map(x=>({
+          nome:x.nomeUrna||x.nomeCivil||'',
+          partido:x.partido||'',
+          uf:x.uf||'BR',
+          numero:x.numero||'',
+          situacao:x.situacao||'',
+          coligacao:x.coligacao||'',
+          votos1T:x.votos1T||0,
+          perc1T:x.percVotos1T||0,
+          turnoId:x.sq||'',
+          /* Fotos: casa por nome normalizado (sem acento) — o TSE usa
+             "FLÁVIO BOLSONARO" e o snapshot de fotos usa "FLAVIO BOLSONARO". */
+          foto:(fotosPres[normKey(x.nomeUrna)]||fotosPres[normKey(x.nomeCivil)]||x.foto||'')
+        }));
       }
     }
-  }catch(e){}
+  }catch(e){console.warn('[spotlight] 2º turno indisponível:',e.message)}
+
+  /* Fallback: snapshot completo do TSE (candidatos-2026.json, cargo 1) */
+  if(!pres.length){
+    try{
+      const r=await fetch('data/candidatos-2026.json');
+      const d=await r.json();
+      const arr=Array.isArray(d)?d:(d.candidatos||d.dados||[]);
+      const candidatosPres = arr.filter(x=>String(x.cargo)==='1');
+      const lula = candidatosPres.find(x=>(x.nomeUrna||x.nomeCivil||'').toUpperCase().includes('LULA'));
+      const bolsonaro = candidatosPres.find(x=>(x.nomeUrna||x.nomeCivil||'').toUpperCase().includes('FLAVIO BOLSONARO'));
+      if(lula && bolsonaro){
+        pres = [
+          {nome: lula.nomeUrna||lula.nomeCivil||'LULA', partido: lula.partido||'PT', uf: lula.uf||'BR', numero: lula.numero||'13', situacao: lula.situacao||'', sq: lula.sq||'', foto: fotosPres['LULA'] || lula.foto || ''},
+          {nome: bolsonaro.nomeUrna||bolsonaro.nomeCivil||'FLAVIO BOLSONARO', partido: bolsonaro.partido||'PL', uf: bolsonaro.uf||'BR', numero: bolsonaro.numero||'22', situacao: bolsonaro.situacao||'', sq: bolsonaro.sq||'', foto: fotosPres['FLAVIO BOLSONARO'] || bolsonaro.foto || ''}
+        ];
+      }else{
+        const prioritarios = candidatosPres.filter(x=>
+          ['ELEITO','DEFERIDO'].includes((x.situacao||'').toUpperCase())
+        );
+        if(prioritarios.length > 0){
+          pres = prioritarios.slice(0, 2).map(x=>({nome:x.nomeUrna||x.nomeCivil||'',partido:x.partido||'',uf:x.uf||'BR',numero:x.numero||'',situacao:x.situacao||'',sq:x.sq||'',foto:x.foto||''}));
+        }else if(candidatosPres.length > 0){
+          pres = candidatosPres.slice(0, 2).map(x=>({nome:x.nomeUrna||x.nomeCivil||'',partido:x.partido||'',uf:x.uf||'BR',numero:x.numero||'',situacao:x.situacao||'',sq:x.sq||'',foto:x.foto||''}));
+        }
+      }
+    }catch(e){}
+  }
   if(!pres.length&&POL.length){
     pres=POL.filter(p=>/presidente/i.test(p.cargo||'')).map(p=>({nome:p.nome,partido:p.partido,uf:p.uf,numero:p.num,situacao:'',foto:p.foto}));
   }
@@ -1545,11 +1745,25 @@ function nufContador(){const ns=window._NEWS||[];const ct={};ns.forEach(n=>{if(n
  const c=document.getElementById('nf-count');if(c)c.textContent=(NUF_FILTRO==='GERAL'?'Exibindo tudo':n+' matéria'+(n===1?'':'s'));}
 function renderNews(){const ns=window._NEWS||[];const lista=(NUF_FILTRO==='GERAL'?ns:ns.filter(n=>n.uf===NUF_FILTRO));
  const dtRel=iso=>{if(!iso)return'';const d=(Date.now()-new Date(iso))/1000;if(d<3600)return Math.max(1,Math.floor(d/60))+' min atrás';if(d<86400)return Math.floor(d/3600)+' h atrás';return Math.floor(d/86400)+' d atrás'};
- $('#homeNews').innerHTML=lista.length?lista.map(n=>`<article class="ncard-new">
-  <div class="nimg">${(n.img||n.thumb)?`<img src="${n.img||n.thumb}" alt="" loading="lazy" onerror="this.remove()">`:'<i class="fa-solid fa-landmark nph"></i>'}<span class="nfonte">✓ ${n.fonte}</span>${n.uf?`<span class="nufb">${n.uf==='BR'?'🇧🇷 Brasil':'📌 '+n.uf}</span>`:''}</div>
-  <div class="nbody"><h4>${n.t}</h4>${n.res?`<p>${n.res}</p>`:''}
-  <div class="nfoot"><span>${n.dt?dtRel(n.dt):''}</span><a href="${n.l}" target="_blank" rel="noopener">Ler na fonte →</a></div></div>
- </article>`).join(''):`<p class="muted" style="padding:20px 4px">Nenhuma notícia ${NUF_FILTRO==='GERAL'?'':NUF_FILTRO==='BR'?'nacional':'de '+NUF_FILTRO} neste momento — as feeds locais atualizam a cada 10 min.</p>`;
+ /* Escape obrigatório: título, resumo e link vêm de feeds externos e
+    entravam no innerHTML sem nenhum escape — um &lt;img do feed quebrava
+    o card e abria brecha de XSS.
+    Antes de escapar, decodificamos as entidades inofensivas (aspas
+    tipográficas, nbsp, travessão): sem isso o texto exibia "&#8220;"
+    literalmente. lt/gt/amp ficam de fora de propósito — são as que
+    poderiam reintroduzir markup. */
+ const decEnt=s=>String(s==null?'':s)
+  .replace(/&#x([0-9a-f]+);/gi,(_,h)=>{const n=parseInt(h,16);return (n===60||n===62)?'':(n>=1&&n<=0x10ffff?String.fromCodePoint(n):'')})
+  .replace(/&#(\d+);/g,(_,d)=>{const n=parseInt(d,10);return (n===60||n===62)?'':(n>=1&&n<=0x10ffff?String.fromCodePoint(n):'')})
+  .replace(/&(nbsp|quot|apos|ldquo|rdquo|lsquo|rsquo|hellip|mdash|ndash|laquo|raquo);/g,(m,e)=>({'nbsp':' ','quot':'"','apos':"'",'ldquo':'\u201C','rdquo':'\u201D','lsquo':'\u2018','rsquo':'\u2019','hellip':'\u2026','mdash':'\u2014','ndash':'\u2013','laquo':'\u00AB','raquo':'\u00BB'})[e]);
+ const esc=s=>decEnt(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+ /* URL só é aceita se for http(s) ou // — evita javascript: em campos de feed */
+ const safeUrl=u=>{const s=String(u||'').trim();return /^https?:\/\//i.test(s)||s.startsWith('//')?s:''};
+ $('#homeNews').innerHTML=lista.length?lista.map(n=>{const imgUrl=safeUrl(n.img||n.thumb),linkUrl=safeUrl(n.l);return `<article class="ncard-new">
+  <div class="nimg">${imgUrl?`<img src="${esc(imgUrl)}" alt="" loading="lazy" onerror="this.remove()">`:'<i class="fa-solid fa-landmark nph"></i>'}<span class="nfonte">✓ ${esc(n.fonte)}</span>${n.uf?`<span class="nufb">${n.uf==='BR'?'🇧🇷 Brasil':'📌 '+esc(n.uf)}</span>`:''}</div>
+  <div class="nbody"><h4>${esc(n.t)}</h4>${n.res?`<p>${esc(n.res)}</p>`:''}
+  <div class="nfoot"><span>${n.dt?dtRel(n.dt):''}</span>${linkUrl?`<a href="${esc(linkUrl)}" target="_blank" rel="noopener">Ler na fonte →</a>`:''}</div></div>
+ </article>`}).join(''):`<p class="muted" style="padding:20px 4px">Nenhuma notícia ${NUF_FILTRO==='GERAL'?'':NUF_FILTRO==='BR'?'nacional':'de '+NUF_FILTRO} neste momento — as feeds locais atualizam a cada 10 min.</p>`;
 }
 function nufSet(v){NUF_FILTRO=v;const sel=document.getElementById('nf-uf'),g=document.getElementById('nf-geral');
  if(v==='GERAL'){g.classList.remove('off');sel.classList.remove('on');sel.value=''}
@@ -2111,6 +2325,27 @@ async function enviarContato(){
 </div>
 <button class="btn" style="width:100%;margin-top:12px" onclick="fechar('mContato')">Fechar</button>
 </div></div>
+<!-- ===== FAQ ACCORDION ===== -->
+<script>
+(function(){
+  var itens=document.querySelectorAll('#sec-ajuda .faq-item');
+  itens.forEach(function(item){
+    var q=item.querySelector('.faq-question');
+    if(!q) return;
+    q.setAttribute('role','button');
+    q.setAttribute('tabindex','0');
+    q.setAttribute('aria-expanded','false');
+    function alternar(){
+      var aberto=item.classList.toggle('active');
+      q.setAttribute('aria-expanded',aberto?'true':'false');
+    }
+    q.addEventListener('click',alternar);
+    q.addEventListener('keydown',function(ev){
+      if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();alternar();}
+    });
+  });
+})();
+</script>
 <!-- ===== WIDGET DE PRIVACIDADE FLUTUANTE ===== -->
 <div id="privacy-widget" class="privacy-widget">
   <button id="privacy-toggle" class="privacy-toggle" aria-label="Política de Privacidade">

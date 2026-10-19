@@ -16,7 +16,8 @@
     "test:photos": "node scripts/validar-fotos.js",
     "test:photos:strict": "node scripts/validar-fotos.js --strict",
     "backup:photos": "node scripts/backup-fotos.js",
-    "backup:photos:dry": "node scripts/backup-fotos.js --dry-run"
+    "backup:photos:dry": "node scripts/backup-fotos.js --dry-run",
+    "check": "node scripts/check.js"
   },
   "engines": {
     "node": ">=22.0.0"

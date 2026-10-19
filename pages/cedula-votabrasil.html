@@ -39,6 +39,13 @@ input,select{background:var(--card2);border:1px solid var(--line);border-radius:
 .card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.3)}
 .av{width:56px;height:56px;border-radius:50%;object-fit:cover;object-position:top;background:var(--card2);flex:none}
 .badge{font:800 10px Manrope;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+/* Modal de confirmação: overlay fixo sobre a página. Sem estas regras o
+   <div class="modal hidden"> vazava no meio do layout e os botões
+   "Cancelar"/"Confirmar" apareciam sempre, sem o modal ser acionado. */
+.modal{position:fixed;inset:0;z-index:1200;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(2,10,26,.78);backdrop-filter:blur(3px)}
+.modal.hidden{display:none}
+.modal-content{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;width:100%;max-width:420px;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.candidate-info{margin:14px 0 6px}
 </style>
 </head>
 <body>
@@ -49,17 +56,22 @@ input,select{background:var(--card2);border:1px solid var(--line);border-radius:
 
 <div class="filtros">
   <div>
+    <!-- O value precisa ser o CÓDIGO do cargo no TSE: a API filtra por
+         String(c.cargo) === q.cargo. Mandar o rótulo ("Presidente") não
+         casava com nada e a lista vinha vazia. -->
     <select id="cargo-select">
-      <option value="Presidente">Presidente</option>
-      <option value="Governador">Governador</option>
-      <option value="Senador">Senador</option>
-      <option value="Deputado Federal">Dep. Federal</option>
-      <option value="Deputado Estadual">Dep. Estadual</option>
+      <option value="1">Presidente</option>
+      <option value="3">Governador</option>
+      <option value="5">Senador</option>
+      <option value="6">Dep. Federal</option>
+      <option value="7">Dep. Estadual</option>
     </select>
   </div>
   <div>
+    <!-- value="" = todos os UFs: a API compara c.uf === q.uf, então o
+         literal "all" também zerava o resultado. -->
     <select id="uf-select">
-      <option value="all">Todos os UFs</option>
+      <option value="">Todos os UFs</option>
       <option value="SP">São Paulo</option>
       <option value="RJ">Rio de Janeiro</option>
       <option value="MG">Minas Gerais</option>
@@ -69,6 +81,7 @@ input,select{background:var(--card2);border:1px solid var(--line);border-radius:
   <button class="btn gold" onclick="buscar(1)">Buscar</button>
 </div>
 
+<div id="aviso" style="display:none;margin-top:12px;padding:10px 14px;border-radius:10px;background:rgba(46,204,113,.12);border:1px solid rgba(46,204,113,.35);font-size:13px"></div>
 <div id="info" class="muted">Selecione um cargo acima para começar.</div>
 <div class="grid" id="lista" style="margin-top:12px"></div>
 
@@ -84,15 +97,15 @@ input,select{background:var(--card2);border:1px solid var(--line);border-radius:
 <div id="confirm-modal" class="modal hidden">
   <div class="modal-content">
     <h2>Confirmar Voto</h2>
-    <img id="confirm-photo" class="av" src="" alt="">
+    <img id="confirm-photo" class="av" alt="" style="display:none">
     <div class="candidate-info">
       <h3 id="confirm-name"></h3>
       <p id="confirm-party"></p>
     </div>
     <p class="muted">Deseja confirmar seu voto neste candidato?</p>
     <div style="display:flex;gap:12px;margin-top:20px">
-      <button id="cancel-vote" class="btn-secondary">Cancelar</button>
-      <button id="confirm-vote" class="btn-primary">Confirmar</button>
+      <button id="cancel-vote" class="btn">Cancelar</button>
+      <button id="confirm-vote" class="btn gold">Confirmar</button>
     </div>
   </div>
 </div>
@@ -107,12 +120,56 @@ const $ = s => document.querySelector(s);
 let page = 1, total = 0, LAST = [], SNAP = null, PS = 50;
 let modoDemo = true; // Assume modo demo se não conectar à API
 
+/* Faixa de aviso (usada no fallback de snapshot e na confirmação de voto) */
+function aviso(m) {
+  const a = $('#aviso');
+  if (!a) return;
+  a.style.display = m ? 'block' : 'none';
+  a.textContent = m || '';
+}
+
 /* Carregar snapshot local se API falhar */
 async function carregarSnapshot() {
   try {
     const rs = await fetch('../data/candidatos-2026.json');
     if (!rs.ok) throw new Error('HTTP ' + rs.status);
     SNAP = await rs.json();
+    /* O TSE publica o mesmo candidato em arquivos diferentes, então o
+       snapshot local repete sq. Sem esta dedup, LULA e FLAVIO apareciam
+       duas vezes na lista. */
+    if (SNAP && Array.isArray(SNAP.candidatos)) {
+      const vistos = new Set();
+      SNAP.candidatos = SNAP.candidatos.filter(c => {
+        const k = [c.cargo, c.uf, c.sq || c.numero].join('|');
+        if (vistos.has(k)) return false;
+        vistos.add(k);
+        return true;
+      });
+    }
+    /* Fotos oficiais verificadas: o snapshot do TSE não tem foto, então sem
+       isto a lista local caía no avatar de iniciais. */
+    try {
+      const rf = await fetch('../data/fotos-candidatos-2026.json');
+      if (rf.ok) {
+        const fotos = await rf.json();
+        const nk = n => String(n||'').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
+        const achar = (obj, nome) => {
+          if (!obj) return '';
+          if (obj[nome]) return obj[nome];
+          for (const k of Object.keys(obj)) if (nk(k) === nome) return obj[k] || '';
+          return '';
+        };
+        (SNAP.candidatos || []).forEach(c => {
+          if (c.foto) return;
+          const nome = nk(c.nomeUrna || c.nomeCivil);
+          if (!nome) return;
+          const cargo = String(c.cargo);
+          if (cargo === '1' || cargo === '9') c.foto = achar(fotos.presidente, nome);
+          else if (fotos.governadores && fotos.governadores[c.uf]) c.foto = achar(fotos.governadores[c.uf], nome);
+          else if (fotos.eleitos_1_turno && fotos.eleitos_1_turno[c.uf]) c.foto = achar(fotos.eleitos_1_turno[c.uf], nome);
+        });
+      }
+    } catch (_) {}
     modoDemo = false;
     console.log('✅ Snapshot local carregado:', SNAP.candidatos ? SNAP.candidatos.length : 0, 'candidatos');
     return SNAP;
@@ -127,13 +184,19 @@ async function carregarSnapshot() {
 function card(c, i) {
   const sit = (c.situacao || '').toUpperCase();
   const cls = sit.includes('INDEF') ? 'red' : (sit.includes('DEFERIDO') ? 'ok' : 'amb');
-  
+  const nome = c.nomeUrna || c.nomeCivil || '?';
+  /* Sem foto no snapshot do TSE, um <img src=""> aparece como imagem
+     quebrada. Usamos a inicial em círculo, como na página de Eleições. */
+  const avatar = c.foto
+    ? `<img class="av" src="${c.foto}" alt="" style="width:50px;height:50px;border-radius:12px;object-fit:cover" onerror="this.outerHTML='<div class=&quot;av&quot; style=&quot;width:50px;height:50px;border-radius:12px;display:grid;place-items:center;font-weight:800;color:#1a1400;background:var(--gold)&quot;>${(nome[0]||'?').toUpperCase()}</div>'">`
+    : `<div class="av" style="width:50px;height:50px;border-radius:12px;display:grid;place-items:center;font-weight:800;color:#1a1400;background:var(--gold)">${(nome[0]||'?').toUpperCase()}</div>`;
+
   return `<div class="card" onclick="abrirIdx(${i})" style="cursor:pointer;transition:transform 0.15s ease">
     <div style="display:flex;gap:12px;align-items:center">
-      <img class="av" src="${c.foto || ''}" alt="" style="width:50px;height:50px;border-radius:12px;object-fit:cover">
+      ${avatar}
     </div>
     <div style="flex:1">
-      <b style="font-size:14.5px">${c.nomeUrna||c.nomeCivil||'—'}</b>
+      <b style="font-size:14.5px">${nome}</b>
       <div class="muted" style="margin-top:2px">${c.numero||''} · <b>${c.partido||''}</b> · ${c.uf||''}${c.idade?' · '+c.idade+' anos':''}${c.ocupacao?' · '+c.ocupacao:''}</div>
     </div>
     <div style="display:flex;gap:8px;align-items:center;margin-top:5px;flex-wrap:wrap">
@@ -150,6 +213,33 @@ function render(arr) {
   $('#lista').innerHTML = arr.map((c,i)=>card(c,i)).join('') || '<p class="muted">Nenhum candidato encontrado.</p>';
 }
 
+/* Abre o modal de confirmação para o candidato clicado.
+   O onclick do card chamava abrirIdx(), que não existia nesta página —
+   o clique morria com ReferenceError e nada acontecia. */
+let VOTANDO = null;
+function abrirIdx(i) {
+  const c = LAST[i];
+  if (!c) return;
+  VOTANDO = c;
+  const nome = c.nomeUrna || c.nomeCivil || '—';
+  $('#confirm-name').textContent = nome;
+  $('#confirm-party').textContent = [c.numero ? 'Nº ' + c.numero : '', c.partido || '', c.uf || ''].filter(Boolean).join(' · ');
+  const ph = $('#confirm-photo');
+  if (c.foto) { ph.src = c.foto; ph.style.display = ''; } else { ph.removeAttribute('src'); ph.style.display = 'none'; }
+  $('#confirm-modal').classList.remove('hidden');
+}
+function fecharConfirmacao() {
+  $('#confirm-modal').classList.add('hidden');
+  VOTANDO = null;
+}
+function confirmarVoto() {
+  if (!VOTANDO) return;
+  const c = VOTANDO;
+  const nome = c.nomeUrna || c.nomeCivil || '—';
+  fecharConfirmacao();
+  aviso('✅ Voto registrado em ' + nome + ' (modo demonstrativo)');
+}
+
 /* Buscar candidatos da API */
 async function buscar(p) {
   page = Math.max(1,p);
@@ -158,8 +248,15 @@ async function buscar(p) {
   
   // Primeiro tenta API do servidor
   try {
-    const url = `${API}/api/candidatos-tse?cargo=${$('#cargo-select').value}&uf=${$('#uf-select').value}&page=${page}&pageSize=${PS}`;
-    const r = await fetch(url, {cache: 'force-cache'});
+    const cargo = $('#cargo-select').value;
+    const ufSel = $('#uf-select').value;
+    /* Presidente/Vice têm uf=BR no TSE: filtrar por um UF estadual os oculta.
+       UF vazio = todos (a API compara c.uf === q.uf). */
+    const ufBusca = (cargo === '1' || cargo === '9') ? 'BR' : ufSel;
+    const url = `${API}/api/candidatos-tse?cargo=${cargo}&uf=${ufBusca}&page=${page}&pageSize=${PS}`;
+    /* Sem cache:'force-cache': a API responde no-store, e forçar o cache
+       devolvia resposta velha (ou 429) mesmo com o servidor atualizado. */
+    const r = await fetch(url);
     if (!r.ok) throw new Error('HTTP ' + r.status);
     const j = await r.json();
     
@@ -185,7 +282,9 @@ async function buscar(p) {
       if (SNAP && SNAP.candidatos) {
         let lista = SNAP.candidatos;
         const cargo = $('#cargo-select').value;
+        const ufSel = $('#uf-select').value;
         if (cargo) lista = lista.filter(c => String(c.cargo) === String(cargo));
+        if (ufSel) lista = lista.filter(c => c.uf === ufSel);
         if (lista.length > 0) {
           total = lista.length;
           render(lista.slice((page-1)*PS, page*PS));
@@ -206,6 +305,10 @@ async function buscar(p) {
 document.addEventListener('DOMContentLoaded', () => {
   $('#cargo-select').addEventListener('change', () => { page=1; buscar(1); });
   $('#uf-select').addEventListener('change', () => { page=1; buscar(1); });
+  $('#cancel-vote').addEventListener('click', fecharConfirmacao);
+  $('#confirm-vote').addEventListener('click', confirmarVoto);
+  /* clique fora do conteúdo do modal também cancela */
+  $('#confirm-modal').addEventListener('click', ev => { if (ev.target === ev.currentTarget) fecharConfirmacao(); });
   buscar(1);
 });
 </script>

@@ -1,0 +1,13 @@
+---
+description: Regras do VotaBrasil/MeuVoto (Node puro + SQLite + Railway + Cloudflare)
+globs: ["server/**/*.js", "scripts/**/*.js", "tests/**/*.js"]
+alwaysApply: true
+---
+
+- Backend é Node HTTP puro: nunca sugerir Express/Fastify.
+- Banco é `node:sqlite` com `DB_PATH` (produção `/data/votos.db`). SQL sempre parametrizado.
+- Edite `server/index.js` com diffs pequenos; não reescreva o arquivo.
+- Rode `npm run check` e `npm test` antes de propor commit.
+- Segredos apenas em `.env`; jamais hardcode token, senha SMTP ou API key.
+- Deploy é Docker no Railway com healthcheck `/api/health`; não altere `railway.toml`/`Dockerfile` sem validar build.
+- Respostas de erro da API em JSON `{ error: "..." }`, com status HTTP correto.

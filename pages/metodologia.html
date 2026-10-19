@@ -45,6 +45,10 @@ a:hover{text-decoration:underline}
 .warn{border-left:4px solid var(--gold);padding:10px 14px;background:rgba(255,215,0,.06);border-radius:8px;font-size:13.5px;margin:14px 0}
 .warn b{color:var(--gold)}
 table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+/* A tabela de "oficial vs. estimado" tem colunas com texto longo; sem um
+   contêiner com scroll ela estourava a largura da tela no celular. */
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+.table-scroll table{min-width:420px}
 th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
 th{background:var(--card2);font-weight:700;color:var(--gold);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
 td.ok{color:var(--green)}
@@ -123,6 +127,7 @@ td.est{color:#f59e0b}
 </div>
 
 <h2 id="oficial-vs-estimado">3. O que é oficial vs. estimado</h2>
+<div class="table-scroll">
 <table>
 <tr><th>Dado</th><th>Origem</th><th>Tipo</th></tr>
 <tr><td>Lista de deputados (nome, partido, UF, foto)</td><td>Câmara dadosabertos</td><td><span class="badge ofc">OFICIAL</span></td></tr>
@@ -138,6 +143,7 @@ td.est{color:#f59e0b}
 <tr><td>Promessas cadastradas</td><td>Inseridas pelo cidadão</td><td><span class="badge est">AUTO-RELATADO</span></td></tr>
 <tr><td>Votações do Senado</td><td>API do Senado (pode ser bloqueada por WAF)</td><td><span class="badge ofc">OFICIAL (quando disponível)</span></td></tr>
 </table>
+</div>
 
 <h2 id="limitacoes">4. Limitações e vieses conhecidos</h2>
 <div class="card">

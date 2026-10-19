@@ -97,18 +97,43 @@ const SEC_HEADERS = {
   'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
   'Referrer-Policy': 'no-referrer',
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
-  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://dadosabertos.camara.leg.br https://legis.senado.leg.br;"
+  /* CSP ampliada para os domínios que o frontend realmente consome.
+     A versão anterior bloqueava TSE, GitHub, RSS e QR server, o que
+     quebraria a página de eleições, o feed de notícias e os QR codes. */
+  'Content-Security-Policy': [
+    "default-src 'self'",
+    "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com https://www.googletagmanager.com https://plausible.io https://www.clarity.ms",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com",
+    "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:",
+    "img-src 'self' data: https: blob:",
+    "connect-src 'self' https://dadosabertos.camara.leg.br https://legis.senado.leg.br https://www2.camara.leg.br https://www25.senado.leg.br https://dadosabertos.tse.jus.br https://divulgacand.tse.jus.br https://divulgacandcontas.tse.jus.br https://api.rss2json.com https://api.qrserver.com https://api.github.com https://api.meu-voto.app https://plausible.io https://www.clarity.ms https://www.googletagmanager.com https://agenciabrasil.ebc.com.br",
+    "frame-src 'self'",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'"
+  ].join('; ')
 };
 
-/* Rate Limiting simples por IP (memória) */
+/* Rate Limiting simples por IP (memória).
+   Dois baldes porque a carga é muito diferente:
+   - API: cada chamada pode consultar TSE/Câmara e escrever no banco. Limite
+     apertado (60/min) protege o backend.
+   - Estáticos: a home sozinha baixa ~40 assets (css, js, json, fotos). Com o
+     limite único de 60/min, um visitante que abrisse 2 páginas em sequência
+     recebia 429 até no HTML e no CSS — o site ficava sem estilo. Aqui o teto
+     é bem mais alto, apenas contra abuso/loop. */
 const rateLimitMap = new Map();
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minuto
-const RATE_LIMIT_MAX = 60; // máx 60 requests por minuto por IP
+const RATE_LIMIT_MAX = 60; // máx 60 requests de API por minuto por IP
+const RATE_LIMIT_MAX_STATIC = 600; // máx 600 requests estáticos por minuto por IP
 
 function rateLimit(req, res, next) {
   const ip = clientIp(req);
   const now = Date.now();
-  const record = rateLimitMap.get(ip) || { count: 0, resetAt: now + RATE_LIMIT_WINDOW };
+  const isApi = String(req.url || '').split('?')[0].startsWith('/api/');
+  const key = isApi ? ip + ':api' : ip + ':static';
+  const max = isApi ? RATE_LIMIT_MAX : RATE_LIMIT_MAX_STATIC;
+  const record = rateLimitMap.get(key) || { count: 0, resetAt: now + RATE_LIMIT_WINDOW };
 
   if (now > record.resetAt) {
     record.count = 0;
@@ -116,9 +141,9 @@ function rateLimit(req, res, next) {
   }
 
   record.count++;
-  rateLimitMap.set(ip, record);
+  rateLimitMap.set(key, record);
 
-  if (record.count > RATE_LIMIT_MAX) {
+  if (record.count > max) {
     res.writeHead(429, {
       'Content-Type': 'application/json; charset=utf-8',
       'Retry-After': Math.ceil((record.resetAt - now) / 1000)
@@ -151,7 +176,10 @@ function sendJson(res, status, obj, methods = 'GET, POST, OPTIONS', req = null) 
     'Access-Control-Allow-Headers': 'Content-Type',
     'Cache-Control': 'no-store',
     'X-Content-Type-Options': SEC_HEADERS['X-Content-Type-Options'],
-    'Referrer-Policy': SEC_HEADERS['Referrer-Policy']
+    'Referrer-Policy': SEC_HEADERS['Referrer-Policy'],
+    'X-Frame-Options': SEC_HEADERS['X-Frame-Options'],
+    'Strict-Transport-Security': SEC_HEADERS['Strict-Transport-Security'],
+    'Permissions-Policy': SEC_HEADERS['Permissions-Policy']
   });
   res.end(JSON.stringify(obj));
 }
@@ -365,7 +393,34 @@ const NEWS_FEEDS_UF = {
   TO: 'https://g1.globo.com/rss/g1/to/tocantins/'
 };
 const NEWS_CACHE = { ts: 0, items: [] };
-function stripTags(v) { return String(v || '').replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/\s+/g, ' ').trim(); }
+/* Remove HTML de conteúdo de feed. A ordem importa: as entidades são
+   decodificadas ANTES de remover as tags, senão um &lt;p&gt; escapado
+   voltaria a ser <p> depois da limpeza e o markup do feed entraria
+   cru no innerHTML do card de notícia (imagem quebrada + XSS).
+   Tags truncadas pelo corte de tamanho do feed também são removidas. */
+function stripTags(v) {
+  return String(v || '')
+    .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/<[^>]*$/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;|&apos;/g, "'")
+    .replace(/&amp;/g, '&')
+    /* entidades numéricas (&#8220; &#x2014;): sem isso o texto exibia
+       "&#8220;" e o escape do cliente ainda duplicava o &. */
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => safeCodePoint(parseInt(h, 16)))
+    .replace(/&#(\d+);/g, (_, d) => safeCodePoint(parseInt(d, 10)))
+    /* qualquer < ou > remanescente vira entidade: nada de markup cru */
+    .replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/\s+/g, ' ').trim();
+}
+/* Converte um code point numérico em caractere, ignorando valores inválidos */
+function safeCodePoint(n) {
+  if (!Number.isFinite(n) || n < 1 || n > 0x10ffff) return '';
+  try { return String.fromCodePoint(n); } catch (_) { return ''; }
+}
 function parseRss(xml, fonte, politicasOnly) {
   const items = [];
   const blocks = String(xml).replace(/\r/g, '').split(/<item[\s>]/).slice(1);
@@ -405,13 +460,72 @@ function detectUF(texto) {
   }
   return found;
 }
+
+/* Fotos oficiais verificadas (data/fotos-candidatos-2026.json).
+   O snapshot do TSE não traz foto de candidato, então sem isto Lula e
+   Flávio apareciam com avatar de iniciais em vez das fotos oficiais.
+   A chave é o nome de urna normalizado (sem acento), por isso o normKey. */
+let FOTOS_CACHE = null;
+function fotosOficiais() {
+  if (FOTOS_CACHE) return FOTOS_CACHE;
+  try {
+    const p = path.join(ROOT, 'data', 'fotos-candidatos-2026.json');
+    FOTOS_CACHE = JSON.parse(fs.readFileSync(p, 'utf8'));
+  } catch (_) { FOTOS_CACHE = {}; }
+  return FOTOS_CACHE;
+}
+function normKey(nome) {
+  return String(nome || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+}
+function fotoOficialDe(c) {
+  const f = fotosOficiais();
+  if (!f) return '';
+  const cargo = String(c.cargo);
+  const nome = normKey(c.nomeUrna || c.nomeCivil || '');
+  if (!nome) return '';
+  /* As chaves do arquivo de fotos vêm em varias grafias ("Mailza Assis",
+     "LULA", "Professora Dorinha"), então comparamos normalizadas. */
+  const porNome = (obj) => {
+    if (!obj) return '';
+    if (obj[nome]) return obj[nome];
+    for (const k of Object.keys(obj)) {
+      if (normKey(k) === nome) return obj[k] || '';
+    }
+    return '';
+  };
+  if (cargo === '1' || cargo === '9') {
+    return porNome(f.presidente);
+  }
+  const porUF = (f.governadores && f.governadores[c.uf]) || null;
+  if (porUF) return porNome(porUF);
+  const eleitos = (f.eleitos_1_turno && f.eleitos_1_turno[c.uf]) || null;
+  if (eleitos) return porNome(eleitos);
+  return '';
+}
 async function refreshNoticias(force) {
   const now = Date.now();
   if (!force && now - NEWS_CACHE.ts < 600000 && NEWS_CACHE.items.length) return;
   try {
     const cab = { Accept: 'application/rss+xml,application/xml,text/xml', 'User-Agent': 'MeuVoto/1.0 (+https://meu-voto.app)' };
+    /* Alguns feeds (Folha, G1) served em ISO-8859-1: o .text() do fetch decodifica
+       como UTF-8 e cada byte vira U+FFFD ("Justi?a"). Decodificamos pelo charset
+       declarado e, sem declaração, tentamos UTF-8 e caímos para latin-1 se
+       o resultado tiver caracteres de substituição. */
+    const decodeFeed = async r => {
+      const buf = Buffer.from(await r.arrayBuffer());
+      const ct = String(r.headers.get('content-type') || '');
+      const m = ct.match(/charset=["']?([\w-]+)/i);
+      let enc = (m && m[1]) ? m[1].toLowerCase() : '';
+      if (!/^(utf-?8|latin-?1|iso-8859-1|windows-1252)$/.test(enc)) enc = 'utf-8';
+      let txt = buf.toString(enc);
+      if (enc === 'utf-8' && txt.includes('\uFFFD')) {
+        const alt = buf.toString('latin1');
+        if (!alt.includes('\uFFFD')) txt = alt;
+      }
+      return txt;
+    };
     const fetchFeed = url => fetch(url, { headers: cab, signal: AbortSignal.timeout ? AbortSignal.timeout(8000) : undefined })
-      .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); });
+      .then(async r => { if (!r.ok) throw new Error('HTTP ' + r.status); return decodeFeed(r); });
     const nacionais = await Promise.all(NEWS_FEEDS.map(f =>
       fetchFeed(f.url).then(x => parseRss(x, f.fonte, f.politicas)).catch(err => { console.warn('[noticias] falha em', f.fonte, ':', err.message); return []; })));
     // Feeds LOCAIS (G1 estaduais): só notícias com teor político, UF fixa do feed
@@ -570,9 +684,15 @@ async function handleApi(req, res, url) {
           
           return cargoCorrespondente && estadoCorrespondente && (partidoCorrespondente || nomeCorrespondente);
         });
-        
+
+        /* Foto oficial verificada (data/fotos-candidatos-2026.json): o snapshot
+           do TSE não traz foto, e o ui-avatars gerava avatar de iniciais no
+           lugar de Lula/Flávio. A foto oficial tem prioridade. */
+        const fotoOficial = fotoOficialDe(c);
         if (incumbenteCorrespondente && incumbenteCorrespondente.photo) {
           c.foto = incumbenteCorrespondente.photo;
+        } else if (fotoOficial) {
+          c.foto = fotoOficial;
         } else if (!c.foto) {
           // Se ainda não tiver foto, usar ui-avatars como fallback
           const name = (c.nomeUrna || c.nomeCivil || c.nome || '').trim();
@@ -1478,7 +1598,10 @@ async function handleApi(req, res, url) {
       'X-Accel-Buffering': 'no',
       'Access-Control-Allow-Origin': '*',
       'X-Content-Type-Options': SEC_HEADERS['X-Content-Type-Options'],
-      'Referrer-Policy': SEC_HEADERS['Referrer-Policy']
+      'Referrer-Policy': SEC_HEADERS['Referrer-Policy'],
+      'X-Frame-Options': SEC_HEADERS['X-Frame-Options'],
+      'Strict-Transport-Security': SEC_HEADERS['Strict-Transport-Security'],
+      'Permissions-Policy': SEC_HEADERS['Permissions-Policy']
     });
     res.write('retry: 10000\n\n');
     res.write('event: welcome\ndata: ' +
@@ -1596,7 +1719,11 @@ async function handleApi(req, res, url) {
   }
 
   // DEBUG: Check OTP status (development only)
+  /* Esta rota devolve o código de um OTP em texto puro. Ela só pode existir
+     fora de produção — exposta, qualquer pessoa lê o código de acesso de
+     qualquer e-mail e entra na conta da vítima. */
   if (p === '/api/debug/otp' && req.method === 'GET') {
+    if (auth.IS_PROD) return sendJson(res, 404, { error: 'Rota de API não encontrada' });
     const email = q.email || '';
     const dbAuth = require('./db_auth');
     const entry = dbAuth.getOtp('email', email);
@@ -2203,10 +2330,18 @@ function serveStatic(res, url) {
        snapshot real em data/*.json direto do backend (origem nula no fetch). */
     'Access-Control-Allow-Origin': '*',
     /* HTML/JS/CSS sempre revalidados: o site é atualizado com frequência e
-       cache antigo de .js já causou página exibindo dados demo ultrapassados. */
-    'Cache-Control': (ext === '.html' || ext === '.js' || ext === '.css') ? 'no-cache' : 'public, max-age=3600',
+       cache antigo de .js já causou página exibindo dados demo ultrapassados.
+       data/*.json também não é cacheado: os snapshots eleitorais são atualizados
+       a cada extração do TSE e cache de 1h exibia percentuais defasados. */
+    'Cache-Control': (ext === '.html' || ext === '.js' || ext === '.css' || fp.includes(path.join('data', ''))) ? 'no-cache' : 'public, max-age=3600',
     'X-Content-Type-Options': SEC_HEADERS['X-Content-Type-Options'],
-    'Referrer-Policy': SEC_HEADERS['Referrer-Policy']
+    'Referrer-Policy': SEC_HEADERS['Referrer-Policy'],
+    'X-Frame-Options': SEC_HEADERS['X-Frame-Options'],
+    'X-XSS-Protection': SEC_HEADERS['X-XSS-Protection'],
+    'Strict-Transport-Security': SEC_HEADERS['Strict-Transport-Security'],
+    'Permissions-Policy': SEC_HEADERS['Permissions-Policy'],
+    /* CSP só faz sentido em documentos; em JS/CSS/JSON é ignorada pelo browser. */
+    'Content-Security-Policy': SEC_HEADERS['Content-Security-Policy']
   });
   fs.createReadStream(fp).pipe(res);
 }

@@ -102,6 +102,11 @@ main{max-width:1150px;margin:0 auto;padding:24px 16px 100px}
 #popup{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
 #popup .box{background:var(--c1);border:1px solid var(--gold);border-radius:14px;max-width:520px;padding:22px}
 footer{border-top:1px solid var(--line);padding:20px;text-align:center;color:#8ea2c0;font-size:13px}
+/* O rodapé institucional usava grid fixo de 4 colunas; em telas estreitas as
+   colunas não cabiam e a página ganhava scroll horizontal de ~130px. */
+.ft-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:32px;align-items:start}
+.ft-grid>*{min-width:0}
+@media(max-width:800px){.ft-grid{grid-template-columns:1fr;gap:26px}}
 .mini{font-size:12px;color:#9fb0c8;margin-top:4px}
 h2{margin:26px 0 10px}
 </style>
@@ -416,7 +421,7 @@ $('#popup-ok').onclick=()=>{LS.set('mb_popup_congresso',1);$('#popup').style.dis
 	</script>
 
   <footer style="background:rgba(6,26,58,0.85);border-top:1px solid #1d3a66;padding:48px 24px 24px;margin-top:60px;font-family:Manrope,system-ui,sans-serif;color:#eaf1fb">
-    <div style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px;align-items:start">
+    <div class="ft-grid" style="max-width:1400px;margin:0 auto">
       <div>
         <div style="width:120px;height:120px;display:flex;align-items:center;justify-content:center;margin-bottom:12px">
           <img src="../assets/logo/footer-icon-120.png" alt="MeuVoto" width="120" height="120" style="border-radius:0;display:block;object-fit:contain;filter:drop-shadow(0 0 18px rgba(46,204,113,0.6))">

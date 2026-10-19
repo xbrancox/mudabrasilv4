@@ -16,7 +16,23 @@ const db = require('./db');
 const dbAuth = require('./db_auth');
 const mailer = require('./mailer');
 
-const AUTH_MODE = 'dev'; // Forçado para dev - OTP funciona sem Resend
+/* Modo de autenticação.
+   'prod' = exige o provedor real (e-mail/SMS) e NUNCA devolve o código.
+   'dev'  = modo local: aceita token "google:email:nome" e mostra o código.
+   'auto' = decide pelo NODE_ENV (prod quando NODE_ENV=production).
+
+   A variável de ambiente tem precedência — o Railway define AUTH_MODE=prod.
+   Antes este valor era fixo em 'dev', o que desligava as proteções em
+   produção: qualquer pessoa podia pedir um OTP para o e-mail de outra
+   pessoa e ler o código na resposta da API (`devCode`), e ainda forjar
+   uma sessão com o token "google:email:nome". */
+function resolveAuthMode() {
+  const raw = String(process.env.AUTH_MODE || process.env.MB_AUTH_MODE || '').trim().toLowerCase();
+  if (raw === 'prod' || raw === 'dev') return raw;
+  return process.env.NODE_ENV === 'production' ? 'prod' : 'dev';
+}
+const AUTH_MODE = resolveAuthMode();
+const IS_PROD = AUTH_MODE === 'prod';
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
 const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID || '';
 const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN || '';
@@ -33,8 +49,17 @@ setInterval(() => {
 }, 60 * 60 * 1000);
 
 async function verifyGoogleToken(idToken) {
-  const isDev = (AUTH_MODE === 'dev' && process.env.NODE_ENV !== 'production');
-  if (isDev || !GOOGLE_CLIENT_ID) {
+  /* O token de desenvolvimento ("google:email:nome") só é aceito em modo dev.
+     Antes, a condição `isDev || !GOOGLE_CLIENT_ID` abria a porta em produção
+     sempre que o GOOGLE_CLIENT_ID não estivesse configurado — e ele não está.
+     Qualquer pessoa podia forjar uma sessão com o e-mail de outra pessoa
+     (`google:victima@exemplo.com:Nome`). Agora, em produção, a ausência do
+     GOOGLE_CLIENT_ID é um erro de configuração explícito, não um atalho. */
+  const isDev = !IS_PROD;
+  if (!GOOGLE_CLIENT_ID) {
+    if (!isDev) {
+      throw new Error('Login com Google indisponivel: GOOGLE_CLIENT_ID nao configurado no servidor.');
+    }
     if (typeof idToken === 'string' && idToken.startsWith('google:')) {
       const rest = idToken.slice(7);
       const parts = rest.split(':');
@@ -82,15 +107,22 @@ async function loginWithGoogle(idToken, userAgent, ipAddress) {
 async function sendOtp(phone) {
   const cleanPhone = String(phone).replace(/\D/g, '');
   if (cleanPhone.length < 10 || cleanPhone.length > 13) {
-    throw new Error('Telefone invalido. Use: 11999999999 ou 5511999999999');
+    throw new Error('Telefone invalido. Use: 11999999999 ou 55119999999999');
   }
   const code = String(Math.floor(100000 + Math.random() * 900000));
   const expiresAt = Date.now() + 5 * 60 * 1000; // 5 minutos
-  
+
   // Persistir OTP no banco
   const otpRecord = dbAuth.createOtp('sms', cleanPhone, code, expiresAt);
-  
-  if (AUTH_MODE === 'prod' && TWILIO_ACCOUNT_SID) {
+
+  if (IS_PROD) {
+    /* Em produção o SMS precisa sair de verdade. Sem o Twilio configurado,
+       o código anterior respondia "Codigo enviado por SMS" sem enviar nada
+       algum — o usuário ficava esperando um SMS que nunca chegaria.
+       Aqui falhamos de forma explícita, dizendo o que falta configurar. */
+    if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_PHONE) {
+      throw new Error('Login por telefone indisponivel no momento. Use o login por e-mail.');
+    }
     try {
       const twilio = require('twilio')(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
       await twilio.messages.create({
@@ -100,11 +132,17 @@ async function sendOtp(phone) {
     } catch (e) {
       throw new Error('Falha ao enviar SMS. Tente novamente.');
     }
+    return {
+      ok: true, phone: cleanPhone, expiresIn: 300,
+      devCode: null,
+      message: 'Codigo enviado por SMS'
+    };
   }
+
   return {
     ok: true, phone: cleanPhone, expiresIn: 300,
-    devCode: AUTH_MODE === 'dev' ? code : undefined,
-    message: AUTH_MODE === 'dev' ? 'MODO DEV: codigo = ' + code : 'Codigo enviado por SMS'
+    devCode: code,
+    message: 'MODO DEV: codigo = ' + code
   };
 }
 
@@ -168,10 +206,21 @@ async function sendEmailOtp(email, userAgent, ipAddress) {
     console.error('[auth] Falha ao enviar e-mail OTP para ' + emailStr + ': ' + e.message);
   }
 
-  // Em desenvolvimento, expor devCode para permitir testes locais sem SMTP.
-  // Em produção, NUNCA expor o código na UI — exigir que o provedor de e-mail funcione.
-  const isDev = AUTH_MODE === 'dev';
-  const provideDevCode = isDev && !emailSent;
+  /* Em desenvolvimento, expor devCode para permitir testes locais sem SMTP.
+     Em produção, NUNCA expor o código na API — o código precisa chegar
+     apenas pelo e-mail do próprio usuário.
+
+     A distinction agora é IS_PROD (modo de autenticação efetivo), e não
+     AUTH_MODE === 'dev': quando o servidor roda com AUTH_MODE=dev em
+     produção, o código voltava no corpo da resposta em texto puro —
+     qualquer pessoa podia pedir um OTP para o e-mail de outra pessoa e
+     ler o código. Em produção, se o e-mail falhar, a rota deve falhar
+     explícitamente em vez de devolver o código. */
+  const isDev = !IS_PROD;
+  // Em modo dev, o mailer simula com sucesso (ok:true) sem enviar e-mail real.
+  // Nesse caso, devemos SEMPRE expor o devCode, pois não há como o usuário
+  // receber o código por outro meio.
+  const provideDevCode = isDev;
 
   if (!isDev && !emailSent) {
     throw new Error('Não foi possível enviar o código por e-mail. Tente novamente em instantes.');
@@ -182,7 +231,10 @@ async function sendEmailOtp(email, userAgent, ipAddress) {
     email: emailStr,
     expiresIn: 600,
     emailSent: emailSent,
-    devCode: provideDevCode ? code : undefined,
+    // Usamos null (não undefined) para que a chave devCode sempre apareça
+    // na resposta JSON, permitindo que o cliente saiba se deve usar o código
+    // de desenvolvimento.
+    devCode: provideDevCode ? code : null,
     message: emailSent
       ? 'Código enviado para seu e-mail'
       : 'E-mail não entregue pelo servidor. Use o código temporário: ' + code
@@ -254,5 +306,5 @@ module.exports = {
   sendEmailOtp, verifyEmailOtp,
   register,
   generateSessionToken, getVoterFromToken, getVoterFromTokenOrAnon, logout,
-  AUTH_MODE
+  AUTH_MODE, IS_PROD
 };

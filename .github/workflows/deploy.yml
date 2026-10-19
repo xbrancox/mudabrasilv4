@@ -1,12 +1,20 @@
-name: Deploy VotaBrasil Pages
+name: Deploy VotaBrasil Pages (manual)
+
+# O deploy automático de Pages fica em pages.yml.
+# Este workflow era duplicado (dois deploys concorrentes por push) e agora
+# roda apenas sob demanda, como fallback manual.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
+
 permissions:
   contents: read
   pages: write
   id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
   deploy:
     environment:

@@ -12,10 +12,10 @@
   --bg-overlay: rgba(14, 23, 38, 0.92);
 
   /* Brand colors Premium */
-  --primary: #1A73E8;       /* Blue el�trico */
+  --primary: #1A73E8;       /* Blue elétrico */
   --primary-dark: #1557b9;
   --primary-light: #3399ff;
-  --gold: #D4AF37;          /* Dourado met�lico */
+  --gold: #D4AF37;          /* Dourado metálico */
   --gold-light: #E4C247;
   --gold-dark: #A88D22;
   --muted: #5A6E8E;         /* Gray medio */
@@ -289,8 +289,11 @@ a:hover {
 }
 
 /* ---------- MAIN CONTENT ---------- */
+/* A sidebar de 220px foi removida do site (o cabeçalho passou a vir do
+   site-header.js e nenhuma página usa mais .sidebar/.main-content). O
+   offset de 220px alinhado ao rodapé deslocava o conteúdo e o rodapé de
+   páginas sem sidebar, como lula.html e resultados-2026.html. */
 .main-content {
-  margin-left: 220px;
   padding: var(--space-xl) var(--space-2xl);
   position: relative;
   z-index: 1;
@@ -813,8 +816,9 @@ label {
 }
 
 /* ---------- FOOTER ---------- */
+/* Sem offset de 220px: a sidebar foi removida do site, então o rodapé deve
+   alinhar com o conteúdo de largura total. */
 footer {
-  margin-left: 220px;
   background: rgba(6, 26, 58, 0.6);
   border-top: 1px solid rgba(127, 176, 245, 0.15);
   padding: var(--space-2xl) var(--space-2xl) var(--space-lg);
@@ -860,6 +864,75 @@ footer {
   font-size: var(--text-xs);
   color: var(--text-muted);
   margin: 0;
+}
+
+/* ---------- RODAPÉ INSTITUCIONAL (lula / flávio / comparador / resultados) ---------- */
+/* As classes .footer-eleicoes* existiam no HTML mas não tinham regra em
+   nenhum CSS. Sem elas o ícone do projeto (icon.png, 1024x1024) era
+   exibido em tamanho natural, estourando ~12px a largura da página e
+   criando scroll horizontal. */
+.footer-eleicoes .wrap {
+  max-width: 1045px;
+  margin: 0 auto;
+}
+
+.footer-eleicoes-conteudo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-lg);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer-eleicoes-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 0 0 auto;
+}
+
+.footer-eleicoes-logo img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  border-radius: 12px;
+  flex: none;
+}
+
+.footer-eleicoes-logo strong {
+  display: block;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.footer-eleicoes-logo span {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.footer-eleicoes-disclaimer {
+  flex: 1 1 320px;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.footer-eleicoes-disclaimer a {
+  color: var(--gold);
+}
+
+.footer-eleicoes-copy {
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid rgba(127, 176, 245, 0.1);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.footer-eleicoes-inst {
+  margin-top: var(--space-sm);
+  font-size: var(--text-xs);
 }
 
 /* ---------- CANDIDATES (página de candidatos) ---------- */

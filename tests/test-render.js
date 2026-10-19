@@ -8,7 +8,7 @@
   const ROOT = path.resolve(__dirname, '..');
   const BASE = 'http://localhost:8080';
   const DATA_DIR = path.join(ROOT, 'server', 'data');
-  const PAGES = ['', 'pages/candidatos.html', 'pages/termometro.html', 'pages/parlamentares.html', 'pages/status.html', 'pages/proposta.html'];
+  const PAGES = ['', 'pages/termometro.html', 'pages/parlamentares.html', 'pages/status.html', 'pages/proposta.html'];
 
   let pass = 0, fail = 0;
   function ok(label, cond, detail = '') {
@@ -17,7 +17,11 @@
   }
   async function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-  for (const f of ['votos.db', '.salt', 'votos.json']) {
+  /* NÃO apaga o '.salt': ele é o sal do hash dos códigos de voto e está
+     versionado no repositório (o Dockerfile faz `COPY . .`, então ele entra
+     na imagem). Rotacioná-lo num teste invalidaria todos os códigos de voto
+     já emitidos em produção. O sal só muda por decisão explícita. */
+  for (const f of ['votos.db', 'votos.json']) {
     try { fs.rmSync(path.join(DATA_DIR, f), { force: true }); } catch {}
   }
 

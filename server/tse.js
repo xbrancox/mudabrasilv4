@@ -50,6 +50,7 @@ function readCache(){
     const raw = fs.readFileSync(CACHE_FILE, 'utf8');
     const obj = JSON.parse(raw);
     if(obj.ts && (Date.now() - obj.ts) > TTL_MS) return null;
+    if(obj && Array.isArray(obj.candidatos)) obj.candidatos = dedupCandidatos(obj.candidatos);
     return obj;
   }catch(_){ return null; }
 }
@@ -108,6 +109,20 @@ async function ingestReal(){
 /* ---------- Snapshot commitado (candidatos reais 2026) ---------- */
 let SNAPSHOT = null; /* em memória após a 1ª leitura */
 let SNAP_MTIME = 0;
+/* O TSE publica o mesmo candidato em arquivos diferentes (ex.:|link e
+   resposta), então o mesmo sq aparece 2x no snapshot. Deduplica por
+   cargo+uf+sq para a lista não repetir o mesmo nome. */
+function dedupCandidatos(lista){
+  const vistos = new Set();
+  const out = [];
+  for (const c of lista) {
+    const k = [c.cargo, c.uf, c.sq || c.numero].join('|');
+    if (vistos.has(k)) continue;
+    vistos.add(k);
+    out.push(c);
+  }
+  return out;
+}
 function readSnapshot(){
   try{
     if(!fs.existsSync(SNAPSHOT_FILE)) return SNAPSHOT || null;
@@ -115,6 +130,7 @@ function readSnapshot(){
     if(SNAPSHOT && st.mtimeMs === SNAP_MTIME) return SNAPSHOT;
     const obj = JSON.parse(fs.readFileSync(SNAPSHOT_FILE, 'utf8'));
     if(obj && Array.isArray(obj.candidatos) && obj.candidatos.length){
+      obj.candidatos = dedupCandidatos(obj.candidatos);
       SNAPSHOT = obj; SNAP_MTIME = st.mtimeMs;
       return SNAPSHOT;
     }

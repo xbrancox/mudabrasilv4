@@ -1,9 +1,9 @@
 {
   "descricao": "Fotos oficiais dos candidatos nas Eleições 2026. Fontes: Wikimedia Commons, TSE, Senado Federal, Palácio do Planalto.",
-  "atualizadoEm": "2026-10-17T19:30:00Z",
+  "atualizadoEm": "2026-10-19T16:20:25.386Z",
   "presidente": {
-    "LULA": "https://upload.wikimedia.org/wikipedia/commons/2/21/Foto_oficial_de_Luiz_In%C3%A1cio_Lula_da_Silva_%283x4_cropped%29.jpg",
-    "FLAVIO BOLSONARO": "https://upload.wikimedia.org/wikipedia/commons/b/b3/Foto_oficial_do_senador_Fl%C3%A1vio_Bolsonaro_%28v._AgSen%29_%283x4%29.jpg"
+    "LULA": "https://commons.wikimedia.org/wiki/Special:FilePath/Foto_oficial_de_Luiz_In%C3%A1cio_Lula_da_Silva_(3x4_cropped).jpg?width=320",
+    "FLAVIO BOLSONARO": "https://commons.wikimedia.org/wiki/Special:FilePath/Foto_oficial_do_senador_Fl%C3%A1vio_Bolsonaro_(v._AgSen)_(3x4).jpg?width=320"
   },
   "governadores": {
     "AC": {
@@ -32,26 +32,68 @@
     }
   },
   "eleitos_1_turno": {
-    "AL": { "JHC": "https://commons.wikimedia.org/wiki/Special:FilePath/2026_JHC_CANDIDATO_GOVERNADOR_AL_TSE_(20002553350).jpg" },
-    "AP": { "Dr. Furlan": "https://commons.wikimedia.org/wiki/Special:FilePath/2026_DR._FURLAN_CANDIDATO_GOVERNADOR_AP_TSE_(30002530014).jpg" },
-    "BA": { "Jerônimo Rodrigues": "" },
-    "CE": { "Elmano de Freitas": "" },
-    "GO": { "Daniel Vilela": "" },
-    "MA": { "Eduardo Braide": "https://commons.wikimedia.org/wiki/Special:FilePath/FOTO_EDUARDO_BRAIDE_2026.jpg" },
-    "MG": { "Cleitinho Azevedo": "https://commons.wikimedia.org/wiki/Special:FilePath/2026_CLEITINHO_AZEVEDO_CANDIDATO_GOVERNADOR_MG_TSE_(130002552296).jpg" },
-    "MS": { "Eduardo Riedel": "" },
-    "MT": { "Otaviano Pivetta": "" },
-    "PA": { "Dr. Daniel": "https://commons.wikimedia.org/wiki/Special:FilePath/2026_DR_DANIEL_CANDIDATO_GOVERNADOR_PA_TSE_(140002549930).jpg" },
-    "PB": { "Lucas Ribeiro": "https://commons.wikimedia.org/wiki/Special:FilePath/FOTO_LUCAS_RIBEIRO_2026.jpg" },
-    "PE": { "Raquel Lyra": "" },
-    "PI": { "Rafael Fonteles": "https://commons.wikimedia.org/wiki/Special:FilePath/2026_RAFAEL_FONTELES_CANDIDATO_GOVERNADOR_PI_TSE_(180002532987).jpg" },
-    "PR": { "Sergio Moro": "" },
-    "RJ": { "Douglas Ruas": "https://commons.wikimedia.org/wiki/Special:FilePath/FOTO_DOUGLAS_RUAS_2026.jpg" },
-    "RO": { "Marcos Rogério": "" },
-    "RR": { "Arthur Henrique": "" },
-    "RS": { "Zucco": "https://commons.wikimedia.org/wiki/Special:FilePath/2026_ZUCCO_CANDIDATO_GOVERNADOR_RS_TSE_(210002547857).jpg" },
-    "SC": { "Jorginho Mello": "https://commons.wikimedia.org/wiki/Special:FilePath/2026_JORGINHO_MELLO_CANDIDATO_GOVERNADOR_SC_TSE_(240002537073).jpg" },
-    "SE": { "Fábio Mitidieri": "" },
-    "SP": { "Tarcísio de Freitas": "https://commons.wikimedia.org/wiki/Special:FilePath/2026_TARC%C3%8DSIO_DE_FREITAS_CANDIDATO_GOVERNADOR_SP_TSE_(250002541303).jpg" }
+    "AL": {
+      "JHC": "https://commons.wikimedia.org/wiki/Special:FilePath/2026_JHC_CANDIDATO_GOVERNADOR_AL_TSE_(20002553350).jpg"
+    },
+    "AP": {
+      "Dr. Furlan": "https://commons.wikimedia.org/wiki/Special:FilePath/2026_DR._FURLAN_CANDIDATO_GOVERNADOR_AP_TSE_(30002530014).jpg"
+    },
+    "BA": {
+      "Jerônimo Rodrigues": ""
+    },
+    "CE": {
+      "Elmano de Freitas": ""
+    },
+    "GO": {
+      "Daniel Vilela": ""
+    },
+    "MA": {
+      "Eduardo Braide": "https://commons.wikimedia.org/wiki/Special:FilePath/FOTO_EDUARDO_BRAIDE_2026.jpg"
+    },
+    "MG": {
+      "Cleitinho Azevedo": "https://commons.wikimedia.org/wiki/Special:FilePath/2026_CLEITINHO_AZEVEDO_CANDIDATO_GOVERNADOR_MG_TSE_(130002552296).jpg"
+    },
+    "MS": {
+      "Eduardo Riedel": ""
+    },
+    "MT": {
+      "Otaviano Pivetta": ""
+    },
+    "PA": {
+      "Dr. Daniel": "https://commons.wikimedia.org/wiki/Special:FilePath/2026_DR_DANIEL_CANDIDATO_GOVERNADOR_PA_TSE_(140002549930).jpg"
+    },
+    "PB": {
+      "Lucas Ribeiro": "https://commons.wikimedia.org/wiki/Special:FilePath/FOTO_LUCAS_RIBEIRO_2026.jpg"
+    },
+    "PE": {
+      "Raquel Lyra": ""
+    },
+    "PI": {
+      "Rafael Fonteles": "https://commons.wikimedia.org/wiki/Special:FilePath/2026_RAFAEL_FONTELES_CANDIDATO_GOVERNADOR_PI_TSE_(180002532987).jpg"
+    },
+    "PR": {
+      "Sergio Moro": ""
+    },
+    "RJ": {
+      "Douglas Ruas": "https://commons.wikimedia.org/wiki/Special:FilePath/FOTO_DOUGLAS_RUAS_2026.jpg"
+    },
+    "RO": {
+      "Marcos Rogério": ""
+    },
+    "RR": {
+      "Arthur Henrique": ""
+    },
+    "RS": {
+      "Zucco": "https://commons.wikimedia.org/wiki/Special:FilePath/2026_ZUCCO_CANDIDATO_GOVERNADOR_RS_TSE_(210002547857).jpg"
+    },
+    "SC": {
+      "Jorginho Mello": "https://commons.wikimedia.org/wiki/Special:FilePath/2026_JORGINHO_MELLO_CANDIDATO_GOVERNADOR_SC_TSE_(240002537073).jpg"
+    },
+    "SE": {
+      "Fábio Mitidieri": ""
+    },
+    "SP": {
+      "Tarcísio de Freitas": "https://commons.wikimedia.org/wiki/Special:FilePath/2026_TARC%C3%8DSIO_DE_FREITAS_CANDIDATO_GOVERNADOR_SP_TSE_(250002541303).jpg"
+    }
   }
 }

@@ -22,7 +22,11 @@
     '#mbtopo .lg .ic{width:120px;height:120px;border-radius:0;background:transparent;display:flex;align-items:center;justify-content:center;color:#061a3a;font-size:24px;flex:none;filter:drop-shadow(0 0 20px rgba(46,204,113,0.7))}',
     '#mbtopo .lg b{font-family:Montserrat,sans-serif;font-size:20px;font-weight:900;color:#fff;display:block;white-space:nowrap;letter-spacing:-0.02em}',
     '#mbtopo .lg .mv-slogan{display:block;color:#FFD700;font-size:10.5px;font-weight:700;white-space:nowrap;font-style:italic;letter-spacing:0.01em}',
-    '#mbtopo nav{display:flex;gap:4px;flex-wrap:nowrap;margin-left:auto;min-width:0}',
+    /* O nav encolhe (min-width:0) mas os links são nowrap: sem wrap os itens
+       "vazavam" da caixa do nav e cobriam os botões de ação (App/Conferir/
+       Entrar/Cadastrar). Com wrap + justify-content:flex-end os links
+       quebram em 2 linhas dentro da área livre em vez de sobrepor. */
+    '#mbtopo nav{display:flex;gap:4px;row-gap:4px;flex-wrap:wrap;justify-content:flex-end;margin-left:auto;min-width:0}',
     '#mbtopo nav a{color:#eaf1fb;text-decoration:none;padding:7px 12px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap;transition:all 0.2s ease}',
     '#mbtopo nav a:hover{background:rgba(18,48,89,0.8);transform:translateY(-1px);color:#FFD700}',
     '#mbtopo nav a.on{background:linear-gradient(135deg,#FFD700,#FFA500);color:#061a3a;font-weight:800;box-shadow:0 2px 10px rgba(255,215,0,0.3)}',
@@ -41,8 +45,21 @@
     '#mbtopo .mnav a{color:#eaf1fb;text-decoration:none;padding:11px 8px;border-bottom:1px dashed rgba(127,176,245,0.15);font-size:14px;font-weight:600;display:flex;align-items:center;gap:10px;transition:color 0.2s ease}',
     '#mbtopo .mnav a:hover{color:#FFD700;padding-left:12px}',
     '@media(max-width:1180px){#mbtopo nav{display:none}#mbtopo .ham{display:block}}',
+    /* Entre 1180px e ~1400px a barra completa (logo + 9 links + 4 botões)
+       estourava a largura da tela em ~10px, criando scroll horizontal na
+       página. Aqui os itens ficam mais compactos sem sumir. */
+    '@media(min-width:1181px) and (max-width:1400px){#mbtopo nav a{padding:7px 9px;font-size:11.5px}#mbtopo .hbtn{padding:8px 11px;font-size:11.5px}#mbtopo .hbadge{padding:5px 8px;font-size:10px}}',
+    /* Abaixo de 900px o bloco de ações (badge + App + Conferir + Entrar +
+       Cadastrar) somava ~430px e, junto com o logo de 120px, estourava a
+       largura da tela (ex.: 809px em uma viewport de 768px), gerando scroll
+       horizontal na página inteira. O menu ☰ já traz App, Conferir, Ajuda,
+       Quem Somos, Entrar e Criar conta, então as ações ficam só nele. */
+    '@media(max-width:900px){#mbtopo .hact{display:none}#mbtopo .ham{margin-left:auto}}',
     '#mbtopo .lg img{height:120px;width:120px;object-fit:contain}',
-    '@media(max-width:640px){#mbtopo .lg img{height:72px!important;width:72px!important}#mbtopo .lg b{font-size:16px!important}#mbtopo .lg .mv-slogan{font-size:0.7rem!important}}'
+    '@media(max-width:640px){#mbtopo .lg img{height:72px!important;width:72px!important}#mbtopo .lg b{font-size:16px!important}#mbtopo .lg .mv-slogan{font-size:0.7rem!important;white-space:normal!important}}',
+    /* Em telas de 360px o slogan em uma linha só (nowrap) empurrava o logo
+       para 304px e o header estourava a viewport em ~14px. */
+    '@media(max-width:400px){#mbtopo .lg .mv-slogan{display:none!important}}'
   ].join('\n');
 
   var ITENS = [
@@ -111,7 +128,13 @@
       ' <a class="hbtn"' + (naHomeAgora ? ' onclick="if(window.abrirLogin)window.abrirLogin();return false" href="#conferir-voto"' : ' href="' + R + 'index.html"') + '>Entrar</a>' +
       ' <a class="hbtn gold"' + (naHomeAgora ? ' onclick="if(window.abrirLogin)window.abrirLogin();return false" href="#conferir-voto"' : ' href="' + R + 'index.html"') + '>Cadastrar</a></div>' +
       '</header>' +
-      '<div class="mnav" id="mbtopo-mnav">' + mnav + '<a href="' + R + 'app/">📱 Abrir o App de Votação</a><a href="' + R + 'index.html#conferir-voto">🔍 Conferir Voto</a></div>';
+      /* O menu ☰ é a única navegação em telas <760px (onde o bloco .hact
+         fica oculto), então Entrar/Cadastrar precisam estar aqui também. */
+      '<div class="mnav" id="mbtopo-mnav">' + mnav + '<a href="' + R + 'app/">📱 Abrir o App de Votação</a><a href="' + R + 'index.html#conferir-voto">🔍 Conferir Voto</a>' +
+      '<a href="' + R + 'index.html#ajuda">❓ Ajuda (FAQ)</a>' +
+      '<a href="' + R + 'index.html#quem-somos">👥 Quem Somos</a>' +
+      '<a' + (naHomeAgora ? ' onclick="if(window.abrirLogin)window.abrirLogin();return false" href="#conferir-voto"' : ' href="' + R + 'index.html"') + '>🔑 Entrar</a>' +
+      '<a' + (naHomeAgora ? ' onclick="if(window.abrirLogin)window.abrirLogin();return false" href="#conferir-voto"' : ' href="' + R + 'index.html"') + '>✨ Criar conta</a></div>';
 
     var alvo = document.body;
     alvo.insertBefore(topo, alvo.firstChild);
