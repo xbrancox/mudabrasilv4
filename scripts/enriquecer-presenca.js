@@ -34,8 +34,34 @@ const SALVAR_A_CADA = 25;
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+/* A API da Câmara e a do Senado falham de forma intermitente por tempo
+   excessivo (UND_ERR_CONNECT_TIMEOUT) quando Called a partir dos runners
+   do GitHub Actions. Sem retry, uma única falha de rede derrubava o job
+   inteiro — o workflow "Manutenção automática" falhava em toda execução.
+
+   Aqui tentamos de novo com espera crescente e, no fim, propagamos o erro
+   original para quem chamou poder tratar. */
+const TENTATIVAS = 4;
+async function fetchComRetry(url, opcoes) {
+  let ultimoErro = null;
+  for (let t = 1; t <= TENTATIVAS; t++) {
+    try {
+      return await fetch(url, opcoes);
+    } catch (e) {
+      ultimoErro = e;
+      if (t < TENTATIVAS) {
+        const espera = 1000 * Math.pow(2, t - 1); // 2s, 4s, 8s
+        console.warn('  rede: tentativa ' + t + '/' + TENTATIVAS + ' falhou (' + e.message +
+          ') — nova tentativa em ' + espera + 'ms');
+        await sleep(espera);
+      }
+    }
+  }
+  throw ultimoErro;
+}
+
 async function getJson(url) {
-  const res = await fetch(url, { headers: { 'User-Agent': UA, Accept: 'application/json' } });
+  const res = await fetchComRetry(url, { headers: { 'User-Agent': UA, Accept: 'application/json' } });
   if (!res.ok) throw new Error('HTTP ' + res.status);
   return res.json();
 }
@@ -48,7 +74,7 @@ async function paginar(urlBase, extrair) {
   let acumulado = [];
   for (let pag = 1; pag <= alvo && pag <= 100; pag++) {
     const sep = urlBase.includes('?') ? '&' : '?';
-    const res = await fetch(urlBase + sep + 'itens=100&pagina=' + pag, { headers: { 'User-Agent': UA, Accept: 'application/json' } });
+    const res = await fetchComRetry(urlBase + sep + 'itens=100&pagina=' + pag, { headers: { 'User-Agent': UA, Accept: 'application/json' } });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const d = await res.json();
     const evs = d.dados || [];
@@ -95,7 +121,18 @@ async function main() {
   const snap = JSON.parse(fs.readFileSync(SNAP, 'utf8'));
   const lista = snap.candidatos;
   console.log('Contando sessões deliberativas da Câmara em ' + INICIO + '..' + FIM + '…');
-  const TOTAL_SESSOES = await totalSessoesDeliberativas();
+
+  let TOTAL_SESSOES = 0;
+  try {
+    TOTAL_SESSOES = await totalSessoesDeliberativas();
+  } catch (e) {
+    /* Sem o total de sessões não dá para calcular presença. Melhor encerrar
+       sem gravar nada do que zerar a presença de todos os parlamentares
+       (o campo null sobrescreveria dados válidos já no snapshot). */
+    console.error('Não foi possível obter o total de sessões da Câmara: ' + e.message);
+    console.error('Enriquecimento de presença cancelado — snapshot mantido intacto.');
+    process.exit(0);
+  }
   console.log('Total de sessões deliberativas: ' + TOTAL_SESSOES);
 
   let feitos = 0, falhas = 0, pulados = 0;

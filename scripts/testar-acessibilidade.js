@@ -51,7 +51,14 @@ let imagesWithoutAlt = 0;
 let totalImages = 0;
 
 htmlFiles.forEach(file => {
-  const content = fs.readFileSync(path.join(PAGES_DIR, file), 'utf8');
+  const raw = fs.readFileSync(path.join(PAGES_DIR, file), 'utf8');
+  /* Comentários de HTML e de JavaScript guardam trechos de exemplo
+     (inclusive tags <img> usados só como ilustração no texto). Contá-los
+     como imagens da página acusava um alt faltando inexistente e quebrava
+     o CI — o img de verdade sempre teve alt="". */
+  const content = raw
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/\/\*[\s\S]*?\*\//g, '');
   const imgMatches = content.match(/<img[^>]*>/g) || [];
   totalImages += imgMatches.length;
   imgMatches.forEach(img => {
