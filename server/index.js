@@ -1411,6 +1411,25 @@ async function handleApi(req, res, url) {
     }
   }
 
+  /* Resultado das Eleições 2026 – dados oficiais TSE */
+  if (p === '/api/eleicoes' && req.method === 'GET') {
+    try {
+      const path = require('path');
+      const fs = require('fs');
+      const base = path.join(__dirname, 'data');
+      const load = (file) => JSON.parse(fs.readFileSync(path.join(base, file), 'utf8'));
+      const resp = {
+        presidente: load('presidente-2026.json'),
+        governadores: load('governadores-2026.json'),
+        senado: load('senado-2026.json'),
+        camara: load('camara-2026.json')
+      };
+      return sendJson(res, 200, resp);
+    } catch (e) {
+      return sendJson(res, 500, { ok: false, error: e.message });
+    }
+  }
+
   /* ===== 2º TURNO — Apoios a candidatos ===== */
   if (p === '/api/turno' && req.method === 'GET') {
     try {
