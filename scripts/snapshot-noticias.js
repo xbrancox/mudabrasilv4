@@ -21,7 +21,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const API = process.env.API_BASE || 'https://VotaBrasil-redesign-production.up.railway.app';
+const API = process.env.API_BASE || 'https://api.meu-voto.app';
 const OUT = path.join(__dirname, '..', 'data', 'noticias.json');
 const MIN = parseInt(process.env.MIN_NOTICIAS || '100', 10);
 
