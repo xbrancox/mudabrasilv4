@@ -44,6 +44,7 @@ const tse = require('./tse');
 const contato = require('./contato');
 const logger = require('./logger');
 const metrics = require('./metrics');
+const mailer = require('./mailer');
 /* ===== 2º Turno 2026 (Presidente + Governadores) ===== */
 let _segundoTurnoCache = null;
 function getSegundoTurno() {
@@ -898,6 +899,14 @@ async function handleApi(req, res, url) {
         maxSize: logger.maxSize(),
         maxFiles: logger.maxFiles(),
         stats: logStats
+      },
+      /* Provedor de e-mail em uso — apenas o nome, nunca a chave.
+         Sem isso, um login por e-mail quebrado em produção não deixa
+         rastro: a API responde "não foi possível enviar" e não há como
+         saber se o problema é SMTP, Resend ou variável ausente. */
+      email: {
+        provider: mailer.IS_DEV ? 'nenhum' : (process.env.SMTP_HOST ? 'smtp' : 'resend'),
+        remetente: process.env.RESEND_FROM || process.env.SMTP_FROM || null
       },
       metrics: '/api/metrics'
     });
