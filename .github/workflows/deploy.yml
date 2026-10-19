@@ -1,4 +1,4 @@
-name: Deploy VotaBrasil Pages (manual)
+name: Deploy GitHub Pages (manual)
 
 # O deploy automático de Pages fica em pages.yml.
 # Este workflow era duplicado (dois deploys concorrentes por push) e agora

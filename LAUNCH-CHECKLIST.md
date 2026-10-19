@@ -236,7 +236,7 @@ Se algo der errado no lançamento:
 
 ## 📝 NOTAS
 
-- **Domínio atual**: `mudabrasil-production-79eb.up.railway.app` (funcional, mas não definitivo)
+- **Domínio atual**: `api.meu-voto.app` (funcional, mas não definitivo)
 - **Frontend atual**: `meu-voto.app` (funcional)
 - **Domínio disponível**: `voto.online` (confirmado via RDAP)
 - **Outros domínios**: `euvoto.site`, `euvoto.ong`, `meuvoto.org` (status desconhecido)

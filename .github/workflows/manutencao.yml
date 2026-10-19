@@ -75,7 +75,7 @@ jobs:
     steps:
       - name: Acorda o backend e baixa o dump
         env:
-          BASE: https://VotaBrasil-redesign-production.up.railway.app
+          BASE: https://api.meu-voto.app
           TOKEN: ${{ secrets.BACKUP_TOKEN }}
         run: |
           curl -fsS --max-time 120 "$BASE/api/health" > /dev/null || echo "health não respondeu, seguindo"

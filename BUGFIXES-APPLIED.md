@@ -13,14 +13,19 @@
 **Problema:**
 ```javascript
 // ANTES (ERRADO)
-'https://VotaBrasil-redesign-production.up.railway.app'
+'https://api.meu-voto.app'
 ```
 
 **Correção:**
 ```javascript
 // DEPOIS (CORRETO)
-'https://mudabrasil-production-79eb.up.railway.app'
+'https://api.meu-voto.app'
 ```
+
+> Atualizado em 19/10/2026: o domínio definitivo é `api.meu-voto.app`. Os domínios
+> `mudabrasil-production-79eb.up.railway.app` (projeto órfão, já deletado) e
+> `VotaBrasil-redesign-production.up.railway.app` (nunca resolveu no DNS) foram
+> removidos; o serviço Railway agora se chama `MeuVoto`.
 
 **Impacto:** Frontend agora consegue falar com o backend real. Votos, reclamações e termômetro funcionam.
 
@@ -200,7 +205,7 @@ const CARGOS_ORDEM = ['Presidente', 'Senador', 'Deputado Federal',
 
 **Problema:** `VotaBrasil` com V maiúsculo na URL.
 
-**Correção:** URL agora é `mudabrasil-production-79eb.up.railway.app` (tudo minúsculo).
+**Correção:** URL agora é `api.meu-voto.app` (tudo minúsculo).
 
 **Impacto:** Boa prática de URLs.
 
