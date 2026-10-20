@@ -528,22 +528,7 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
   </div>
 </div>
 
-<!-- ===== SPOTLIGHT 2º TURNO — PRESIDENCIÁVEIS (dados reais TSE) ===== -->
-<div class="spot" id="spot-presidente">
-  <div class="spot-head">
-    <span class="tag">DECISÃO DO 2º TURNO</span>
-    <h2 style="margin-top:14px">Quem disputa a Presidência</h2>
-    <p>Candidatos confirmados para o 2º turno (dia 25): LULA (PT) e FLAVIO BOLSONARO (PL). Clique para ver a ficha completa, o histórico e como cada um votou.</p>
-  </div>
-  <div class="spot-grid" id="spotGrid"></div>
-  <div class="apoio-total-wrap" id="turnoTotalApoiosWrap" style="margin-top:18px">
-    <div class="apoio-total-num" id="turnoTotalApoios">0</div>
-    <div class="apoio-total-label">👥 Pessoas que já declararam apoio no 2º turno</div>
-  </div>
-  <p class="spot-note">📊 Dados públicos do TSE (DivulgaCand) · <a href="pages/eleicoes-2026.html">ver todos os candidatos e filtros →</a><br>O MeuVoto é um protótipo cívico independente, sem vínculo com TSE, partidos ou candidatos.</p>
-</div>
-
-<!-- ===== CARDS GRANDES — FICHAS DE LULA E FLÁVIO (restaurado) ===== -->
+<!-- ===== CARDS GRANDES — FICHAS DE LULA E FLÁVIO COM BARRAS DE APOIO ===== -->
 <div class="wrap" id="candidatos" style="margin-top:52px;scroll-margin-top:150px">
   <div class="sec-head">
     <span class="tag">DISPUTA PRESIDENCIAL</span>
@@ -564,8 +549,16 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
         <div><span>Coligação:</span><span>PL / Republicanos / PP</span></div>
       </div>
       <div class="cand-cta">
-        <a class="btn primary" href="pages/flavio-bolsonaro.html" style="text-decoration:none"><i class="fa-solid fa-file-lines"></i> Ver propostas</a>
+        <a class="btn primary" href="https://pln.camara.leg.br/pesquisa?q=flavio+bolsonaro" target="_blank" rel="noopener" style="text-decoration:none"><i class="fa-solid fa-file-lines"></i> Ver propostas</a>
         <a class="btn" href="pages/comparador.html" style="text-decoration:none"><i class="fa-solid fa-scale-balanced"></i> Comparar</a>
+        <button class="btn sm gold" onclick="apoiarTurno('flavio','Flávio Bolsonaro')"><i class="fa-solid fa-hand"></i> Apoiar</button>
+      </div>
+      <div class="apoio-barra-wrap" style="margin-top:14px">
+        <div class="apoio-barra-label">
+          <span class="apoio-barra-count" id="apoio-count-flavio">0 apoios</span>
+          <span class="apoio-barra-pct" id="apoio-pct-flavio">0%</span>
+        </div>
+        <div class="apoio-barra-track"><div class="apoio-barra-fill" id="apoio-barra-flavio" style="width:0%"></div></div>
       </div>
     </article>
 
@@ -581,8 +574,16 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
         <div><span>Coligação:</span><span>PT / PSB / PCdoB / PV</span></div>
       </div>
       <div class="cand-cta">
-        <a class="btn primary" href="pages/lula.html" style="text-decoration:none"><i class="fa-solid fa-file-lines"></i> Ver propostas</a>
+        <a class="btn primary" href="https://pln.camara.leg.br/pesquisa?q=lula" target="_blank" rel="noopener" style="text-decoration:none"><i class="fa-solid fa-file-lines"></i> Ver propostas</a>
         <a class="btn" href="pages/comparador.html" style="text-decoration:none"><i class="fa-solid fa-scale-balanced"></i> Comparar</a>
+        <button class="btn sm gold" onclick="apoiarTurno('lula','Lula')"><i class="fa-solid fa-hand"></i> Apoiar</button>
+      </div>
+      <div class="apoio-barra-wrap" style="margin-top:14px">
+        <div class="apoio-barra-label">
+          <span class="apoio-barra-count" id="apoio-count-lula">0 apoios</span>
+          <span class="apoio-barra-pct" id="apoio-pct-lula">0%</span>
+        </div>
+        <div class="apoio-barra-track"><div class="apoio-barra-fill" id="apoio-barra-lula" style="width:0%"></div></div>
       </div>
     </article>
   </div>
@@ -1117,8 +1118,36 @@ async function carregaTurnoStats(){
         const barEl=document.getElementById('apoio-barra-'+candId);
         if(barEl) barEl.style.width=pct+'%';
       });
+      // Sincronizar cards grandes (Flávio/Lula) com os dados do spotlight
+      sincronizarCardsGrandes(j.porCandidato||[], total);
     }
   }catch(e){}
+}
+
+/* Sincroniza as barras de apoio dos cards grandes (Flávio/Lula) com os
+   dados do endpoint /api/turno, usando mapeamento por nome. */
+function sincronizarCardsGrandes(porCandidato, total){
+  const nomesParaBusca = {
+    'flavio': ['FLAVIO', 'BOLSONARO', 'FLÁVIO'],
+    'lula': ['LULA']
+  };
+  Object.keys(nomesParaBusca).forEach(chave => {
+    const nomes = nomesParaBusca[chave];
+    const match = porCandidato.find(c => {
+      const id = String(c.candidateId||'').toUpperCase();
+      const name = String(c.candidateName||'').toUpperCase();
+      return nomes.some(n => id.includes(n) || name.includes(n));
+    });
+    if(match){
+      const pct = total>0 ? Math.round(match.total/total*100) : 0;
+      const countEl = document.getElementById('apoio-count-' + chave);
+      const pctEl = document.getElementById('apoio-pct-' + chave);
+      const barEl = document.getElementById('apoio-barra-' + chave);
+      if(countEl) countEl.textContent = match.total + ' apoio' + (match.total!==1?'s':'');
+      if(pctEl) pctEl.textContent = pct + '%';
+      if(barEl) barEl.style.width = pct + '%';
+    }
+  });
 }
 async function carregaSpotlight(){
   const grid=document.getElementById('spotGrid');if(!grid)return;
@@ -1259,6 +1288,13 @@ function initSSE(){
         carregaRemoteRec();
         const secRadar = document.getElementById('sec-radar');
         if(secRadar && secRadar.classList.contains('on')) renderRad();
+      } catch(_){}
+    });
+    /* 🔴 AO VIVO — novo apoio no 2º turno */
+    SSE_SOURCE.addEventListener('turno', function(e){
+      try {
+        const data = JSON.parse(e.data);
+        if(data && data.ok) carregaTurnoStats();
       } catch(_){}
     });
     SSE_SOURCE.onerror = function(){
@@ -1776,6 +1812,8 @@ function ncarScroll(dir){const c=document.getElementById('homeNews');if(c)c.scro
 async function newsOLD(){try{const r=await fetch('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent('https://agenciabrasil.ebc.com.br/rss/ultimasnoticias/feed.xml'));const j=await r.json();const it=(j.items||[]).slice(0,2);
 $('#homeNews').innerHTML=it.map(n=>`<div class="ncard"><div class="th"><span class="cat">${(n.category||'Política').toString().slice(0,14)}</span><i class="fa-solid fa-layer-group"></i></div><div class="bd"><h4>${n.title}</h4><p>${(n.description||'').replace(/<[^>]+>/g,'').slice(0,140)}</p><div style="display:flex;gap:10px;align-items:center;font-size:11px;color:var(--muted)"><span class="seal">Fonte verificada</span><span>Agência Brasil</span><a href="${n.link}" target="_blank">Ler →</a></div></div></div>`).join('')}catch(e){$('#homeNews').innerHTML='<div class="ncard"><div class="th"><span class="cat">Política</span><i class="fa-solid fa-layer-group"></i></div><div class="bd"><h4>Brasil promete restaurar 163 mil km² de terras degradadas até 2030</h4><p>O Brasil apresentou as primeiras metas de Neutralidade da Degradação da Terra em evento internacional.</p><div style="display:flex;gap:10px;align-items:center;font-size:11px;color:var(--muted)"><span class="seal">Fonte verificada</span><span>Agência Brasil</span><a>Ler →</a></div></div></div>'}}
 try{carregaPol()}catch(e){console.error('carregaPol',e)}try{news()}catch(e){console.error('news',e)}try{carregaStats()}catch(e){console.error('carregaStats',e)}try{carregaSpotlight()}catch(e){console.error('carregaSpotlight',e)}
+/* Sincronizar barras de apoio dos cards grandes (Flávio/Lula) após o spotlight */
+try{carregaTurnoStats()}catch(e){console.error('carregaTurnoStats',e)}
 /* Fase 3 — SSE: inicia conexão após carregamento inicial */
 setTimeout(initSSE, 2000);
 </script>
