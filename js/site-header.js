@@ -62,17 +62,24 @@
     '@media(max-width:400px){#mbtopo .lg .mv-slogan{display:none!important}}'
   ].join('\n');
 
+  /* Catálogo único de páginas do site.
+     - `rotulo`/`pagina` montam o menu do cabeçalho (desktop e mobile);
+     - `card:true` + `resumo` alimentam os mini cards "Explore o MeuVoto" da
+       home (js/explore-paginas.js): o texto explica, em linguagem simples,
+       o que a pessoa vai encontrar na página.
+     - `rotuloCard` sobrescreve o rótulo SÓ no card, quando o nome do menu é
+       curto demais para quem não conhece o projeto (ex.: "Hub"). */
   var ITENS = [
-    { chave: 'inicio',    pagina: 'index.html',            rotulo: 'In\u00edcio' },
-    { chave: 'radar',     pagina: 'parlamentares.html',    rotulo: 'Radar Pol\u00edtico' },
-    { chave: 'eleicoes',  pagina: 'resultados-2026.html',    rotulo: 'Elei\u00e7\u00f5es 2026' },
-    { chave: 'iniciativa',pagina: 'iniciativa-cidada.html', rotulo: 'Iniciativa Cidad\u00e3' },
-    { chave: 'congresso', pagina: 'congresso.html',        rotulo: 'PLs no Congresso' },
-    { chave: 'votacoes',  pagina: 'votacoes.html',         rotulo: 'Vota\u00e7\u00f5es' },
-    { chave: 'links',     pagina: 'links.html',            rotulo: 'Hub' },
-    { chave: 'conferir',  pagina: 'index.html#conferir-voto', rotulo: 'Conferir Voto' },
-    { chave: 'revogar',   pagina: 'index.html#revogar-voto',  rotulo: 'Revogar Voto' },
-    { chave: 'quem',      pagina: 'index.html#quem-somos',    rotulo: 'Quem Somos' }
+    { chave: 'inicio',     pagina: 'index.html',              rotulo: 'Início' },
+    { chave: 'radar',      pagina: 'parlamentares.html',      rotulo: 'Radar Político',  card: true, icone: 'fa-satellite-dish', tom: 'gold',  stat: 'expPoliticos', cta: 'Ver o Radar', resumo: 'A ficha de cada deputado e senador: os projetos dele, como votou e as condenações. Compare dois lado a lado, reclame ou dê apoio.' },
+    { chave: 'eleicoes',   pagina: 'resultados-2026.html',    rotulo: 'Eleições 2026',   card: true, icone: 'fa-chart-pie',        tom: 'blue',  cta: 'Ver o resultado', resumo: 'Quem ganhou cada cargo em 2026, quantos votos teve, como ficaram as cadeiras e quem foi eleito, estado por estado.' },
+    { chave: 'iniciativa', pagina: 'iniciativa-cidada.html', rotulo: 'Iniciativa Cidadã', card: true, icone: 'fa-lightbulb',        tom: 'green', cta: 'Criar meu projeto', resumo: 'Você escreve a ideia, junta assinaturas com um QR Code e submete como projeto de lei ao Congresso. Dá para convidar parlamentares a apoiar.' },
+    { chave: 'congresso',  pagina: 'congresso.html',          rotulo: 'PLs no Congresso', card: true, icone: 'fa-file-lines',       tom: 'gold',  stat: 'expPls', cta: 'Ver os projetos', resumo: 'Os projetos de lei que estão no Congresso agora. Você vota em cada um na Urna Expressa do Povo, em 1 minuto e sem criar conta.' },
+    { chave: 'votacoes',   pagina: 'votacoes.html',           rotulo: 'Votações',         card: true, icone: 'fa-vote-yea',         tom: 'blue',  cta: 'Ver as votações', resumo: 'Como o Congresso votou de verdade: o placar de cada matéria, o voto de cada deputado nas sessões nominais e um PDF com tudo para você cobrar.' },
+    { chave: 'links',      pagina: 'links.html',              rotulo: 'Hub',              rotuloCard: 'Todas as páginas', card: true, icone: 'fa-compass', tom: 'gold', cta: 'Abrir o mapa do site', resumo: 'O mapa de tudo o que tem aqui, organizado por assunto: transparência do Congresso, cobrança de promessas, eleições e como o sistema funciona.' },
+    { chave: 'conferir',   pagina: 'index.html#conferir-voto',rotulo: 'Conferir Voto',    card: true, icone: 'fa-magnifying-glass', tom: 'green', stat: 'expVotos', cta: 'Conferir meu voto', resumo: 'Cole o código de 20 dígitos que o app te deu e você vê em quem votou: nome, partido e número de cada escolhido. Sem código? Teste com um exemplo.' },
+    { chave: 'revogar',    pagina: 'index.html#revogar-voto', rotulo: 'Revogar Voto',     card: true, icone: 'fa-trash-can',        tom: 'red',   stat: 'expRevogados', cta: 'Revogar meu voto', resumo: 'O eleito não cumpriu? Depois da posse você retira sua confiança. A regra é uma só: 70% dos votos que o elegeram cassam o mandato.' },
+    { chave: 'quem',       pagina: 'index.html#quem-somos',   rotulo: 'Quem Somos',       card: true, icone: 'fa-users',            tom: 'blue',  cta: 'Conhecer o projeto', resumo: 'Quem faz o projeto, de onde vêm os dados e o que o MeuVoto não é. A ideia em uma frase: meu voto coloca, meu voto tira.' }
   ];
 
   var naPaginaDeArquivo = /\/pages\//.test(location.pathname);
@@ -87,6 +94,21 @@
     if (item.pagina.indexOf('index.html') === 0) return R + item.pagina;
     return R + 'pages/' + item.pagina;
   }
+
+  /* API pública do catálogo de páginas. O menu do cabeçalho e os mini cards
+     "Explore o MeuVoto" (js/explore-paginas.js) leem daqui — uma fonte só,
+     então o card nunca aponta para uma página que não existe no menu. */
+  window.MB_PAGINAS = {
+    itens: ITENS,
+    porChave: function (chave) {
+      for (var i = 0; i < ITENS.length; i++) if (ITENS[i].chave === chave) return ITENS[i];
+      return null;
+    },
+    href: function (chave) {
+      var it = this.porChave(chave);
+      return it ? hrefDe(it) : '#';
+    }
+  };
 
   function chaveAtiva() {
     if (!naHome) {

@@ -177,11 +177,38 @@ a{color:var(--gold);text-decoration:none}
 .step .n{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;margin:0 auto 16px;font:900 20px Montserrat;color:#fff;box-shadow:0 6px 18px rgba(0,0,0,.3)}
 .step h3{font-size:16px;margin-bottom:8px}
 .step p{font-size:13px;line-height:1.55}
-.explore{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
-.exp{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px;transition:transform .2s,border-color .2s,box-shadow .2s;display:flex;flex-direction:column}
-.exp:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 12px 30px rgba(0,0,0,.35)}
-.exp .ic{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;font-size:19px;margin-bottom:16px}
-.exp h3{font-size:16px;margin-bottom:8px}.exp p{color:var(--muted);font-size:13px;line-height:1.55;flex:1}.exp a{font-size:13px;font-weight:800;cursor:pointer;margin-top:12px;display:inline-block}
+/* ===== EXPLORE — MINI CARDS MODERNOS =====
+   Cards montados por js/explore-paginas.js a partir do catálogo de páginas
+   do cabeçalho (window.MB_PAGINAS). Card inteiro é o link. */
+.xgrid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:1fr;gap:16px;margin-top:22px}
+.xpc{position:relative;display:flex;flex-direction:column;gap:10px;padding:20px;border-radius:18px;overflow:hidden;text-decoration:none;color:inherit;background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid var(--line);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+.xpc::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--acc),transparent)}
+.xpc:hover{transform:translateY(-4px);border-color:var(--acc);box-shadow:0 16px 34px rgba(0,0,0,.38)}
+.xpc:focus-visible{outline:3px solid var(--acc);outline-offset:3px}
+.xpc-ic{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;font-size:18px;background:var(--acc-bg);color:var(--acc);flex:none}
+.xpc-t{font:800 15.5px/1.25 Montserrat,sans-serif;color:var(--ink)}
+.xpc-d{color:var(--muted);font-size:13px;line-height:1.55;flex:1}
+.xpc-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:2px;padding-top:12px;border-top:1px solid var(--line)}
+.xpc-cta{display:inline-flex;align-items:center;gap:8px;font:800 12.5px Manrope;color:var(--acc)}
+.xpc-cta i{transition:transform .2s ease}
+.xpc:hover .xpc-cta i{transform:translateX(4px)}
+.xpc-stat{font:800 10px Manrope;letter-spacing:.04em;color:var(--muted);background:rgba(26,40,64,.6);border:1px solid var(--line);border-radius:999px;padding:5px 10px;white-space:nowrap}
+.xpc-stat:empty{display:none}
+.ac-gold{--acc:var(--gold);--acc-bg:rgba(255,215,0,.14)}
+.ac-blue{--acc:var(--blueL);--acc-bg:rgba(51,153,255,.14)}
+.ac-green{--acc:var(--green);--acc-bg:rgba(46,204,113,.14)}
+.ac-red{--acc:var(--red);--acc-bg:rgba(231,76,60,.14)}
+/* Tints dos ícones por tema (o cabeçalho injeta as variáveis do tema) */
+html[data-theme="claro"] .ac-gold{--acc-bg:rgba(154,107,0,.12)}
+html[data-theme="claro"] .ac-blue{--acc-bg:rgba(13,78,168,.10)}
+html[data-theme="claro"] .ac-green{--acc-bg:rgba(23,114,69,.10)}
+html[data-theme="claro"] .ac-red{--acc-bg:rgba(179,55,42,.10)}
+html[data-theme="claro"] .xpc-stat{background:rgba(11,28,51,.05)}
+html[data-theme="alto"] .ac-gold{--acc-bg:rgba(255,215,0,.2)}
+html[data-theme="alto"] .ac-blue{--acc-bg:rgba(142,201,255,.2)}
+html[data-theme="alto"] .ac-green{--acc-bg:rgba(0,230,118,.2)}
+html[data-theme="alto"] .ac-red{--acc-bg:rgba(255,82,82,.2)}
+html[data-theme="alto"] .xpc-stat{background:#000;color:#fff}
 .donuts{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
 .don{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;position:relative}
 .don h4{font-size:14px;padding-right:70px}
@@ -296,8 +323,8 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
 .overlay.open{display:flex}
 .modal{background:var(--bg);border:1px solid var(--line);border-radius:20px;max-width:760px;width:100%;max-height:90vh;overflow:auto;padding:24px}
 #toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--card2);border:1px solid var(--line);color:var(--ink);padding:12px 18px;border-radius:12px;z-index:300;display:none;max-width:90%}
-@media(max-width:960px){#radList{grid-template-columns:1fr}.explore{grid-template-columns:repeat(2,1fr)}.donuts{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:1fr}.filtros{grid-template-columns:1fr 1fr}.ft{grid-template-columns:1fr 1fr}.stats{grid-template-columns:repeat(2,1fr)}nav{display:none}.ham{display:inline-flex}.ft .ic img{height:80px;width:80px}}
-@media(max-width:600px){.explore{grid-template-columns:1fr}.hero2 .cta .btn{width:100%}.spot-grid{grid-template-columns:1fr}.ttip{position:absolute;z-index:9999;background:#000;color:#fff;font:600 11px Manrope;padding:6px 10px;border-radius:8px;white-space:normal;max-width:220px;pointer-events:none;opacity:0;transition:opacity .15s;margin-top:8px}}
+@media(max-width:960px){#radList{grid-template-columns:1fr}.xgrid{grid-template-columns:repeat(2,1fr)}.xgrid .xpc:last-child:nth-child(odd){grid-column:span 2}.donuts{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:1fr}.filtros{grid-template-columns:1fr 1fr}.ft{grid-template-columns:1fr 1fr}.stats{grid-template-columns:repeat(2,1fr)}nav{display:none}.ham{display:inline-flex}.ft .ic img{height:80px;width:80px}}
+@media(max-width:600px){.xgrid{grid-template-columns:1fr}.xgrid .xpc:last-child:nth-child(odd){grid-column:auto}.hero2 .cta .btn{width:100%}.spot-grid{grid-template-columns:1fr}.ttip{position:absolute;z-index:9999;background:#000;color:#fff;font:600 11px Manrope;padding:6px 10px;border-radius:8px;white-space:normal;max-width:220px;pointer-events:none;opacity:0;transition:opacity .15s;margin-top:8px}}
 /* Onboarding overlay — z-index abaixo do header (9000) para não interceptar navegação */
 #mOnboard{display:none}.overlay.mOnboard{display:flex;z-index:8999}
 
@@ -310,20 +337,20 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
 #pctLula,#pctFlavio{transition:all .5s ease}
 
 /* ===== EXPLORE CARDS COMPACT ===== */
-.explore{grid-template-columns:repeat(3,1fr);gap:14px}
-.exp{padding:16px 14px}
-.exp .ic{width:42px;height:42px;font-size:18px}
-.exp h3{font-size:15px;margin:10px 0 6px}
-.exp p{font-size:12.5px;line-height:1.5;margin-bottom:8px}
-.exp a{font-size:13px;font-weight:700}
+.xgrid{gap:14px}
+.xpc{padding:18px 16px}
+.xpc-ic{width:42px;height:42px;font-size:17px}
+.xpc-t{font-size:15px}
+.xpc-d{font-size:12.5px;line-height:1.5}
 
 /* ===== MOBILE RESPONSIVENESS ===== */
 @media(max-width:768px){
-  .explore{grid-template-columns:repeat(2,1fr);gap:10px}
-  .exp{padding:14px 12px}
-  .exp .ic{width:38px;height:38px;font-size:16px}
-  .exp h3{font-size:14px}
-  .exp p{font-size:12px}
+  .xgrid{gap:10px}
+  .xpc{padding:15px 13px;border-radius:16px}
+  .xpc-ic{width:38px;height:38px;font-size:16px;border-radius:11px}
+  .xpc-t{font-size:14px}
+  .xpc-d{font-size:12px}
+  .xpc-cta{font-size:12px}
   
   /* Poll cards on mobile */
   .card[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important}
@@ -400,8 +427,51 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
   .pesquisa-votos-validos-pro{flex-direction:column}
   .pesquisa-meta-wrap{flex-direction:column;gap:8px}
 }
+
+/* ===== GOVERNADORES 2º TURNO — MINICARDS =====
+   Cards compactos e modernos: um por estado, com os dois
+   candidatos lado a lado, foto circular e barra de apoio. */
+.gov2turno-grid{--g2-borda:rgba(120,145,185,.22);--g2-fundo:linear-gradient(155deg,rgba(22,34,58,.92),rgba(14,23,38,.72))}
+.g2-card{position:relative;display:flex;flex-direction:column;height:100%;background:var(--g2-fundo);border:1px solid var(--g2-borda);border-radius:16px;padding:16px 16px 14px;overflow:hidden;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.g2-card::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:linear-gradient(90deg,var(--gold),rgba(212,175,55,.15))}
+.g2-card:hover{transform:translateY(-3px);border-color:rgba(212,175,55,.45);box-shadow:0 12px 32px rgba(0,0,0,.4)}
+.g2-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.g2-uf{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:26px;padding:0 8px;border-radius:7px;background:rgba(212,175,55,.14);border:1px solid rgba(212,175,55,.35);color:var(--gold);font:900 12px Montserrat;letter-spacing:.06em;flex:0 0 auto}
+.g2-titulo{flex:1;min-width:0}
+.g2-titulo h3{margin:0;font:800 15px Manrope;color:var(--ink);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.g2-titulo small{display:block;margin-top:2px;font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.g2-duelo{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:stretch}
+.g2-cand{display:flex;flex-direction:column;align-items:center;text-align:center;background:rgba(0,0,0,.22);border:1px solid rgba(120,145,185,.16);border-radius:12px;padding:12px 10px 11px;transition:border-color .18s ease,background .18s ease}
+.g2-cand:hover{border-color:rgba(212,175,55,.4);background:rgba(212,175,55,.05)}
+.g2-cand-foto{width:58px;height:58px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--g2-borda);background:var(--card2);flex:0 0 auto}
+.g2-cand-foto-fallback{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#2ECC71,#27AE60);color:#fff;font:900 18px Montserrat;text-transform:uppercase}
+.g2-cand-nome{margin:9px 0 0;min-height:31px;font:800 12.5px Manrope;line-height:1.25;color:var(--ink);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.g2-cand-partido{margin-top:4px;display:inline-block;padding:2px 8px;border-radius:999px;background:rgba(120,145,185,.16);color:#C8D5E7;font:700 10px Manrope;letter-spacing:.04em;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.g2-cand-pct{margin-top:8px;font:900 17px Montserrat;color:var(--gold);line-height:1}
+.g2-cand-pct small{display:block;margin-top:2px;font:600 9.5px Manrope;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.g2-apoio{width:100%;margin-top:10px}
+.g2-apoio-label{display:flex;align-items:baseline;justify-content:space-between;gap:6px;margin-bottom:4px}
+.g2-apoio-count{font:700 10px Manrope;color:#C8D5E7;white-space:nowrap}
+.g2-apoio-pct{font:900 10px Montserrat;color:var(--gold);white-space:nowrap}
+.g2-apoio-track{height:5px;border-radius:3px;background:rgba(255,255,255,.07);overflow:hidden}
+.g2-apoio-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold),#FFA500);transition:width .4s ease}
+.g2-apoiar{width:100%;margin-top:auto;padding:7px 8px;border:1px solid rgba(212,175,55,.4);border-radius:999px;background:rgba(212,175,55,.1);color:var(--gold);font:700 11px Manrope;cursor:pointer;transition:background .15s ease,color .15s ease,border-color .15s ease}
+.g2-apoiar:hover{background:var(--gold);border-color:var(--gold);color:#1a1400}
+.g2-apoiar:disabled{opacity:.5;cursor:default}
+.g2-foot{margin-top:auto;padding-top:10px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.g2-foot small{font-size:10px;color:var(--muted);line-height:1.4}
+.g2-link{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:999px;border:1px solid var(--g2-borda);color:#C8D5E7;font:700 10.5px Manrope;text-decoration:none;white-space:nowrap;transition:border-color .15s ease,color .15s ease}
+.g2-link:hover{border-color:var(--gold);color:var(--gold)}
+.g2-vazio{grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--muted);background:var(--card);border:1px solid var(--line);border-radius:16px}
+.g2-vazio i{font-size:30px;color:var(--gold);opacity:.5;display:block;margin-bottom:12px}
+@media(max-width:420px){
+  .g2-duelo{gap:8px}
+  .g2-cand-foto{width:48px;height:48px}
+  .g2-cand-nome{font-size:11.5px}
+  .g2-cand-pct{font-size:15px}
+}
 </style>
-  <script src="js/site-header.js?v=3"></script>
+  <script src="js/site-header.js?v=5"></script>
 <link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="manifest" href="/manifest.json">
 <script type="application/ld+json">
@@ -604,7 +674,7 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
   <div class="disclaimer-pesquisa" style="background:rgba(255,215,0,0.1);border:1px solid var(--gold);border-radius:12px;padding:16px;margin-bottom:24px;text-align:center">
     <i class="fa-solid fa-triangle-exclamation" style="color:var(--gold);font-size:20px;margin-bottom:8px;display:block"></i>
     <strong style="color:var(--gold);display:block;margin-bottom:4px">ATENÇÃO: PESQUISA DE OPINIÃO</strong>
-    <p style="margin:0;font-size:13px;color:var(--text-muted)">Estes números NÃO representam votos reais, apenas intenções de voto apuradas por amostragem de institutos independentes.</p>
+    <p style="margin:0;font-size:13px;color:var(--muted)">Estes números NÃO representam votos reais, apenas intenções de voto apuradas por amostragem de institutos independentes.</p>
   </div>
 
   <div style="max-width:400px;margin:0 auto 24px">
@@ -635,48 +705,12 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
   <div class="sec-head">
     <span class="tag">ELEIÇÕES ESTADUAIS</span>
     <h2 style="margin-top:14px">Governadores que vão para o 2º turno</h2>
-    <p style="margin-top:8px;color:var(--text-muted)">Selecione seu estado para ver os candidatos que disputam o 2º turno ou o governador eleito no 1º turno.</p>
+    <p style="margin-top:8px;color:var(--muted)">Seis estados decidem o governador no segundo turno. Confira os candidatos com fotos oficiais e dados do 1º turno.</p>
   </div>
 
-  <div style="max-width:400px;margin:0 auto 24px">
-    <label for="seletor-estado" style="display:block;margin-bottom:8px;font-weight:600">🔽 Selecione seu estado:</label>
-    <select id="seletor-estado" style="width:100%;padding:12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--text-primary);font-size:14px">
-      <option value="">-- Escolha um estado --</option>
-      <option value="AC">Acre (AC)</option>
-      <option value="AL">Alagoas (AL)</option>
-      <option value="AP">Amapá (AP)</option>
-      <option value="AM">Amazonas (AM)</option>
-      <option value="BA">Bahia (BA)</option>
-      <option value="CE">Ceará (CE)</option>
-      <option value="DF">Distrito Federal (DF)</option>
-      <option value="ES">Espírito Santo (ES)</option>
-      <option value="GO">Goiás (GO)</option>
-      <option value="MA">Maranhão (MA)</option>
-      <option value="MT">Mato Grosso (MT)</option>
-      <option value="MS">Mato Grosso do Sul (MS)</option>
-      <option value="MG">Minas Gerais (MG)</option>
-      <option value="PA">Pará (PA)</option>
-      <option value="PB">Paraíba (PB)</option>
-      <option value="PR">Paraná (PR)</option>
-      <option value="PE">Pernambuco (PE)</option>
-      <option value="PI">Piauí (PI)</option>
-      <option value="RJ">Rio de Janeiro (RJ)</option>
-      <option value="RN">Rio Grande do Norte (RN)</option>
-      <option value="RS">Rio Grande do Sul (RS)</option>
-      <option value="RO">Rondônia (RO)</option>
-      <option value="RR">Roraima (RR)</option>
-      <option value="SC">Santa Catarina (SC)</option>
-      <option value="SP">São Paulo (SP)</option>
-      <option value="SE">Sergipe (SE)</option>
-      <option value="TO">Tocantins (TO)</option>
-    </select>
-  </div>
-
-  <div id="estado-card" style="background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;max-width:800px;margin:0 auto">
-    <div class="pesquisa-vazio">
-      <i class="fa-solid fa-map-location-dot" style="font-size:32px;color:var(--gold);margin-bottom:12px;display:block"></i>
-      <p>Selecione um estado acima para visualizar os dados do governador.</p>
-    </div>
+  <!-- Grid de minicards dos 6 estados do 2º turno -->
+  <div id="governadores-2turno-grid" class="gov2turno-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));grid-auto-rows:1fr;gap:16px;margin-top:24px">
+    <!-- Cards renderizados via JS -->
   </div>
 </div>
 
@@ -687,15 +721,9 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
 <div class="step"><div class="n" style="background:var(--blue)">2</div><h3>Guarde o código</h3><p class="muted">Cada voto gera um código de 20 dígitos. É o seu comprovante.</p></div>
 <div class="step"><div class="n" style="background:var(--gold);color:#1a1400">3</div><h3>Confira aqui</h3><p class="muted">No site, você cola o código e confere em quem votou.</p></div>
 </div>
-<div class="sec-head" style="margin-top:56px"><h2>Explore o MeuVoto</h2><p>Tudo o que você precisa para uma participação cívica informada e ativa.</p></div>
-<div class="explore">
-<div class="exp"><div class="ic" style="background:rgba(255,215,0,.15);color:var(--gold)"><i class="fa-regular fa-clock"></i></div><h3>Radar Político</h3><p>Ficha completa com dados reais, reclamações e comparação lado a lado.</p><span class="badge" id="expPoliticos" style="font-size:11px">Carregando…</span> <a onclick="go('radar')">Acessar →</a></div>
-<div class="exp"><div class="ic" style="background:rgba(59,130,246,.15);color:var(--blueL)"><i class="fa-regular fa-file-lines"></i></div><h3>PLs no Congresso</h3><p>Opine sobre leis em tramitação no congresso nacional.</p><span class="badge" id="expPls" style="font-size:11px">Carregando…</span> <a href="pages/congresso.html">Ir ao Congresso →</a></div>
-<div class="exp"><div class="ic" style="background:rgba(255,215,0,.15);color:var(--gold)"><i class="fa-solid fa-check"></i></div><h3>Conferir Voto</h3><p>Cole o código e confira os candidatos em quem votou.</p><span class="badge" id="expVotos" style="font-size:11px">Carregando…</span> <a onclick="go('conferir')">Verificar →</a></div>
-<div class="exp"><div class="ic" style="background:rgba(231,76,60,.15);color:var(--red)"><i class="fa-regular fa-trash-can"></i></div><h3>Revogar Voto</h3><p>Não cumpriu? Revogue a confiança do seu voto após a posse.</p><span class="badge" id="expRevogados" style="font-size:11px">Carregando…</span> <a onclick="go('revogados')" style="color:var(--red)">Revogar →</a></div>
-<div class="exp"><div class="ic" style="background:rgba(46,204,113,.15);color:var(--green)"><i class="fa-solid fa-scale-balanced"></i></div><h3>Comparar</h3><p>Fixe políticos e veja dois (ou mais) lado a lado.</p><a onclick="go('radar')">Comparar →</a></div>
-<div class="exp"><div class="ic" style="background:rgba(46,204,113,.15);color:var(--green)"><i class="fa-solid fa-sack-dollar"></i></div><h3>Fundo Eleitoral</h3><p>Dados públicos do TSE: quanto cada partido recebeu de dinheiro público de campanha.</p><a href="pages/fundo-eleitoral.html">Ver dados →</a></div>
-</div>
+<div class="sec-head" style="margin-top:56px"><span class="tag">EXPLORE</span><h2 style="margin-top:14px">Explore o MeuVoto</h2><p>Cada página do projeto em um card: o que você encontra lá e um clique para ir.</p></div>
+<div class="xgrid" id="explore-grid"></div>
+<noscript><p class="muted" style="margin-top:14px">Ative o JavaScript para ver os cards. Pelo menu do topo você vai para as mesmas páginas: Radar Político, Eleições 2026, Iniciativa Cidadã, PLs no Congresso, Votações, Hub, Conferir Voto, Revogar Voto e Quem Somos.</p></noscript>
 <div class="dk-sec" id="acompanhamento">
   <div class="dk-head">
     <h2 style="margin:6px 0 4px">Resultado das Eleições 2026</h2>
@@ -978,7 +1006,8 @@ $$('#nav a').forEach(a=>a.onclick=()=>go(a.dataset.p));
   /* #contato abre o modal de contato (usado pela busca global) */
   if(h==='contato'){setTimeout(()=>{if(typeof abrirContato==='function')abrirContato();},80);return}
   if(mapa[h]!==undefined){setTimeout(()=>go(mapa[h]),50)}
-  window.addEventListener('hashchange',()=>{const hh=(location.hash||'').replace('#','').split('?')[0];if(hh==='radar'||hh==='congresso'){location.href='pages/parlamentares.html';return}if(hh==='contato'){if(typeof abrirContato==='function')abrirContato();return}if(mapa[hh]!==undefined)go(mapa[hh])});
+  window.addEventListener('hashchange',()=>{const hh=(location.hash||'').replace('#','').split('?')[0];if(hh==='radar'||hh==='congresso'){location.href='pages/parlamentares.html';return}if(hh==='contato'){if(typeof abrirContato==='function')abrirContato();return}/* Hash vazio = link "Início" do menu: volta para a primeira seção. */
+  if(hh===''){go('inicio');return}if(mapa[hh]!==undefined)go(mapa[hh])});
 })();
 const LS={get:(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))};
 const CORES=['#2ECC71','#FFD700','#4a90f0','#E74C3C','#A855F7'],NOMES=['Maria','Carlos','Ana','João','Outros'];
@@ -994,7 +1023,9 @@ if(!POL.length){
 try{const r=await fetch('https://dadosabertos.camara.leg.br/api/v2/deputados?itens=513&ordem=ASC&ordenarPor=nome');const j=await r.json();(j.dados||[]).forEach(d=>POL.push({nome:d.nome,partido:d.siglaPartido||'',uf:d.siglaUf||'',cargo:'Deputado Federal',foto:d.urlFoto||'',num:d.id,real:1,rec:0,selo:false}));}catch(e){}
 try{const r=await fetch('https://legis.senado.leg.br/dadosabertos/senador/lista/legislatura/57?formato=json');const j=await r.json();const L=(j.lista&&j.lista.senador)||[];L.forEach(s=>{const p=s.IdentificacaoParlamentar||{};POL.push({nome:p.NomeParlamentar||'',partido:p.SiglaPartido||'',uf:p.Uf||'',cargo:'Senador',foto:p.UrlFotoParlamentar||'',num:p.CodigoParlamentar||'',real:1,rec:0,selo:false});});}catch(e){}}
 ready=true;const el=document.getElementById('bReais');if(el)el.textContent=POL.length+' políticos reais'+(BACKEND_OK?' (backend)':'');
-popula();renderRad();carregaRemoteRec();atualizarUI()}
+popula();renderRad();carregaRemoteRec();atualizarUI();
+/* Contadores ao vivo dos cards "Explore o MeuVoto" (votos, revogações, PLs, parlamentares) */
+if(typeof carregaExploreStats==='function'){try{carregaExploreStats()}catch(e){}}}
 /* ============================================================
    SPOTLIGHT 2º TURNO — presidenciáveis (dados reais do TSE)
    Fonte: data/candidatos-2026.json (cargo 1 = Presidente).
@@ -1088,9 +1119,13 @@ async function carregaExploreStats(){
   try{
     const r3=await fetch(API_BASE+'/api/candidatos');
     const j3=await r3.json();
-    if(j3&&j3.ok&&Array.isArray(j3.list)){
+    /* /api/candidatos devolve {total, candidatos:[...]} — aceita também
+       {dados|list:[...]} para não quebrar se o formato mudar. */
+    const arrPol=Array.isArray(j3)?j3:(j3&&(j3.candidatos||j3.dados||j3.list));
+    if(Array.isArray(arrPol)&&arrPol.length){
       const elPol=document.getElementById('expPoliticos');
-      if(elPol) elPol.textContent=j3.list.length+' políticos';
+      /* O Radar chama esses 594 de "parlamentar(es)" — mesmo número, mesma palavra. */
+      if(elPol) elPol.textContent=arrPol.length+' parlamentares';
     }
   }catch(e){}
 }
@@ -1109,14 +1144,21 @@ async function carregaTurnoStats(){
         const candId=c.candidateId;
         const pct=total>0?Math.round(c.total/total*100):0;
         // Atualizar contagem
-        const countEl=document.getElementById('apoio-count-'+candId);
+        const countEl = document.getElementById('apoio-count-'+candId);
         if(countEl) countEl.textContent=c.total+' apoio'+(c.total!==1?'s':'');
         // Atualizar percentual
-        const pctEl=document.getElementById('apoio-pct-'+candId);
+        const pctEl = document.getElementById('apoio-pct-'+candId);
         if(pctEl) pctEl.textContent=pct+'%';
         // Atualizar barra de progresso
-        const barEl=document.getElementById('apoio-barra-'+candId);
+        const barEl = document.getElementById('apoio-barra-'+candId);
         if(barEl) barEl.style.width=pct+'%';
+        // Minicards de governadores (prefixo gov-apoio-)
+        const gCount = document.getElementById('gov-apoio-count-'+candId);
+        if(gCount) gCount.textContent=c.total+' apoio'+(c.total!==1?'s':'');
+        const gPct = document.getElementById('gov-apoio-pct-'+candId);
+        if(gPct) gPct.textContent=pct+'%';
+        const gBar = document.getElementById('gov-apoio-barra-'+candId);
+        if(gBar) gBar.style.width=pct+'%';
       });
       // Sincronizar cards grandes (Flávio/Lula) com os dados do spotlight
       sincronizarCardsGrandes(j.porCandidato||[], total);
@@ -1984,47 +2026,10 @@ setTimeout(initSSE, 2000);
   }).catch(function(e){console.warn('fundo-eleitoral:',e)});
 })();
 </script>
-<script id="vb-hist-fe">
-(function(){
-  function fmt(v){return 'R$ '+Number(v).toLocaleString('pt-BR',{maximumFractionDigits:0})}
-  fetch('data/fundo-candidatos-historico.json').then(function(r){return r.json()}).then(function(d){
-    var hs=[].slice.call(document.querySelectorAll('h1,h2,h3,h4'));
-    var h=hs.filter(function(x){return /Fundo Eleitoral/i.test(x.textContent)})[0];
-    var sec=h?(h.closest('section')||h.parentElement.parentElement):document.body;
-    var box=document.createElement('div');
-    box.style.cssText='margin:18px 0;padding:16px;border:1px solid #23406b;border-radius:12px;background:#0e1c33';
-    box.innerHTML='<h3 style="margin:0 0 8px">Por que ainda nao aparece o valor por candidato em 2026?</h3>'+
-    '<ol style="margin:0;padding-left:20px;line-height:1.55">'+
-    '<li>O Fundo Eleitoral e repassado aos <b>partidos</b> - esses valores ja estao aqui, com fonte oficial (TSE, Resolucao 23.749/2026).</li>'+
-    '<li>A distribuicao <b>por candidato</b> e informada por cada campanha ao TSE na prestacao de contas: parciais durante a campanha (set-out/2026) e prestacao final apos a eleicao (nov-dez/2026).</li>'+
-    '<li><b>Ate essa publicacao, valores por candidato referentes a 2026 nao tem carater oficial</b> - o que circula antes disso sao estimativas ou projecoes, nao dados da fonte publica.</li>'+
-    '<li>Por isso, mostramos hoje: o total oficial por partido (2026) + o historico real da ultima eleicao para estes mesmos cargos (<b>2022</b>). Assim que o TSE publicar os dados de 2026, eles entram aqui automaticamente, com a mesma fonte.</li>'+
-    '</ol>'+
-    '<div style="margin:14px 0 6px;font-weight:700">Ultima eleicao para estes mesmos cargos: 2022 · '+d.totalCandidatos+' candidatos receberam FEFC · total '+fmt(d.totalRepassado)+'</div>'+
-    '<input id="vb-hist-q" type="text" placeholder="Buscar por nome, partido ou UF..." style="width:100%;padding:10px;border:1px solid #23406b;border-radius:8px;background:#0b1526;color:#eaf2ff;margin:6px 0">'+
-    '<div id="vb-hist-list"></div>'+
-    '<button id="vb-hist-more" style="margin:10px 0;padding:10px 16px;border:0;border-radius:8px;background:#009739;color:#fff;font-weight:700;cursor:pointer">Carregar mais</button>'+
-    '<div style="margin-top:8px;font-size:.85em;opacity:.75">Fonte: '+d.fonte+'</div>';
-    sec.appendChild(box);
-    var list=box.querySelector('#vb-hist-list'),q=box.querySelector('#vb-hist-q'),more=box.querySelector('#vb-hist-more');
-    var view=[],shown=0;
-    function render(reset){
-      if(reset){shown=0;list.innerHTML=''}
-      var frag=view.slice(shown,shown+100);
-      shown+=frag.length;
-      list.innerHTML+=frag.map(function(x){return '<div style="padding:8px 10px;border-bottom:1px solid #1b2f4d"><b>'+x.n+'</b> ('+x.p+'/'+x.uf+') - '+x.c+'<div style="color:#7ee2a8;font-weight:700">'+fmt(x.t)+'</div></div>'}).join('');
-      more.style.display=(shown<view.length)?'inline-block':'none';
-    }
-    q.addEventListener('input',function(){
-      var s=q.value.toLowerCase();
-      view=d.candidatos.filter(function(x){return !s||x.n.toLowerCase().indexOf(s)>-1||x.p.toLowerCase().indexOf(s)>-1||x.uf.toLowerCase().indexOf(s)>-1});
-      render(true);
-    });
-    more.addEventListener('click',function(){render(false)});
-    view=d.candidatos;render(true);
-  }).catch(function(e){console.warn('hist-fe:',e)});
-})();
-</script>
+<!-- Bloco "vb-hist-fe" (histórico do Fundo Eleitoral por candidato) removido:
+     na home ele caía no fallback document.body e aparecia solto depois do rodapé,
+     com lista vazia (data/fundo-candidatos-historico.json sem registros).
+     O conteúdo vive na página dedicada pages/fundo-eleitoral.html. -->
 <script id="vb-quem-somos">
 (function(){
   if(window.__vbqsDone)return; window.__vbqsDone=1;
@@ -2080,12 +2085,17 @@ setTimeout(initSSE, 2000);
   function sobe(el){var s=el;while(s&&s.tagName!=='SECTION'&&s!==document.body){s=s.parentElement;}return (s&&s.tagName==='SECTION')?s:el.parentElement;}
   function ehQuem(c){return c&&/quem\s+somos/i.test(c.textContent||'');}
   function achar(){
+    /* A seção "Quem Somos" é a que carrega o data-anchor — usa ela primeiro.
+       Sem isso, qualquer texto "Quem Somos" da página (ex.: o card "Quem Somos"
+       da seção Explore) sequestrava a seção errada. */
+    var ancorada=document.querySelector('[data-anchor="quem-somos"]');
+    if(ancorada){var cA=sobe(ancorada);if(ehQuem(cA))return cA;}
     var byId=document.getElementById('quem-somos');
     if(byId){var c0=sobe(byId);if(ehQuem(c0))return c0;}
     var els=document.querySelectorAll('h1,h2,h3,h4,p,span,div,small,em,strong,li');
     var i,el,c;
-    for(i=0;i<els.length;i++){el=els[i];if(el.tagName==='A')continue;if(el.closest('nav')||el.closest('header'))continue;if(semAcc(el.textContent)==='quem somos'){c=sobe(el);if(ehQuem(c))return c;}}
-    for(i=0;i<els.length;i++){el=els[i];if(el.closest('nav')||el.closest('header'))continue;var t=semAcc(el.textContent);for(var k=0;k<SENT.length;k++){if(t.indexOf(SENT[k])>-1){c=sobe(el);if(ehQuem(c))return c;break;}}}
+    for(i=0;i<els.length;i++){el=els[i];if(el.tagName==='A')continue;if(el.closest('nav')||el.closest('header'))continue;if(el.closest('a'))continue;if(semAcc(el.textContent)==='quem somos'){c=sobe(el);if(ehQuem(c))return c;}}
+    for(i=0;i<els.length;i++){el=els[i];if(el.closest('nav')||el.closest('header'))continue;if(el.closest('a'))continue;var t=semAcc(el.textContent);for(var k=0;k<SENT.length;k++){if(t.indexOf(SENT[k])>-1){c=sobe(el);if(ehQuem(c))return c;break;}}}
     return null;
   }
   function aplicar(){var c=achar();if(!c)return false;c.innerHTML=TEXTO;c.setAttribute('data-vbqs','1');console.log('[vb-quem-somos] epigrafe a esquerda');return true;}
@@ -2424,6 +2434,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
   <script src="js/home-2026.js?v=2" defer></script>
+  <script src="js/explore-paginas.js?v=1" defer></script>
   <script>
     /* Relógio de atualização constante das pesquisas */
     setInterval(function(){
