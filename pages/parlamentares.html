@@ -396,7 +396,11 @@ function tseBusca(nome,uf){const k=normNome(nome)+'|'+String(uf||'').toUpperCase
     return TSE_CAND_RES[k]={estado:lista.length?'ok':'vazio',lista};
   }catch(e){return TSE_CAND_RES[k]={estado:'erro',lista:[]}}})();
   return TSE_CAND[k]}
-/* ---------- POPUP ⚖️ Processos e condenações ---------- */
+/* ---------- POPUP ⚖️ Processos (fontes oficiais) ----------
+   A plataforma não mantém registro próprio de processos contra o parlamentar.
+   O que existe e verificável em fontes oficiais: processos eleitorais da
+   candidatura (DivulgaCandContas — TSE) e processos éticos do mandato
+   (Conselho de Ética da Câmara / Conselhos do Senado). Nada aqui é inventado. */
 const CE_CAMARA='https://www2.camara.leg.br/a-camara/estruturaadm/eticaedecoro/processos.html';
 const CE_SENADO='https://www25.senado.leg.br/web/conselhos';
 let PROCI=null;
@@ -412,8 +416,8 @@ function procHTML(nome,cands,erro,cargo){
   const ce=/senador/i.test(String(cargo||''))
     ?`<div class="quote info" style="margin-top:6px">🏛️ Processo ético (mandato): Conselho de Ética e Decoro Parlamentar do Senado — <a href="${CE_SENADO}" target="_blank" rel="noopener" style="color:var(--blueL)">ver Conselhos no site do Senado ↗</a></div>`
     :`<div class="quote info" style="margin-top:6px">🏛️ Processo ético (mandato): Representações ao Conselho de Ética da Câmara — <a href="${CE_CAMARA}" target="_blank" rel="noopener" style="color:var(--blueL)">ver no site da Câmara ↗</a></div>`;
-  return `<h3 style="margin-bottom:6px">⚖️ Processos e condenações — ${esc(nome)}</h3>
-  <p class="muted" style="margin:6px 0">O que consta <b>nesta plataforma</b>: nada — aqui não há registro de processo contra este político. E não existe no Brasil consulta pública unificada de processos por pessoa: cada tribunal (Justiça Federal/Estadual, STF, STJ) exige consulta individual com CPF e captcha. O que dá para verificar oficialmente, sem inventar nada:</p>
+  return `<h3 style="margin-bottom:6px">⚖️ Processos que constam em fontes oficiais — ${esc(nome)}</h3>
+  <p class="muted" style="margin:6px 0">Esta plataforma não mantém registro próprio de processos contra o parlamentar. E não existe no Brasil consulta pública unificada de processos por pessoa: cada tribunal (Justiça Federal/Estadual, STF, STJ) exige consulta individual com CPF e captcha. O que dá para verificar oficialmente, sem inventar nada, é o que está abaixo — dados de fontes de confiança (TSE e conselhos de ética).</p>
   ${corpo}${ce}`}
 function verProcId(id){const p=POL.find(x=>x.id===id);if(!p)return;PROCI=id;
   abreProc(procHTML(p.nome,null,false,p.cargo));
@@ -432,10 +436,10 @@ function patTSE(p,id){
   let pat;
   if(!r)pat='<span class="muted">⏳ consultando candidatura no TSE…</span>';
   else if(r.estado==='erro')pat=`<a href="javascript:void(0)" onclick="return verProcId('${esc(id)}')" style="color:var(--blueL)">TSE indisponível — verificar ↗</a>`;
-  else if(r.lista.length===1)pat=`<a href="${tseCandUrl(r.lista[0])}" target="_blank" rel="noopener" style="color:var(--blueL)">bens declarados 2026 — página oficial no TSE ↗</a>`;
-  else if(r.lista.length>1)pat=`<a href="javascript:void(0)" onclick="return verProcId('${esc(id)}')" style="color:var(--blueL)">${r.lista.length} candidaturas em 2026 — escolher no TSE ↗</a>`;
+  else if(r&&r?.lista.length===1)pat=`<a href="${tseCandUrl(r?.lista[0])}" target="_blank" rel="noopener" style="color:var(--blueL)">bens declarados 2026 — página oficial no TSE ↗</a>`;
+  else if(r&&r?.lista.length>1)pat=`<a href="javascript:void(0)" onclick="return verProcId('${esc(id)}')" style="color:var(--blueL)">${r?.lista.length} candidaturas em 2026 — escolher no TSE ↗</a>`;
   else pat=`<a href="javascript:void(0)" onclick="return verProcId('${esc(id)}')" style="color:var(--blueL)">sem candidatura em 2026 — verificar por quê ↗</a>`;
-  return st('Patrimônio declarado',pat)+st('Processos e condenações',`<a href="javascript:void(0)" onclick="return verProcId('${esc(id)}')" style="color:var(--blueL)">verificar processos ↗</a>`)
+  return st('Patrimônio declarado',pat)+st('Processos em fontes oficiais',`<a href="javascript:void(0)" onclick="return verProcId('${esc(id)}')" style="color:var(--blueL)">verificar processos ↗</a>`)
 }
 /* Card de fontes "Nº de urna": com SQ resolvido vira link da página
    oficial da candidatura; sem candidatura, botão que abre o popup ⚖️. */
