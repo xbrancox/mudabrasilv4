@@ -671,24 +671,22 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
     <h2 style="margin-top:14px">Intenção de voto para o 2º turno</h2>
   </div>
   
-  <div class="disclaimer-pesquisa" style="background:rgba(255,215,0,0.1);border:1px solid var(--gold);border-radius:12px;padding:16px;margin-bottom:24px;text-align:center">
-    <i class="fa-solid fa-triangle-exclamation" style="color:var(--gold);font-size:20px;margin-bottom:8px;display:block"></i>
-    <strong style="color:var(--gold);display:block;margin-bottom:4px">ATENÇÃO: PESQUISA DE OPINIÃO</strong>
-    <p style="margin:0;font-size:13px;color:var(--muted)">Estes números NÃO representam votos reais, apenas intenções de voto apuradas por amostragem de institutos independentes.</p>
-  </div>
+  <!-- O bloco "ATENÇÃO: PESQUISA DE OPINIÃO" foi retirado: pesquisas de
+       opinião são, por definição, intenções de voto — não há como
+       apresentá-las de outra forma, e o alerta repetido cansa o leitor.
+       O aviso permanece na página dedicada pages/resultados-2026.html. -->
 
-  <div style="max-width:400px;margin:0 auto 24px">
-    <label for="seletor-pesquisa" style="display:block;margin-bottom:8px;font-weight:600">🔽 Selecione o instituto:</label>
-    <select id="seletor-pesquisa" style="width:100%;padding:12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--text-primary);font-size:14px">
-      <!-- Os rótulos definitivos são gerados por js/home-2026.js a partir de
-           data/pesquisas-presidente-2026.json. Estas opções são o fallback
-           estático caso o JSON não carregue. -->
-      <option value="datafolha">Datafolha (08/10/2026)</option>
-      <option value="gerp">Gerp (13/10/2026)</option>
-      <option value="indexabroadcast">Indexa/Broadcast (11/10/2026)</option>
-      <option value="quaest">Quaest (em breve)</option>
-      <option value="futura">Futura (em breve)</option>
-      <option value="ipec">Ipec (em breve)</option>
+  <div style="max-width:760px;margin:0 auto 24px">
+    <label style="display:block;margin-bottom:14px;font-weight:700;font-size:15px">🔽 Escolha um instituto com dados atualizados:</label>
+    <div id="pesquisa-institutos" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px">
+      <!-- Os mini cards são gerados por js/home-2026.js a partir de
+           data/pesquisas-presidente-2026.json (apenas status=divulgada). -->
+    </div>
+    <p style="margin:10px 0 0;font-size:12px;color:var(--muted);text-align:center">Quaest, Futura e Ipec ainda estão em campo — os resultados serão adicionados assim que divulgados.</p>
+    <!-- <select> mantido oculto como fonte de valor para o código de
+         renderização e o deep-link; a UI é feita de mini cards. -->
+    <select id="seletor-pesquisa" style="display:none">
+      <option value="datafolha">Datafolha</option>
     </select>
   </div>
 

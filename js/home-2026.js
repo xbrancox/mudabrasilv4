@@ -52,31 +52,55 @@
       return;
     }
 
-    /* Os rótulos do <select> eram escritos à mão no HTML e ficavam
-       desatualizados: Gerp e Indexa já estavam divulgadas no JSON, mas o
-       dropdown ainda anunciava "(em breve)". Montar as opções a partir dos
-       dados elimina a divergência. */
-    function rotuloInstituto(p) {
-      const nome = p.instituto || '';
-      if (p.status === 'divulgada' && p.data) return nome + ' (' + p.data + ')';
-      return nome + ' (em breve)';
-    }
+    /* O seletor saiu do HTML (era um <select> com rótulos escritos à mão,
+       que ficavam desatualizados). Agora os institutos aparecem como mini
+       cards gerados a partir do JSON — só os que já divulgaram dados. */
     function valorInstituto(p) {
       return (p.instituto || '').toLowerCase().replace(/\//g, '').replace(/\s/g, '');
     }
-    const valorAtual = select.value;
+    const container = document.getElementById('pesquisa-institutos');
+    const divulgadas = pesquisasData.pesquisas.filter(function (p) {
+      return p.status === 'divulgada' && p.espontanea;
+    });
+    const emBreve = pesquisasData.pesquisas.filter(function (p) {
+      return p.status !== 'divulgada';
+    });
+    if (container) {
+      container.innerHTML = '';
+      divulgadas.forEach(function (p) {
+        const card = document.createElement('div');
+        card.className = 'pesquisa-mini-card';
+        card.setAttribute('role', 'button');
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('aria-label', 'Ver pesquisa ' + p.instituto);
+        const cor = p.status === 'divulgada' ? '#2ECC71' : '#95A5A6';
+        card.style.borderColor = cor;
+        card.innerHTML =
+          '<div style="font-size:24px;margin-bottom:8px">📊</div>' +
+          '<div style="font-weight:800;font-size:15px">' + (p.instituto || '') + '</div>' +
+          '<div style="font-size:12px;color:var(--muted);margin-top:4px">' + (p.data || '—') + '</div>' +
+          '<div style="margin-top:10px;font-size:11px;font-weight:700;color:' + cor + '">● Divulgada</div>';
+        card.onclick = function () { select.value = valorInstituto(p); renderizar(valorInstituto(p)); };
+        card.onkeydown = function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            select.value = valorInstituto(p);
+            renderizar(valorInstituto(p));
+          }
+        };
+        container.appendChild(card);
+      });
+    }
+    /* Mantém o <select> original (agora oculto) como fonte de valor, para
+       que o código de renderização e o deep-link continuem funcionando. */
     select.innerHTML = '';
-    pesquisasData.pesquisas.forEach(function (p) {
+    divulgadas.forEach(function (p) {
       const opt = document.createElement('option');
       opt.value = valorInstituto(p);
-      opt.textContent = rotuloInstituto(p);
+      opt.textContent = p.instituto + (p.data ? ' (' + p.data + ')' : '');
       select.appendChild(opt);
     });
-    if (valorAtual) {
-      const existe = Array.prototype.some.call(select.options, function (o) { return o.value === valorAtual; });
-      if (existe) select.value = valorAtual;
-    }
-    console.log('[home-2026] Dropdown reconstruído com', pesquisasData.pesquisas.length, 'institutos');
+    console.log('[home-2026] Mini cards gerados:', divulgadas.length, 'divulgadas,', emBreve.length, 'em breve');
 
     function renderizar(valor) {
       console.log('[home-2026] Renderizando pesquisa para:', valor);
