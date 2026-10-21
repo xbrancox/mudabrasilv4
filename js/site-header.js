@@ -121,6 +121,11 @@
   }
 
   function montar() {
+    /* Se já existe um header estático no HTML (index.html), remove-o: o JS
+       é a única fonte do header em todas as páginas, e manter ambos
+       gerava dois menus idênticos. */
+    var antigo = document.getElementById('mbtopo-header');
+    if (antigo) { antigo.remove(); }
     if (document.getElementById('mbtopo')) return;
     var ativo = chaveAtiva();
     var naHomeAgora = naHome && arquivoAtual === 'index.html';
@@ -137,7 +142,7 @@
       ? ' onclick="if(window.abrirLogin)window.abrirLogin();else this.href=\'#conferir-voto\';return false" href="#conferir-voto"'
       : ' href="' + R + 'index.html"';
 
-    var topo = document.createElement('div');
+var topo = document.createElement('div');
     topo.id = 'mbtopo';
     topo.innerHTML =
       '<header>' +
@@ -147,16 +152,17 @@
       ' <div class="hact"><span class="hbadge" id="mbtopo-badge" hidden>conectando\u2026</span>' +
       ' <a class="hbtn mint" href="' + R + 'app/" title="Aplicativo de votação (funciona offline no celular)">📱 App</a>' +
       ' <a class="hbtn" href="' + R + 'index.html#conferir-voto">Conferir</a>' +
-      ' <a class="hbtn"' + (naHomeAgora ? ' onclick="if(window.abrirLogin)window.abrirLogin();return false" href="#conferir-voto"' : ' href="' + R + 'index.html"') + '>Entrar</a>' +
-      ' <a class="hbtn gold"' + (naHomeAgora ? ' onclick="if(window.abrirLogin)window.abrirLogin();return false" href="#conferir-voto"' : ' href="' + R + 'index.html"') + '>Cadastrar</a></div>' +
+      ' <a class="hbtn" id="mbtopo-entrar"' + (naHomeAgora ? ' onclick="if(window.abrirLogin)window.abrirLogin();return false" href="#conferir-voto"' : ' href="' + R + 'index.html"') + '>Entrar</a></div>' +
       '</header>' +
       /* O menu ☰ é a única navegação em telas <760px (onde o bloco .hact
-         fica oculto), então Entrar/Cadastrar precisam estar aqui também. */
+         fica oculto), então Entrar precisa estar aqui também. O botão
+         "Cadastr"/"Criar conta" foi retirado: o fluxo de OTP por e-mail
+         não exige cadastro separado, e um botão que só levava ao mesmo
+         modal de Entrar causava confusão. */
       '<div class="mnav" id="mbtopo-mnav">' + mnav + '<a href="' + R + 'app/">📱 Abrir o App de Votação</a><a href="' + R + 'index.html#conferir-voto">🔍 Conferir Voto</a>' +
       '<a href="' + R + 'index.html#ajuda">❓ Ajuda (FAQ)</a>' +
       '<a href="' + R + 'index.html#quem-somos">👥 Quem Somos</a>' +
-      '<a' + (naHomeAgora ? ' onclick="if(window.abrirLogin)window.abrirLogin();return false" href="#conferir-voto"' : ' href="' + R + 'index.html"') + '>🔑 Entrar</a>' +
-      '<a' + (naHomeAgora ? ' onclick="if(window.abrirLogin)window.abrirLogin();return false" href="#conferir-voto"' : ' href="' + R + 'index.html"') + '>✨ Criar conta</a></div>';
+      '<a class="hbtn" id="mbtopo-entrar-m"' + (naHomeAgora ? ' onclick="if(window.abrirLogin)window.abrirLogin();return false" href="#conferir-voto"' : ' href="' + R + 'index.html"') + '>🔑 Entrar</a></div>';
 
     var alvo = document.body;
     alvo.insertBefore(topo, alvo.firstChild);
@@ -201,6 +207,13 @@
           if (as[idx]) as[idx].classList.toggle('on', it.chave === novo);
         });
       });
+    }
+
+    /* O header é injetado após carregaPol(), que já chamou atualizarUI()
+       uma vez — naquele momento o header não existia. Rechama para que
+       o botão "Entrar" vira "Sair" quando o usuário estiver logado. */
+    if (typeof window.atualizarUI === 'function') {
+      try { window.atualizarUI(); } catch (e) {}
     }
   }
 
