@@ -31,8 +31,6 @@
     '#mbtopo nav a:hover{background:rgba(18,48,89,0.8);transform:translateY(-1px);color:#FFD700}',
     '#mbtopo nav a.on{background:linear-gradient(135deg,#FFD700,#FFA500);color:#061a3a;font-weight:800;box-shadow:0 2px 10px rgba(255,215,0,0.3)}',
     '#mbtopo .hact{display:flex;gap:8px;align-items:center;flex:none}',
-    '#mbtopo .hbadge{border:1px solid rgba(46,204,113,0.5);color:#2ECC71;background:rgba(46,204,113,0.1);border-radius:999px;padding:5px 10px;font-size:10.5px;white-space:nowrap;font-weight:700;animation:pulseBadge 2s infinite}',
-    '@keyframes pulseBadge{0%{box-shadow:0 0 0 0 rgba(46,204,113,0.4)}70%{box-shadow:0 0 0 6px rgba(46,204,113,0)}100%{box-shadow:0 0 0 0 rgba(46,204,113,0)}}',
     '#mbtopo .hbtn{border-radius:999px;padding:8px 14px;font-size:12px;white-space:nowrap;font-weight:700;text-decoration:none;cursor:pointer;border:1px solid rgba(127,176,245,0.3);background:#123059;color:#eaf1fb;font-family:inherit;transition:all 0.2s ease}',
     '#mbtopo .hbtn:hover{filter:brightness(1.15);transform:translateY(-1px);box-shadow:0 4px 12px rgba(18,48,89,0.5)}',
     '#mbtopo .hbtn.gold{background:linear-gradient(135deg,#FFD700,#FFA500);color:#061a3a;border-color:transparent;font-weight:800;box-shadow:0 2px 10px rgba(255,215,0,0.25)}',
@@ -72,10 +70,10 @@
   var ITENS = [
     { chave: 'inicio',     pagina: 'index.html',              rotulo: 'Início' },
     { chave: 'radar',      pagina: 'parlamentares.html',      rotulo: 'Radar Político',  card: true, icone: 'fa-satellite-dish', tom: 'gold',  stat: 'expPoliticos', cta: 'Ver o Radar', resumo: 'A ficha de cada deputado e senador: projetos, como votou e os processos que constam em fontes oficiais (TSE e conselhos de ética). Compare dois lado a lado, reclame ou dê apoio.' },
-    { chave: 'eleicoes',   pagina: 'resultados-2026.html',    rotulo: 'Eleições 2026',   card: true, icone: 'fa-chart-pie',        tom: 'blue',  cta: 'Ver o resultado', resumo: 'Quem ganhou cada cargo em 2026, quantos votos teve, como ficaram as cadeiras e quem foi eleito, estado por estado.' },
-    { chave: 'iniciativa', pagina: 'iniciativa-cidada.html', rotulo: 'Iniciativa Cidadã', card: true, icone: 'fa-lightbulb',        tom: 'green', cta: 'Criar meu projeto', resumo: 'Você escreve a ideia, junta assinaturas com um QR Code e submete como projeto de lei ao Congresso. Dá para convidar parlamentares a apoiar.' },
     { chave: 'congresso',  pagina: 'congresso.html',          rotulo: 'PLs no Congresso', card: true, icone: 'fa-file-lines',       tom: 'gold',  stat: 'expPls', cta: 'Ver os projetos', resumo: 'Os projetos de lei que estão no Congresso agora. Você vota em cada um na Urna Expressa do Povo, em 1 minuto e sem criar conta.' },
     { chave: 'votacoes',   pagina: 'votacoes.html',           rotulo: 'Votações',         card: true, icone: 'fa-vote-yea',         tom: 'blue',  cta: 'Ver as votações', resumo: 'Como o Congresso votou de verdade: o placar de cada matéria, o voto de cada deputado nas sessões nominais e um PDF com tudo para você cobrar.' },
+    { chave: 'eleicoes',   pagina: 'resultados-2026.html',    rotulo: 'Eleições 2026',   card: true, icone: 'fa-chart-pie',        tom: 'blue',  cta: 'Ver o resultado', resumo: 'Quem ganhou cada cargo em 2026, quantos votos teve, como ficaram as cadeiras e quem foi eleito, estado por estado.' },
+    { chave: 'iniciativa', pagina: 'iniciativa-cidada.html', rotulo: 'Iniciativa Cidadã', card: true, icone: 'fa-lightbulb',        tom: 'green', cta: 'Criar meu projeto', resumo: 'Você escreve a ideia, junta assinaturas com um QR Code e submete como projeto de lei ao Congresso. Dá para convidar parlamentares a apoiar.' },
     { chave: 'links',      pagina: 'links.html',              rotulo: 'Hub',              rotuloCard: 'Todas as páginas', card: true, icone: 'fa-compass', tom: 'gold', cta: 'Abrir o mapa do site', resumo: 'O mapa de tudo o que tem aqui, organizado por assunto: transparência do Congresso, cobrança de promessas, eleições e como o sistema funciona.' },
     { chave: 'conferir',   pagina: 'index.html#conferir-voto',rotulo: 'Conferir Voto',    card: true, icone: 'fa-magnifying-glass', tom: 'green', stat: 'expVotos', cta: 'Conferir meu voto', resumo: 'Cole o código de 20 dígitos que o app te deu e você vê em quem votou: nome, partido e número de cada escolhido. Sem código? Teste com um exemplo.' },
     { chave: 'revogar',    pagina: 'index.html#revogar-voto', rotulo: 'Revogar Voto',     card: true, icone: 'fa-trash-can',        tom: 'red',   stat: 'expRevogados', cta: 'Revogar meu voto', resumo: 'O eleito não cumpriu? Depois da posse você retira sua confiança. A regra é uma só: 70% dos votos que o elegeram cassam o mandato.' },
@@ -149,9 +147,8 @@ var topo = document.createElement('div');
       ' <a class="lg" href="' + R + 'index.html"><span class="ic"><img src="' + R + 'assets/logo/header-icon-120.png" alt="MeuVoto" width="120" height="120" style="border-radius:0;object-fit:contain;display:block;filter:drop-shadow(0 0 20px rgba(46,204,113,0.7))"></span><span><b>MeuVoto</b><span class="mv-slogan">Meu voto coloca, meu voto tira.</span></span></a>' +
       ' <button class="ham" aria-label="Menu" onclick="document.getElementById(\'mbtopo-mnav\').classList.toggle(\'open\')"><i class="fa-solid fa-bars"></i></button>' +
       ' <nav>' + nav + '</nav>' +
-      ' <div class="hact"><span class="hbadge" id="mbtopo-badge" hidden>conectando\u2026</span>' +
+      ' <div class="hact">' +
       ' <a class="hbtn mint" href="' + R + 'app/" title="Aplicativo de votação (funciona offline no celular)">📱 App</a>' +
-      ' <a class="hbtn" href="' + R + 'index.html#conferir-voto">Conferir</a>' +
       ' <a class="hbtn" id="mbtopo-entrar"' + (naHomeAgora ? ' onclick="if(window.abrirLogin)window.abrirLogin();return false" href="#conferir-voto"' : ' href="' + R + 'index.html"') + '>Entrar</a></div>' +
       '</header>' +
       /* O menu ☰ é a única navegação em telas <760px (onde o bloco .hact
@@ -181,18 +178,6 @@ var topo = document.createElement('div');
       document.head.appendChild(fa);
     }
 
-    // badge do backend (API_BASE '' é válida — mesma origem; nunca usar || aqui)
-    var base = (window.MeuVoto && typeof window.MeuVoto.API_BASE === 'string')
-      ? window.MeuVoto.API_BASE
-      : '';
-    var badge = document.getElementById('mbtopo-badge');
-    if (badge) {
-      fetch(base + '/api/health').then(function (r) {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        badge.hidden = false;
-        badge.textContent = 'backend ativo';
-      }).catch(function () { badge.hidden = true; });
-    }
 
     // Título da página já está correto como MeuVoto
     // (não precisa substituir)

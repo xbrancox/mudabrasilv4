@@ -916,18 +916,13 @@ footer{background:#08142e;border-top:1px solid var(--line);padding:44px 0 20px;m
 <input type="file" id="fFile" multiple style="padding:8px"/>
 <div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end"><button class="btn" onclick="fechar('mForm')">Cancelar</button><button class="btn gold" onclick="enviaForm()"><i class="fa-solid fa-paper-plane"></i> Enviar</button></div></div></div>
 <div class="overlay" id="mDados"><div class="modal"><div id="dadosBody"></div><button class="btn" style="width:100%;margin-top:12px" onclick="fechar('mDados')">Fechar</button></div></div>
-<div class="overlay" id="mLogin"><div class="modal"><h3 style="margin-bottom:10px">Entrar</h3>
-<div id="loginInicial">
-<button class="btn blue" style="width:100%;margin-bottom:10px" onclick="entrarCidadao()"><i class="fa-solid fa-envelope"></i> Entrar com e-mail</button>
-<button class="btn gold" style="width:100%" onclick="souPolitico()"><i class="fa-solid fa-landmark"></i> Sou político ou candidato</button>
-<p class="muted" style="margin-top:10px">Político/Candidato = verificação REAL via backend (e-mail institucional ou TSE).</p>
-<button class="btn" style="width:100%;margin-top:12px" onclick="fechar('mLogin')">Fechar</button>
-</div>
-<div id="loginPasso1" style="display:none">
+<div class="overlay" id="mLogin"><div class="modal"><h3 style="margin-bottom:10px">🔑 Entrar com E-mail</h3>
+<div id="loginPasso1">
+<p class="muted" style="margin-bottom:8px">Informe seu e-mail para receber o código de acesso rápido.</p>
 <label class="muted" style="display:block;margin-bottom:4px">Seu e-mail</label>
 <input id="loginEmail" type="email" placeholder="seu@email.com" style="width:100%;padding:10px;margin-bottom:12px;border:1px solid var(--line);border-radius:8px"/>
 	<button id="btnEnviarCodigo" class="btn blue" type="button" style="width:100%"><i class="fa-solid fa-paper-plane"></i> Enviar código</button>
-<button class="btn" style="width:100%;margin-top:8px" onclick="voltarLoginInicio()">Voltar</button>
+<button class="btn" style="width:100%;margin-top:8px" onclick="fechar('mLogin')">Cancelar</button>
 </div>
 <div id="loginPasso2" style="display:none">
 	<p class="muted" style="margin-bottom:8px">Enviamos um código de 6 dígitos para seu e-mail.</p>
@@ -1684,22 +1679,18 @@ const txt=ti+' — '+de+(files.length?` 📎 ${files.join(', ')}`:'');
 if(FORM_T=='rec'){const m=LS.get('mb_rec_txt',{});(m[idx]=m[idx]||[]).unshift(txt);LS.set('mb_rec_txt',m);if(!toast._silent)toast('Reclamação registrada localmente. 📣')}
 else{const m=LS.get('mb_elog_txt',{});(m[idx]=m[idx]||[]).unshift(txt);LS.set('mb_elog_txt',m);if(!toast._silent)toast('Apoio registrado localmente. 👍')}
 fechar('mForm');renderRad()}
-function abrirLogin(){document.getElementById('mLogin').classList.add('open')}
-function entrarCidadao(){
-  document.getElementById('loginInicial').style.display='none';
-  document.getElementById('loginPasso1').style.display='block';
-  document.getElementById('loginPasso2').style.display='none';
-  document.getElementById('loginEmail').value='';
-  document.getElementById('loginCode').value='';
-  document.getElementById('loginDevCode').style.display='none';
+function abrirLogin(){
+  document.getElementById('mLogin').classList.add('open');
+  const p1=document.getElementById('loginPasso1');
+  const p2=document.getElementById('loginPasso2');
+  if(p1)p1.style.display='block';
+  if(p2)p2.style.display='none';
+  const em=document.getElementById('loginEmail');if(em)em.value='';
+  const cd=document.getElementById('loginCode');if(cd)cd.value='';
+  const dv=document.getElementById('loginDevCode');if(dv)dv.style.display='none';
 }
 function voltarLoginPasso1(){
   document.getElementById('loginPasso1').style.display='block';
-  document.getElementById('loginPasso2').style.display='none';
-}
-function voltarLoginInicio(){
-  document.getElementById('loginInicial').style.display='block';
-  document.getElementById('loginPasso1').style.display='none';
   document.getElementById('loginPasso2').style.display='none';
 }
 async function enviarCodigoLogin(){
